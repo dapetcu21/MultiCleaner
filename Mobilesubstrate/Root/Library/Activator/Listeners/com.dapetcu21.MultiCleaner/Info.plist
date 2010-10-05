@@ -1,0 +1,7 @@
+{
+	title = "MultiCleaner Quit";
+	description = "Quit foreground app";
+	"compatible-modes" = (
+		application,
+	);
+}

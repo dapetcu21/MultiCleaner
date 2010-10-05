@@ -1,0 +1,8 @@
+{
+	title = "MultiCleaner Quit All";
+	description = "Quit all apps";
+	"compatible-modes" = (
+		springboard,
+		application,
+	);
+}

@@ -1,0 +1,491 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		C116D94A123B69F200667659 /* Make DEB */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C116D953123B6A5C00667659 /* Build configuration list for PBXAggregateTarget "Make DEB" */;
+			buildPhases = (
+				C116D949123B69F200667659 /* ShellScript */,
+			);
+			dependencies = (
+				C116D952123B6A1E00667659 /* PBXTargetDependency */,
+			);
+			name = "Make DEB";
+			productName = "Make DEB";
+		};
+		C1C71E7F12355C3D00B473E8 /* Install to Device */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C1C71E8612355CA300B473E8 /* Build configuration list for PBXAggregateTarget "Install to Device" */;
+			buildPhases = (
+				C1C71E7E12355C3D00B473E8 /* ShellScript */,
+			);
+			dependencies = (
+				C116D950123B6A0E00667659 /* PBXTargetDependency */,
+			);
+			name = "Install to Device";
+			productName = "Install to Device";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		851F89700F78271600A6C185 /* MultiCleaner.mm in Sources */ = {isa = PBXBuildFile; fileRef = 851F896F0F78271600A6C185 /* MultiCleaner.mm */; };
+		C14DB8701259158A009C63EA /* MCIndividualSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = C14DB86D1259158A009C63EA /* MCIndividualSettings.m */; };
+		C14DB8711259158A009C63EA /* MCSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = C14DB86F1259158A009C63EA /* MCSettings.m */; };
+		C14DB874125915A0009C63EA /* MCSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = C14DB873125915A0009C63EA /* MCSettingsController.m */; };
+		C17904A01236FD4C00D8CD8E /* MCListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = C179049F1236FD4C00D8CD8E /* MCListener.mm */; };
+		C17904B8123700A400D8CD8E /* libactivator.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C17904B7123700A400D8CD8E /* libactivator.dylib */; };
+		C1A5122A124F5B91006D3842 /* MCListenerQuitAll.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A511AA124F51C8006D3842 /* MCListenerQuitAll.m */; };
+		C1C71F3412355D2D00B473E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C71E8D12355D1400B473E8 /* UIKit.framework */; };
+		C1C71F3512355D2D00B473E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C71E8E12355D1900B473E8 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C116D8D1123B61B900667659 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C158BFA6123A52AB00A43941 /* MultiCleaner.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
+			remoteInfo = MultiCleaner;
+		};
+		C116D94F123B6A0E00667659 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C116D94A123B69F200667659;
+			remoteInfo = "Make DEB";
+		};
+		C116D951123B6A1E00667659 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
+			remoteInfo = MultiCleaner;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		32CA4F630368D1EE00C91783 /* MultiCleaner_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiCleaner_Prefix.pch; sourceTree = "<group>"; };
+		851F896F0F78271600A6C185 /* MultiCleaner.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MultiCleaner.mm; sourceTree = "<group>"; };
+		C116D962123B6C3F00667659 /* control */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = control; sourceTree = "<group>"; };
+		C14DB86C1259158A009C63EA /* MCIndividualSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCIndividualSettings.h; path = ../Common/MCIndividualSettings.h; sourceTree = SOURCE_ROOT; };
+		C14DB86D1259158A009C63EA /* MCIndividualSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCIndividualSettings.m; path = ../Common/MCIndividualSettings.m; sourceTree = SOURCE_ROOT; };
+		C14DB86E1259158A009C63EA /* MCSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCSettings.h; path = ../Common/MCSettings.h; sourceTree = SOURCE_ROOT; };
+		C14DB86F1259158A009C63EA /* MCSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCSettings.m; path = ../Common/MCSettings.m; sourceTree = SOURCE_ROOT; };
+		C14DB872125915A0009C63EA /* MCSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCSettingsController.h; path = classes/MCSettingsController.h; sourceTree = SOURCE_ROOT; };
+		C14DB873125915A0009C63EA /* MCSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCSettingsController.m; path = classes/MCSettingsController.m; sourceTree = SOURCE_ROOT; };
+		C14DB8F61259B739009C63EA /* MultiCleaner.deb */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = MultiCleaner.deb; sourceTree = SOURCE_ROOT; };
+		C14DB9A61259B794009C63EA /* MultiCleaner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiCleaner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C158BDF91238056B00A43941 /* AppSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppSupport.framework; path = System/Library/PrivateFrameworks/AppSupport.framework; sourceTree = SDKROOT; };
+		C158BFA6123A52AB00A43941 /* MultiCleaner.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MultiCleaner.xcodeproj; path = ../App/MultiCleaner.xcodeproj; sourceTree = SOURCE_ROOT; };
+		C179049E1236FD4C00D8CD8E /* MCListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCListener.h; sourceTree = "<group>"; };
+		C179049F1236FD4C00D8CD8E /* MCListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCListener.mm; sourceTree = "<group>"; };
+		C17904B7123700A400D8CD8E /* libactivator.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libactivator.dylib; path = JBToolkit/libactivator.dylib; sourceTree = DEVELOPER_DIR; };
+		C179057C1237881D00D8CD8E /* MultiCleaner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiCleaner.h; sourceTree = "<group>"; };
+		C1912A0A123677420047DA69 /* Root */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Root; sourceTree = "<group>"; };
+		C1A511A9124F51C8006D3842 /* MCListenerQuitAll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCListenerQuitAll.h; sourceTree = "<group>"; };
+		C1A511AA124F51C8006D3842 /* MCListenerQuitAll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCListenerQuitAll.m; sourceTree = "<group>"; };
+		C1C71E8D12355D1400B473E8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C1C71E8E12355D1900B473E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C1C7207912363A8300B473E8 /* Preferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Preferences.framework; path = System/Library/PrivateFrameworks/Preferences.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1C71F3412355D2D00B473E8 /* UIKit.framework in Frameworks */,
+				C1C71F3512355D2D00B473E8 /* Foundation.framework in Frameworks */,
+				C17904B8123700A400D8CD8E /* libactivator.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				C14DB872125915A0009C63EA /* MCSettingsController.h */,
+				C14DB873125915A0009C63EA /* MCSettingsController.m */,
+				C14DB86C1259158A009C63EA /* MCIndividualSettings.h */,
+				C14DB86D1259158A009C63EA /* MCIndividualSettings.m */,
+				C14DB86E1259158A009C63EA /* MCSettings.h */,
+				C14DB86F1259158A009C63EA /* MCSettings.m */,
+				C179057C1237881D00D8CD8E /* MultiCleaner.h */,
+				851F896F0F78271600A6C185 /* MultiCleaner.mm */,
+				C179049E1236FD4C00D8CD8E /* MCListener.h */,
+				C179049F1236FD4C00D8CD8E /* MCListener.mm */,
+				C1A511A9124F51C8006D3842 /* MCListenerQuitAll.h */,
+				C1A511AA124F51C8006D3842 /* MCListenerQuitAll.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C14DB8F61259B739009C63EA /* MultiCleaner.deb */,
+				C14DB9A61259B794009C63EA /* MultiCleaner.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				C158BFA6123A52AB00A43941 /* MultiCleaner.xcodeproj */,
+				C1912A0A123677420047DA69 /* Root */,
+				C116D962123B6C3F00667659 /* control */,
+				080E96DDFE201D6D7F000001 /* Classes */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* MultiCleaner_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C17904B7123700A400D8CD8E /* libactivator.dylib */,
+				C1C7207912363A8300B473E8 /* Preferences.framework */,
+				C1C71E8D12355D1400B473E8 /* UIKit.framework */,
+				C1C71E8E12355D1900B473E8 /* Foundation.framework */,
+				C158BDF91238056B00A43941 /* AppSupport.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C116D8CE123B61B900667659 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C116D8D2123B61B900667659 /* MultiCleaner.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* MultiCleaner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "MultiCleaner" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+				C19129DB123672B70047DA69 /* Install */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MultiCleaner;
+			productName = MultiCleaner;
+			productReference = C14DB9A61259B794009C63EA /* MultiCleaner.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MultiCleaner" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C116D8CE123B61B900667659 /* Products */;
+					ProjectRef = C158BFA6123A52AB00A43941 /* MultiCleaner.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* MultiCleaner */,
+				C116D94A123B69F200667659 /* Make DEB */,
+				C1C71E7F12355C3D00B473E8 /* Install to Device */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		C116D8D2123B61B900667659 /* MultiCleaner.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = MultiCleaner.app;
+			remoteRef = C116D8D1123B61B900667659 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C116D949123B69F200667659 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "rm -R \"Root/Applications/MultiCleaner.app\"\ncp -R \"../App/build/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/MultiCleaner.app\" \"Root/Applications/MultiCleaner.app\"\nrm -R \"Root/Applications/MultiCleaner.app/_CodeSignature\"\nrm -R \"Root/Applications/MultiCleaner.app/CodeResources\"\nfind -d \"Root\" -name \".DS_Store\" -exec rm -r '{}' \\; -print\ncp ${DEB_CONTROL_FILE} ./controltmp1\nexport COPYFILE_DISABLE=true\nexport COPY_EXTENDED_ATTRIBUTES_DISABLE=true\nTMP=`du -d0 -k Root`\nFILESIZE=`expr \"$TMP\" : '\\([0-9]*\\).*'`\necho Installed-Size: $FILESIZE >> controltmp2\necho Installed-Size: $FILESIZE\nmkdir \"Root/DEBIAN\"\ncat controltmp1 controltmp2 | tr -s '\\012' > Root/DEBIAN/control\nrm controltmp*\n/opt/local/bin/dpkg-deb -D -b Root #change if you installed dpkg somewhere else\nmv Root.deb MultiCleaner.deb\nrm -R \"Root/DEBIAN\"\nexit 0;";
+		};
+		C19129DB123672B70047DA69 /* Install */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Install;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "SOURCE=${CONFIGURATION_BUILD_DIR}/${PROJECT_NAME}.app/${PROJECT_NAME}\nDEST=Root/Library/MobileSubstrate/DynamicLibraries/${PROJECT_NAME}.dylib\nif [ -f \"$DEST\" ] \nthen\n rm -r \"$DEST\"\nfi\ncp \"$SOURCE\" \"$DEST\"\n/usr/local/bin/ldid -S \"$DEST\"";
+		};
+		C1C71E7E12355C3D00B473E8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "IP_ADDRESS=192.168.1.65\nscp -r \"MultiCleaner.deb\" \"root@${IP_ADDRESS}:/User/Documents/MultiCleaner.deb\"\nssh root@${IP_ADDRESS} dpkg --force-downgrade -i /User/Documents/MultiCleaner.deb";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				851F89700F78271600A6C185 /* MultiCleaner.mm in Sources */,
+				C17904A01236FD4C00D8CD8E /* MCListener.mm in Sources */,
+				C1A5122A124F5B91006D3842 /* MCListenerQuitAll.m in Sources */,
+				C14DB8701259158A009C63EA /* MCIndividualSettings.m in Sources */,
+				C14DB8711259158A009C63EA /* MCSettings.m in Sources */,
+				C14DB874125915A0009C63EA /* MCSettingsController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C116D950123B6A0E00667659 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C116D94A123B69F200667659 /* Make DEB */;
+			targetProxy = C116D94F123B6A0E00667659 /* PBXContainerItemProxy */;
+		};
+		C116D952123B6A1E00667659 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1D6058900D05DD3D006BFB54 /* MultiCleaner */;
+			targetProxy = C116D951123B6A1E00667659 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MultiCleaner_Prefix.pch;
+				INFOPLIST_FILE = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_DIR)/JBToolkit\"",
+					"\"$(SRCROOT)\"",
+				);
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CODE_SIGN_FLAGS = "-ngta";
+				PRODUCT_NAME = MultiCleaner;
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MultiCleaner_Prefix.pch;
+				INFOPLIST_FILE = "";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_DIR)/JBToolkit\"",
+					"\"$(SRCROOT)\"",
+				);
+				MACH_O_TYPE = mh_dylib;
+				OTHER_CODE_SIGN_FLAGS = "-ngta";
+				PRODUCT_NAME = MultiCleaner;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_OPENMP_FLAGS = "-fopenmp";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-init",
+					"_$(PROJECT_NAME)Initialize",
+					"-lsubstrate",
+					"-dynamiclib",
+				);
+				PREBINDING = NO;
+				SDKROOT = iphoneos4.0;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = (
+					"-init",
+					"_$(PROJECT_NAME)Initialize",
+					"-lsubstrate",
+					"-dynamiclib",
+				);
+				PREBINDING = NO;
+				SDKROOT = iphoneos4.0;
+			};
+			name = Release;
+		};
+		C116D94B123B69F200667659 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEB_CONTROL_FILE = "${SRCROOT}/control";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make DEB";
+			};
+			name = Debug;
+		};
+		C116D94C123B69F200667659 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEB_CONTROL_FILE = "${SRCROOT}/control";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "Make DEB";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		C1C71E8012355C3D00B473E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Install to Device";
+			};
+			name = Debug;
+		};
+		C1C71E8112355C3D00B473E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "Install to Device";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "MultiCleaner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MultiCleaner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C116D953123B6A5C00667659 /* Build configuration list for PBXAggregateTarget "Make DEB" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C116D94B123B69F200667659 /* Debug */,
+				C116D94C123B69F200667659 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1C71E8612355CA300B473E8 /* Build configuration list for PBXAggregateTarget "Install to Device" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C1C71E8012355C3D00B473E8 /* Debug */,
+				C1C71E8112355C3D00B473E8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
