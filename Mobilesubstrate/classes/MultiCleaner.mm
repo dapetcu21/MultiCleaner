@@ -50,6 +50,7 @@ struct MultiCleanerVars {
 	BOOL flipBack;
 	BOOL editMode;
 	BOOL isOut;
+	float sysVersion;
 };
 static struct MultiCleanerVars MC;
 
@@ -57,6 +58,11 @@ static struct MultiCleanerVars MC;
 #define SBWActiveDisplayStack             ((SBDisplayStack *)[MC.displayStacks objectAtIndex:1])
 #define SBWSuspendingDisplayStack         ((SBDisplayStack *)[MC.displayStacks objectAtIndex:2])
 #define SBWSuspendedEventOnlyDisplayStack ((SBDisplayStack *)[MC.displayStacks objectAtIndex:3])
+
+inline BOOL versionBigger(float ver)
+{
+	return (MC.sysVersion-0.000001)<=ver;
+}
 
 @interface MCListener(MCMisc)
 -(void)resumeMenu;
@@ -349,6 +355,16 @@ DefineObjCHook(void,SBAS__quitHit_,SBAppSwitcherController * self, SEL _cmd, SBA
 		Original(SBAS__quitHit_)(self,_cmd,button);
 }
 
+DefineObjCHook(void,SBAS_closeTapped_,SBAppSwitcherController * self, SEL _cmd, SBApplicationIcon * icon)
+{
+	SBApplication * app = [icon application];
+	if (app == [SBWActiveDisplayStack topApplication])
+	{
+		quitForegroundAppAndReturn();
+	} else
+		Original(SBAS_closeTapped_)(self,_cmd,icon);
+}
+
 #pragma mark App quitting
 
 extern "C"
@@ -370,7 +386,8 @@ void quitForegroundAppAndReturn()
 		removeApplicationFromBar(appSwitcher, app);
 		//TODO: Find a better way to call resumeMenu
 		MC.editMode = [appSwitcher _inEditMode];
-		[[MCListener sharedInstance] performSelector:@selector(resumeMenu) withObject:nil afterDelay:0.3];
+		if ([[MSHookIvar<SBAppSwitcherBarView*>(appSwitcher,"_bottomBar") appIcons] count]!=0)
+			[[MCListener sharedInstance] performSelector:@selector(resumeMenu) withObject:nil afterDelay:0.3];
 	}
 	quitForegroundApp();
 }
@@ -659,10 +676,15 @@ void SBASC_icon_touchEnded_(SBAppSwitcherController * self, SEL _cmd, SBIcon * i
 	[icon setExclusiveTouch:NO]; 
 	if (MC.isOut&&MC.settings.swipeQuit)
 	{
-		SBAppIconQuitButton * quitButton = [[$SBAppIconQuitButton alloc] init];
-		quitButton.appIcon = (SBApplicationIcon*)icon;
-		[self performSelectorOnMainThread:@selector(_quitButtonHit:) withObject:quitButton waitUntilDone:NO];
-		[quitButton release];
+		if (versionBigger(4.1))
+		{
+			[self performSelectorOnMainThread:@selector(iconCloseBoxTapped:) withObject:icon waitUntilDone:NO];
+		} else {
+			SBAppIconQuitButton * quitButton = [[$SBAppIconQuitButton alloc] init];
+			quitButton.appIcon = (SBApplicationIcon*)icon;
+			[self performSelectorOnMainThread:@selector(_quitButtonHit:) withObject:quitButton waitUntilDone:NO];
+			[quitButton release];
+		}
 	} else {
 		[icons insertObject:icon atIndex:MC.index];
 		
@@ -817,7 +839,8 @@ extern "C" void MultiCleanerInitialize() {
 		MC.currentIcon = nil;
 		MC.flipTimer = nil;
 		MC.isOut = NO;
-		
+		MC.sysVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
+			
 		$SBAppSwitcherController = objc_getClass("SBAppSwitcherController");
 		$SpringBoard = objc_getClass("SpringBoard");
 		$SBAppSwitcherModel = objc_getClass("SBAppSwitcherModel");
@@ -836,7 +859,10 @@ extern "C" void MultiCleanerInitialize() {
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(_beginEditing),SBAS__beginEditing);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(_stopEditing),SBAS__stopEditing);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(_applicationIconsExcept:forOrientation:),SBAS__applicationIconsExcept_forOrientation_);
-		InstallObjCInstanceHook($SBAppSwitcherController,@selector(_quitButtonHit:),SBAS__quitHit_);
+		if (versionBigger(4.1))
+			InstallObjCInstanceHook($SBAppSwitcherController,@selector(iconCloseBoxTapped:),SBAS_closeTapped_);
+		else
+			InstallObjCInstanceHook($SBAppSwitcherController,@selector(_quitButtonHit:),SBAS__quitHit_);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(viewWillAppear),SBAS_viewWillAppear);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(iconTouchBegan:),SBAS_iconTouchBegan_);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(iconShouldAllowTap:),SBAS_iconShouldAllowTap_);
