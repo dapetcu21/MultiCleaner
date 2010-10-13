@@ -20,6 +20,8 @@
 @synthesize moveBack;
 @synthesize dontMoveToFront;
 @synthesize launchType;
+@synthesize quitType;
+@synthesize swipeNoQuit;
 
 -(id)init
 {
@@ -42,6 +44,7 @@
 	moveBack = NO;
 	dontMoveToFront = NO;
 	launchType = kLTFront;
+	quitType = kQTAppAndIcon;
 }
 
 -(void)loadFromDict:(NSDictionary*)dict
@@ -86,12 +89,23 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		dontMoveToFront = [num boolValue];
 	
+	num = [dict objectForKey:@"SwipeNoQuit"];
+	if ([num isKindOfClass:[NSNumber class]])
+		swipeNoQuit = [num boolValue];
+	
 	num = [dict objectForKey:@"LaunchType"];
 	if ([num isKindOfClass:[NSNumber class]])
 		launchType = [num intValue];
 	
+	num = [dict objectForKey:@"QuitType"];
+	if ([num isKindOfClass:[NSNumber class]])
+		quitType = [num intValue];
+	
 	if ((launchType>=NUMLAUNCHTYPES)||(launchType<0))
 		launchType = kLTFront;
+	
+	if ((quitType>=NUMQUITTYPES)||(quitType<0))
+		quitType = kQTAppAndIcon;
 	
 }
 
@@ -105,7 +119,10 @@
 	[dict setObject:[NSNumber numberWithBool:quitException] forKey:@"QuitException"];
 	[dict setObject:[NSNumber numberWithBool:moveBack] forKey:@"MoveBack"];
 	[dict setObject:[NSNumber numberWithBool:dontMoveToFront] forKey:@"DontMoveToFront"];
+	[dict setObject:[NSNumber numberWithBool:swipeNoQuit] forKey:@"SwipeNoQuit"];
 	[dict setObject:[NSNumber numberWithInt:launchType] forKey:@"LaunchType"];
+	[dict setObject:[NSNumber numberWithInt:quitType] forKey:@"QuitType"];
+	
 }
 
 
@@ -122,6 +139,8 @@
 	cp.moveBack=moveBack;
 	cp.dontMoveToFront=dontMoveToFront;
 	cp.launchType=launchType;
+	cp.quitType=quitType;
+	cp.swipeNoQuit=swipeNoQuit;
 	return cp;
 }
 

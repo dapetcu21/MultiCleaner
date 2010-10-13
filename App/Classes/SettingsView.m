@@ -104,6 +104,8 @@ enum kOptionCells
 enum kAdditionalCells
 {
 	kShowCurrCell = 0,
+	kQuitTypeCell,
+	kSwipeTypeCell,
 	kHiddenCell,
 	kExceptionCell,
 	NUMADDCELLS
@@ -166,7 +168,9 @@ enum kAdditionalCells
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
     UITableViewCell *cell;
-	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kLaunchTypeCell))
+	if (((indexPath.section==kRearrangeSec)&&(indexPath.row==kLaunchTypeCell))||
+		((indexPath.section==kAdditionalSec)&&(indexPath.row==kQuitTypeCell))||
+		((indexPath.section==kAdditionalSec)&&(indexPath.row==kSwipeTypeCell)))
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
 	else
 		cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
@@ -196,7 +200,7 @@ enum kAdditionalCells
 			case kDimClosedCell:
 			{
 				[((SwitchCell*)cell) setOn:settings.dimClosed];
-				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setDimClosed:)];
+				[((SwitchCell*)cell) setTarget:self andSelector:@selector(modifiedDimClosed:)];
 				cell.textLabel.text=global?
 					@"Dim closed apps":
 					@"Dim icon if closed";
@@ -215,6 +219,36 @@ enum kAdditionalCells
 				[((SwitchCell*)cell) setOn:settings.hidden];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setHidden:)];
 				cell.textLabel.text=@"Hide app from bar";
+				break;
+			}
+			case kQuitTypeCell:
+			{
+				cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+				cell.textLabel.text=@"Red button action";
+				switch(settings.quitType)
+				{
+					case kQTAppAndIcon:
+						cell.detailTextLabel.text=@"app&icon";
+						break;
+					case kQTIcon:
+						cell.detailTextLabel.text=@"remove icon";
+						break;
+					case kQTApp:
+						cell.detailTextLabel.text=@"close app";
+						break;
+				}
+				break;
+			}
+			case kSwipeTypeCell:
+			{
+				cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+				cell.textLabel.text=@"Swipe to quit action";
+				if (settings.swipeNoQuit)
+					cell.detailTextLabel.text=@"rem icon";
+				else
+					cell.detailTextLabel.text=@"quit";
 				break;
 			}
 			case kShowCurrCell:
@@ -292,11 +326,17 @@ enum kAdditionalCells
 #pragma mark Table view delegate
 
 #define kLaunchPositionTag 2001
+#define kQuitTypeTag 2002
+#define kSwipeTypeTag 2003
 
 - (void)pickerTableController:(PickerTableController *)tvc changedSelectionTo:(int)sel
 {
 	if (tvc.tag == kLaunchPositionTag)
 		settings.launchType=sel;
+	if (tvc.tag == kQuitTypeTag)
+		settings.quitType=sel;
+	if (tvc.tag == kSwipeTypeTag)
+		settings.swipeNoQuit=(BOOL)sel;
 	[self.tableView reloadData];
 }
 
@@ -309,6 +349,28 @@ enum kAdditionalCells
 		vc.items = [NSArray arrayWithObjects:@"Front of the bar (default)",@"Back of the bar",@"Before closed apps moved back",nil];
 		vc.tag = kLaunchPositionTag;
 		vc.currentSelection = settings.launchType;
+		[self.navigationController pushViewController:vc animated:YES];
+		[vc release];
+	}
+	if ((indexPath.section==kAdditionalSec)&&(indexPath.row==kQuitTypeCell))
+	{
+		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
+		vc.title = @"Quit button behavior";
+		vc.delegate = self;
+		vc.items = [NSArray arrayWithObjects:@"Quit app and remove icon",@"Quit app and leave icon",@"Just remove icon",nil];
+		vc.tag = kQuitTypeTag;
+		vc.currentSelection = settings.quitType;
+		[self.navigationController pushViewController:vc animated:YES];
+		[vc release];
+	}
+	if ((indexPath.section==kAdditionalSec)&&(indexPath.row==kSwipeTypeCell))
+	{
+		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
+		vc.title = @"Swipe to quit behavior";
+		vc.delegate = self;
+		vc.items = [NSArray arrayWithObjects:@"Quit app and remove icon",@"Just remove icon",nil];
+		vc.tag = kSwipeTypeTag;
+		vc.currentSelection = (int)(settings.swipeNoQuit);
 		[self.navigationController pushViewController:vc animated:YES];
 		[vc release];
 	}

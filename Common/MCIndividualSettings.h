@@ -15,6 +15,13 @@ enum kLaunchTypes {
 	NUMLAUNCHTYPES
 };
 
+enum kQuitTypes {
+	kQTAppAndIcon = 0,
+	kQTApp,
+	kQTIcon,
+	NUMQUITTYPES
+};
+
 @interface MCIndividualSettings : NSObject<NSCopying> {	
 	BOOL autoclose;
 	BOOL hidden;
@@ -26,6 +33,8 @@ enum kLaunchTypes {
 	BOOL moveBack;
 	BOOL dontMoveToFront;
 	int launchType;
+	int quitType;
+	BOOL swipeNoQuit;
 }
 
 -(void)saveToDict:(NSMutableDictionary*)dict;
@@ -42,5 +51,7 @@ enum kLaunchTypes {
 @property(nonatomic,assign) BOOL moveBack;
 @property(nonatomic,assign) BOOL dontMoveToFront;
 @property(nonatomic,assign) int launchType;
+@property(nonatomic,assign) int quitType;
+@property(nonatomic,assign) BOOL swipeNoQuit;
 
 @end
