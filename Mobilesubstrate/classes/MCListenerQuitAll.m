@@ -25,15 +25,19 @@
 
 -(void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event
 {
-	alert = [[UIAlertView alloc] init];
+	MCSettings * sett = [MCSettings sharedInstance];
+	if (!sett.hidePrompt)
+		alert = [[UIAlertView alloc] init];
+	else
+		alert = nil;
 	alert.delegate = self;
-	if ([MCSettings sharedInstance].confirmQuit)
+	if (sett.confirmQuit&!sett.hidePrompt)
 	{
 		alert.title = @"MultiCleaner";
 		alert.message = @"Quit all apps?";
-		[alert addButtonWithTitle:@"No"];
 		[alert addButtonWithTitle:@"Yes"];
-		alert.cancelButtonIndex = 0;
+		[alert addButtonWithTitle:@"No"];
+		alert.cancelButtonIndex = 1;
 		[alert show];
 		[alert release];
 	} else {
@@ -55,7 +59,7 @@
 	menuDown = NO;
 	if (alert)
 	{
-		[alert dismissWithClickedButtonIndex:0 animated:YES];
+		[alert dismissAnimated:YES];
 		alert=nil;
 	}
 }
@@ -65,7 +69,7 @@
 	menuDown = NO;
 	if (alert)
 	{
-		[alert dismissWithClickedButtonIndex:0 animated:YES];
+		[alert dismissAnimated:YES];
 		alert=nil;
 	}	
 	quitAllApps();
@@ -92,7 +96,7 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-	if (buttonIndex==1)
+	if (buttonIndex!=alertView.cancelButtonIndex)
 	{
 		alert = nil;
 		[self activationConfirmed];

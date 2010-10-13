@@ -24,6 +24,9 @@
 @synthesize noEditMode;
 @synthesize fastExit;
 @synthesize confirmQuit;
+@synthesize confirmQuitSingle;
+@synthesize hidePrompt;
+@synthesize hidePromptSingle;
 
 +(MCSettings*)sharedInstance
 {
@@ -56,6 +59,9 @@
 	noEditMode = NO;
 	fastExit = NO;
 	confirmQuit = NO;
+	confirmQuitSingle = NO;
+	hidePrompt = NO;
+	hidePromptSingle = NO;
 	quitMode = kQuitModeRemoveIcons;
 	badgeCorner = 0;
 }
@@ -113,6 +119,18 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		confirmQuit = [num boolValue];
 	
+	num = [def objectForKey:@"ConfirmQuitSingle"];
+	if ([num isKindOfClass:[NSNumber class]])
+		confirmQuitSingle = [num boolValue];
+	
+	num = [def objectForKey:@"HidePrompt"];
+	if ([num isKindOfClass:[NSNumber class]])
+		hidePrompt = [num boolValue];
+	
+	num = [def objectForKey:@"HidePromptSingle"];
+	if ([num isKindOfClass:[NSNumber class]])
+		hidePromptSingle = [num boolValue];
+	
 	num = [def objectForKey:@"QuitMode"];
 	if ([num isKindOfClass:[NSNumber class]])
 		quitMode = [num intValue];
@@ -145,6 +163,9 @@
 	[def setObject:[NSNumber numberWithBool:noEditMode] forKey:@"NoEditMode"];
 	[def setObject:[NSNumber numberWithBool:fastExit] forKey:@"FastExit"];
 	[def setObject:[NSNumber numberWithBool:confirmQuit] forKey:@"ConfirmQuit"];
+	[def setObject:[NSNumber numberWithBool:confirmQuitSingle] forKey:@"ConfirmQuitSingle"];
+	[def setObject:[NSNumber numberWithBool:hidePrompt] forKey:@"HidePrompt"];
+	[def setObject:[NSNumber numberWithBool:hidePromptSingle] forKey:@"HidePromptSingle"];
 	//NSLog(@"saving common settings: %@",def);
 }
 @end

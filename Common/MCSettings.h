@@ -30,6 +30,9 @@ enum kQuitModes
 	BOOL noEditMode;
 	BOOL fastExit;
 	BOOL confirmQuit;
+	BOOL confirmQuitSingle;
+	BOOL hidePrompt;
+	BOOL hidePromptSingle;
 }
 @property(nonatomic,assign) BOOL startupiPod;
 @property(nonatomic,assign) BOOL startupEdit;
@@ -45,6 +48,9 @@ enum kQuitModes
 @property(nonatomic,assign) BOOL noEditMode;
 @property(nonatomic,assign) BOOL fastExit;
 @property(nonatomic,assign) BOOL confirmQuit;
+@property(nonatomic,assign) BOOL confirmQuitSingle;
+@property(nonatomic,assign) BOOL hidePrompt;
+@property(nonatomic,assign) BOOL hidePromptSingle;
 
 -(void)loadFromDict:(NSDictionary*)def;
 -(void)saveToDict:(NSMutableDictionary*)def;

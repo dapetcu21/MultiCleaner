@@ -8,6 +8,7 @@
 
 #import "RootViewController.h"
 #import "ApplicationCell.h"
+#import "SwitchCell.h"
 #import "SettingsView.h"
 #include <dlfcn.h>
 #import <libactivator/libactivator.h>
@@ -136,6 +137,13 @@ enum kSections {
 	NUMSECTIONS
 };
 
+enum kClosedAppCells {
+	kCAActivator = 0,
+	kCAHidePrompt,
+	kCAConfirm,
+	NUMCLOSEDAPPCELLS
+};
+
 
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -147,7 +155,7 @@ enum kSections {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
 		case kCloseAppSection:
-			return 1;
+			return NUMCLOSEDAPPCELLS;
 		case kGeneralSettings:
 			return 2;
 		case kAppSettings:
@@ -170,7 +178,7 @@ enum kSections {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section==kCloseAppSection)
+	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAActivator))
 		return round(self.tableView.rowHeight*1.4f);
 	return self.tableView.rowHeight;
 }
@@ -192,6 +200,11 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 		}
 	}
 	else
+	if ((indexPath.section==kCloseAppSection)&&((indexPath.row==kCAHidePrompt)||(indexPath.row==kCAConfirm)))
+	{
+		cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+	}
+	else
 	{
 		cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 		if (cell == nil) {
@@ -201,12 +214,30 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
     }
 	
 	
-	if (indexPath.section==kCloseAppSection)
+	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAActivator))
 	{
 		cell.textLabel.text=@"Quit current app";
 		cell.selectionStyle=UITableViewCellSelectionStyleBlue;
 		cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
 		cell.detailTextLabel.text=@"Activator trigger";
+	}
+	
+	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAConfirm))
+	{
+		cell.textLabel.text=@"Confirm quit";
+		[(SwitchCell*)cell setOn:[MCSettings sharedInstance].confirmQuitSingle];
+		[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setConfirmQuitSingle:)];
+		cell.selectionStyle=UITableViewCellSelectionStyleNone;
+		cell.accessoryType=UITableViewCellAccessoryNone;
+	}
+	
+	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAHidePrompt))
+	{
+		cell.textLabel.text=@"Hide prompt";
+		[(SwitchCell*)cell setOn:[MCSettings sharedInstance].hidePromptSingle];
+		[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setHidePromptSingle:)];
+		cell.selectionStyle=UITableViewCellSelectionStyleNone;
+		cell.accessoryType=UITableViewCellAccessoryNone;
 	}
 	
 	if (indexPath.section==kAboutSection)
@@ -311,7 +342,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UIViewController * vc = nil;
-	if (indexPath.section==kCloseAppSection)
+	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAActivator))
 	{
 		vc = [[LAListenerSettingsViewController alloc] init];
 		((LAListenerSettingsViewController*)vc).listenerName=@"com.dapetcu21.MultiCleaner";

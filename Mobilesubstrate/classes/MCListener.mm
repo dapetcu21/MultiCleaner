@@ -7,6 +7,7 @@
 //
 
 #import "MCListener.h"
+#import "MCSettings.h"
 #import "MultiCleaner.h"
 
 @implementation MCListener
@@ -28,13 +29,14 @@
 	menuDown=NO;
 	if (alert)
 	{
-		[alert dismissWithClickedButtonIndex:0 animated:YES];
+		[alert dismissAnimated:YES];
 		alert=nil;
 	}
 	quitForegroundApp();
 }
 
 - (void)willPresentAlertView:(UIAlertView *)alertView {
+	if ([MCSettings sharedInstance].confirmQuitSingle) return;
 	CGPoint center = alertView.center;
 	CGRect frame = alertView.frame;
 	frame.size.height = 60;
@@ -43,17 +45,32 @@
 }
 
 - (void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event
-{
-	alert = [[UIAlertView alloc] init];
-	alert.title = @"Quit app";
+{	
+	MCSettings * sett = [MCSettings sharedInstance];
+	if (!sett.hidePromptSingle)
+		alert = [[UIAlertView alloc] init];
+	else
+		alert = nil;
 	alert.delegate = self;
-	[alert show];
-	[alert release];
-	if ([event.name isEqual:LAEventNameMenuHoldShort])
+	if (sett.confirmQuitSingle&&!sett.hidePromptSingle)
 	{
-		menuDown= YES;
+		alert.title = @"MultiCleaner";
+		alert.message = @"Quit app?";
+		[alert addButtonWithTitle:@"Yes"];
+		[alert addButtonWithTitle:@"No"];
+		alert.cancelButtonIndex = 1;
+		[alert show];
+		[alert release];
 	} else {
-		[self activationConfirmed];
+		alert.title = @"Quit app";
+		[alert show];
+		[alert release];
+		if ([event.name isEqual:LAEventNameMenuHoldShort])
+		{
+			menuDown = YES;
+		} else {
+			[self activationConfirmed];
+		}
 	}
 	[event setHandled:YES];
 }
@@ -63,7 +80,7 @@
 	menuDown = NO;
 	if (alert)
 	{
-		[alert dismissWithClickedButtonIndex:0 animated:YES];
+		[alert dismissAnimated:YES];
 		alert=nil;
 	}
 }
@@ -83,5 +100,13 @@
 	return singleton;
 }
 
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex!=alertView.cancelButtonIndex)
+	{
+		alert = nil;
+		[self activationConfirmed];
+	}
+}
 
 @end

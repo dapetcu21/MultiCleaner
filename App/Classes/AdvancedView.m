@@ -80,6 +80,7 @@ enum kQuitAllCells {
 	kQAActivator = 0,
 	kQAQuitCurrent,
 	kQAIconBehavior,
+	kQAHidePrompt,
 	kQAConfirm,
 	NUMQACELLS
 };
@@ -174,6 +175,12 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setQuitCurrentApp:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].quitCurrentApp;
 					cell.textLabel.text = @"Also quit current app";
+					break;
+				case kQAHidePrompt:
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setHidePrompt:)]; 
+					((SwitchCell*)cell).on=[MCSettings sharedInstance].hidePrompt;
+					cell.textLabel.text = @"Hide prompt";
 					break;
 				case kQAConfirm:
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
