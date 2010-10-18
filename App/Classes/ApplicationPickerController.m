@@ -97,7 +97,7 @@ static NSArray *applicationDisplayIdentifiers()
             //        non-apps.
             if (identifier
                     && ![identifier hasPrefix:@"jp.ashikase.springjumps."]
-                    && ![identifier isEqualToString:@"com.iptm.bigboss.sbsettings"]
+                    //&& ![identifier isEqualToString:@"com.iptm.bigboss.sbsettings"]
                     && ![identifier isEqualToString:@"com.apple.webapp"])
             [identifiers addObject:identifier];
         }

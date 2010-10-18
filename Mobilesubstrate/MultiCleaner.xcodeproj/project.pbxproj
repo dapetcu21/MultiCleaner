@@ -207,7 +207,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MultiCleaner" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
 			projectReferences = (
@@ -257,7 +264,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "rm -R \"Root/Applications/MultiCleaner.app\"\ncp -R \"../App/build/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/MultiCleaner.app\" \"Root/Applications/MultiCleaner.app\"\nrm -R \"Root/Applications/MultiCleaner.app/_CodeSignature\"\nrm -R \"Root/Applications/MultiCleaner.app/CodeResources\"\nfind -d \"Root\" -name \".DS_Store\" -exec rm -r '{}' \\; -print\ncp ${DEB_CONTROL_FILE} ./controltmp1\nexport COPYFILE_DISABLE=true\nexport COPY_EXTENDED_ATTRIBUTES_DISABLE=true\nTMP=`du -d0 -k Root`\nFILESIZE=`expr \"$TMP\" : '\\([0-9]*\\).*'`\necho Installed-Size: $FILESIZE >> controltmp2\necho Installed-Size: $FILESIZE\nmkdir \"Root/DEBIAN\"\ncat controltmp1 controltmp2 | tr -s '\\012' > Root/DEBIAN/control\nrm controltmp*\n/opt/local/bin/dpkg-deb -D -b Root #change if you installed dpkg somewhere else\nmv Root.deb MultiCleaner.deb\nrm -R \"Root/DEBIAN\"\nexit 0;";
+			shellScript = "rm -R \"Root/Applications/MultiCleaner.app\"\ncp -R \"../App/build/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/MultiCleaner.app\" \"Root/Applications/MultiCleaner.app\"\nrm -R \"Root/Applications/MultiCleaner.app/_CodeSignature\"\nrm -R \"Root/Applications/MultiCleaner.app/CodeResources\"\nfind -d \"Root\" -name \".DS_Store\" -exec rm -r '{}' \\; -print\ncp ${DEB_CONTROL_FILE} ./controltmp1\nexport COPYFILE_DISABLE=true\nexport COPY_EXTENDED_ATTRIBUTES_DISABLE=true\nTMP=`du -d0 -k Root`\nFILESIZE=`expr \"$TMP\" : '\\([0-9]*\\).*'`\necho Installed-Size: $FILESIZE >> controltmp2\necho Installed-Size: $FILESIZE\nmkdir \"Root/DEBIAN\"\ncat controltmp1 controltmp2 | tr -s '\\012' > Root/DEBIAN/control\nrm controltmp*\n/usr/local/bin/dpkg-deb -D -b Root #change if you installed dpkg somewhere else\nmv Root.deb MultiCleaner.deb\nrm -R \"Root/DEBIAN\"\nexit 0;";
 		};
 		C19129DB123672B70047DA69 /* Install */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -391,6 +398,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_LDFLAGS = (
 					"-init",
 					"_$(PROJECT_NAME)Initialize",
@@ -398,7 +406,7 @@
 					"-dynamiclib",
 				);
 				PREBINDING = NO;
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos4.1;
 			};
 			name = Release;
 		};

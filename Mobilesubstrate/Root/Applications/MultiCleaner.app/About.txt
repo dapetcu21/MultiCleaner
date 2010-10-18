@@ -1,11 +1,16 @@
 MultiCleaner
-version 2.3
+version 2.3.2
 
 CHANGELOG:
+v2.3.2
+ - minor compatibility fixes
+v2.3.1
+ - fixed silly typo causing versions smaller than 4.1 not to work anymore
 v2.3
  - iOS4.1 compatibility fixes
  - more control over quit app prompts
  - customizable behavior of the quit button in edit mode
+ - customizable behavior of swipe to quit
  - minor tweaks to the rearranging system
 v2.2
  - app icon rearranging and helper features

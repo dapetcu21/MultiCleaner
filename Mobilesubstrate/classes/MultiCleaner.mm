@@ -62,7 +62,7 @@ static struct MultiCleanerVars MC;
 
 inline BOOL versionBigger(float ver)
 {
-	return (MC.sysVersion-0.000001)<=ver;
+	return (MC.sysVersion)>=ver;
 }
 
 @interface MCListener(MCMisc)
