@@ -46,13 +46,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C116D8D1123B61B900667659 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C158BFA6123A52AB00A43941 /* MultiCleaner.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
-			remoteInfo = MultiCleaner;
-		};
 		C116D94F123B6A0E00667659 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -65,6 +58,20 @@
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 1D6058900D05DD3D006BFB54;
+			remoteInfo = MultiCleaner;
+		};
+		C1BA97F2126CD6D7000EB691 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C1BA9750126CACFD000EB691 /* SBSettings.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C14DB9A61259B794009C63EA;
+			remoteInfo = MultiCleaner;
+		};
+		C1BA97FA126CD6EB000EB691 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C158BFA6123A52AB00A43941 /* App.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
 			remoteInfo = MultiCleaner;
 		};
 /* End PBXContainerItemProxy section */
@@ -82,7 +89,7 @@
 		C14DB8F61259B739009C63EA /* MultiCleaner.deb */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = MultiCleaner.deb; sourceTree = SOURCE_ROOT; };
 		C14DB9A61259B794009C63EA /* MultiCleaner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiCleaner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C158BDF91238056B00A43941 /* AppSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppSupport.framework; path = System/Library/PrivateFrameworks/AppSupport.framework; sourceTree = SDKROOT; };
-		C158BFA6123A52AB00A43941 /* MultiCleaner.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MultiCleaner.xcodeproj; path = ../App/MultiCleaner.xcodeproj; sourceTree = SOURCE_ROOT; };
+		C158BFA6123A52AB00A43941 /* App.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = App.xcodeproj; path = ../App/App.xcodeproj; sourceTree = SOURCE_ROOT; };
 		C179049E1236FD4C00D8CD8E /* MCListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCListener.h; sourceTree = "<group>"; };
 		C179049F1236FD4C00D8CD8E /* MCListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCListener.mm; sourceTree = "<group>"; };
 		C17904B7123700A400D8CD8E /* libactivator.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libactivator.dylib; path = JBToolkit/libactivator.dylib; sourceTree = DEVELOPER_DIR; };
@@ -90,6 +97,7 @@
 		C1912A0A123677420047DA69 /* Root */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Root; sourceTree = "<group>"; };
 		C1A511A9124F51C8006D3842 /* MCListenerQuitAll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCListenerQuitAll.h; sourceTree = "<group>"; };
 		C1A511AA124F51C8006D3842 /* MCListenerQuitAll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCListenerQuitAll.m; sourceTree = "<group>"; };
+		C1BA9750126CACFD000EB691 /* SBSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SBSettings.xcodeproj; path = ../SBSettings/SBSettings.xcodeproj; sourceTree = SOURCE_ROOT; };
 		C1C71E8D12355D1400B473E8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C1C71E8E12355D1900B473E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C1C7207912363A8300B473E8 /* Preferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Preferences.framework; path = System/Library/PrivateFrameworks/Preferences.framework; sourceTree = SDKROOT; };
@@ -140,7 +148,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				C158BFA6123A52AB00A43941 /* MultiCleaner.xcodeproj */,
+				C1BA9750126CACFD000EB691 /* SBSettings.xcodeproj */,
+				C158BFA6123A52AB00A43941 /* App.xcodeproj */,
 				C1912A0A123677420047DA69 /* Root */,
 				C116D962123B6C3F00667659 /* control */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -171,10 +180,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C116D8CE123B61B900667659 /* Products */ = {
+		C1BA97EF126CD6D7000EB691 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C116D8D2123B61B900667659 /* MultiCleaner.app */,
+				C1BA97F3126CD6D7000EB691 /* MultiCleaner.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C1BA97F7126CD6EB000EB691 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1BA97FB126CD6EB000EB691 /* MultiCleaner.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -219,8 +236,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = C116D8CE123B61B900667659 /* Products */;
-					ProjectRef = C158BFA6123A52AB00A43941 /* MultiCleaner.xcodeproj */;
+					ProductGroup = C1BA97F7126CD6EB000EB691 /* Products */;
+					ProjectRef = C158BFA6123A52AB00A43941 /* App.xcodeproj */;
+				},
+				{
+					ProductGroup = C1BA97EF126CD6D7000EB691 /* Products */;
+					ProjectRef = C1BA9750126CACFD000EB691 /* SBSettings.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -233,11 +254,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		C116D8D2123B61B900667659 /* MultiCleaner.app */ = {
+		C1BA97F3126CD6D7000EB691 /* MultiCleaner.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = MultiCleaner.app;
-			remoteRef = C116D8D1123B61B900667659 /* PBXContainerItemProxy */;
+			remoteRef = C1BA97F2126CD6D7000EB691 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C1BA97FB126CD6EB000EB691 /* MultiCleaner.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = MultiCleaner.app;
+			remoteRef = C1BA97FA126CD6EB000EB691 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -264,7 +292,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "rm -R \"Root/Applications/MultiCleaner.app\"\ncp -R \"../App/build/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/MultiCleaner.app\" \"Root/Applications/MultiCleaner.app\"\nrm -R \"Root/Applications/MultiCleaner.app/_CodeSignature\"\nrm -R \"Root/Applications/MultiCleaner.app/CodeResources\"\nfind -d \"Root\" -name \".DS_Store\" -exec rm -r '{}' \\; -print\ncp ${DEB_CONTROL_FILE} ./controltmp1\nexport COPYFILE_DISABLE=true\nexport COPY_EXTENDED_ATTRIBUTES_DISABLE=true\nTMP=`du -d0 -k Root`\nFILESIZE=`expr \"$TMP\" : '\\([0-9]*\\).*'`\necho Installed-Size: $FILESIZE >> controltmp2\necho Installed-Size: $FILESIZE\nmkdir \"Root/DEBIAN\"\ncat controltmp1 controltmp2 | tr -s '\\012' > Root/DEBIAN/control\nrm controltmp*\n/usr/local/bin/dpkg-deb -D -b Root #change if you installed dpkg somewhere else\nmv Root.deb MultiCleaner.deb\nrm -R \"Root/DEBIAN\"\nexit 0;";
+			shellScript = "rm -R \"Root/Applications/MultiCleaner.app\"\ncp -R \"../App/build/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/MultiCleaner.app\" \"Root/Applications/MultiCleaner.app\"\nrm -R \"Root/Applications/MultiCleaner.app/_CodeSignature\"\nrm -R \"Root/Applications/MultiCleaner.app/CodeResources\"\ncp \"../SBsettings/MultiCleaner.dylib\" \"Root/var/mobile/Library/SBSettings/Toggles/Quit Apps/Toggle.dylib\"\nfind -d \"Root\" -name \".DS_Store\" -exec rm -r '{}' \\; -print\ncp ${DEB_CONTROL_FILE} ./controltmp1\nexport COPYFILE_DISABLE=true\nexport COPY_EXTENDED_ATTRIBUTES_DISABLE=true\nTMP=`du -d0 -k Root`\nFILESIZE=`expr \"$TMP\" : '\\([0-9]*\\).*'`\necho Installed-Size: $FILESIZE >> controltmp2\necho Installed-Size: $FILESIZE\nmkdir \"Root/DEBIAN\"\ncat controltmp1 controltmp2 | tr -s '\\012' > Root/DEBIAN/control\nrm controltmp*\n/usr/local/bin/dpkg-deb -D -b Root #change if you installed dpkg somewhere else\nmv Root.deb MultiCleaner.deb\nrm -R \"Root/DEBIAN\"\nexit 0;";
 		};
 		C19129DB123672B70047DA69 /* Install */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -377,6 +405,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_OPENMP_FLAGS = "-fopenmp";
+				MACH_O_TYPE = mh_dylib;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-init",
@@ -385,7 +414,7 @@
 					"-dynamiclib",
 				);
 				PREBINDING = NO;
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos4.1;
 			};
 			name = Debug;
 		};
@@ -399,6 +428,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				MACH_O_TYPE = mh_dylib;
 				OTHER_LDFLAGS = (
 					"-init",
 					"_$(PROJECT_NAME)Initialize",

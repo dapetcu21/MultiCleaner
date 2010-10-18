@@ -27,6 +27,7 @@
 @synthesize confirmQuitSingle;
 @synthesize hidePrompt;
 @synthesize hidePromptSingle;
+@synthesize quitAllEnabled;
 
 +(MCSettings*)sharedInstance
 {
@@ -64,6 +65,7 @@
 	hidePromptSingle = NO;
 	quitMode = kQuitModeRemoveIcons;
 	badgeCorner = 0;
+	quitAllEnabled = YES;
 }
 
 -(void)loadFromDict:(NSDictionary *)def
@@ -131,6 +133,11 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		hidePromptSingle = [num boolValue];
 	
+	
+	num = [def objectForKey:@"QuitAllEnabled"];
+	if ([num isKindOfClass:[NSNumber class]])
+		quitAllEnabled = [num boolValue];
+	
 	num = [def objectForKey:@"QuitMode"];
 	if ([num isKindOfClass:[NSNumber class]])
 		quitMode = [num intValue];
@@ -166,6 +173,7 @@
 	[def setObject:[NSNumber numberWithBool:confirmQuitSingle] forKey:@"ConfirmQuitSingle"];
 	[def setObject:[NSNumber numberWithBool:hidePrompt] forKey:@"HidePrompt"];
 	[def setObject:[NSNumber numberWithBool:hidePromptSingle] forKey:@"HidePromptSingle"];
+	[def setObject:[NSNumber numberWithBool:quitAllEnabled] forKey:@"QuitAllEnabled"];
 	//NSLog(@"saving common settings: %@",def);
 }
 @end

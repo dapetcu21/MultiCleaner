@@ -26,6 +26,8 @@
 -(void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event
 {
 	MCSettings * sett = [MCSettings sharedInstance];
+	if (!(sett.quitAllEnabled))
+		return;
 	if (!sett.hidePrompt)
 		alert = [[UIAlertView alloc] init];
 	else
