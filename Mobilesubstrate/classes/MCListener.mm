@@ -8,6 +8,7 @@
 
 #import "MCListener.h"
 #import "MCSettings.h"
+#import "MCSettingsController.h"
 #import "MultiCleaner.h"
 
 @implementation MCListener
@@ -46,6 +47,9 @@
 
 - (void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event
 {	
+	
+	if ([[MCSettingsController sharedInstance] settingsForBundleID:foregroundAppDisplayIdentifier()].quitSingleException)
+		return;
 	MCSettings * sett = [MCSettings sharedInstance];
 	if (!sett.hidePromptSingle)
 		alert = [[UIAlertView alloc] init];

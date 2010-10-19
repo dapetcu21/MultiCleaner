@@ -17,6 +17,7 @@ extern "C"
 void settingsReloaded();
 void quitForegroundApp();
 void quitAllApps();
+NSString * foregroundAppDisplayIdentifier();
 #ifdef __cplusplus
 }
 #endif

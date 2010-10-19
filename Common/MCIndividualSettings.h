@@ -35,6 +35,7 @@ enum kQuitTypes {
 	int launchType;
 	int quitType;
 	BOOL swipeNoQuit;
+	BOOL quitSingleException;
 }
 
 -(void)saveToDict:(NSMutableDictionary*)dict;
@@ -48,6 +49,7 @@ enum kQuitTypes {
 @property(nonatomic,assign) BOOL runningBadge;
 @property(nonatomic,assign) BOOL showCurrent;
 @property(nonatomic,assign) BOOL quitException;
+@property(nonatomic,assign) BOOL quitSingleException;
 @property(nonatomic,assign) BOOL moveBack;
 @property(nonatomic,assign) BOOL dontMoveToFront;
 @property(nonatomic,assign) int launchType;

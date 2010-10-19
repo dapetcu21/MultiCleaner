@@ -17,6 +17,7 @@
 @synthesize runningBadge;
 @synthesize showCurrent;
 @synthesize quitException;
+@synthesize quitSingleException; 
 @synthesize moveBack;
 @synthesize dontMoveToFront;
 @synthesize launchType;
@@ -43,6 +44,7 @@
 	quitException = NO;
 	moveBack = NO;
 	dontMoveToFront = NO;
+	quitSingleException = NO;
 	launchType = kLTFront;
 	quitType = kQTAppAndIcon;
 }
@@ -81,6 +83,10 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		quitException = [num boolValue];
 	
+	num = [dict objectForKey:@"QuitSingleException"];
+	if ([num isKindOfClass:[NSNumber class]])
+		quitSingleException = [num boolValue];
+	
 	num = [dict objectForKey:@"MoveBack"];
 	if ([num isKindOfClass:[NSNumber class]])
 		moveBack = [num boolValue];
@@ -117,6 +123,7 @@
 	[dict setObject:[NSNumber numberWithBool:runningBadge] forKey:@"RunningBadge"];
 	[dict setObject:[NSNumber numberWithBool:showCurrent] forKey:@"ShowCurrentApp"];
 	[dict setObject:[NSNumber numberWithBool:quitException] forKey:@"QuitException"];
+	[dict setObject:[NSNumber numberWithBool:quitSingleException] forKey:@"QuitSingleException"];
 	[dict setObject:[NSNumber numberWithBool:moveBack] forKey:@"MoveBack"];
 	[dict setObject:[NSNumber numberWithBool:dontMoveToFront] forKey:@"DontMoveToFront"];
 	[dict setObject:[NSNumber numberWithBool:swipeNoQuit] forKey:@"SwipeNoQuit"];
@@ -141,6 +148,7 @@
 	cp.launchType=launchType;
 	cp.quitType=quitType;
 	cp.swipeNoQuit=swipeNoQuit;
+	cp.quitSingleException=quitSingleException;
 	return cp;
 }
 

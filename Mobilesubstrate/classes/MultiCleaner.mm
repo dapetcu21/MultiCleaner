@@ -60,6 +60,13 @@ static struct MultiCleanerVars MC;
 #define SBWSuspendingDisplayStack         ((SBDisplayStack *)[MC.displayStacks objectAtIndex:2])
 #define SBWSuspendedEventOnlyDisplayStack ((SBDisplayStack *)[MC.displayStacks objectAtIndex:3])
 
+extern "C" 
+NSString * foregroundAppDisplayIdentifier()
+{
+	SBApplication * app = [SBWActiveDisplayStack topApplication];
+	return [app displayIdentifier];
+}
+
 inline BOOL versionBigger(float ver)
 {
 	return (MC.sysVersion)>=ver;

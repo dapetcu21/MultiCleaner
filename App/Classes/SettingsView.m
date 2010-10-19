@@ -108,6 +108,7 @@ enum kAdditionalCells
 	kSwipeTypeCell,
 	kHiddenCell,
 	kExceptionCell,
+	kSingleExceptionCell,
 	NUMADDCELLS
 };
 
@@ -127,7 +128,7 @@ enum kAdditionalCells
 		case kRearrangeSec:
 			return NUMREARRANGECELLS;
 		case kAdditionalSec:
-			return global?NUMADDCELLS-2:NUMADDCELLS;
+			return global?NUMADDCELLS-3:NUMADDCELLS;
 		case kAlwaysDimSec:
 			return settings.dimClosed?1:0;
 		default:
@@ -264,6 +265,11 @@ enum kAdditionalCells
 				[((SwitchCell*)cell) setOn:settings.quitException];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setQuitException:)];
 				cell.textLabel.text=@"\"Quit all\" exception";
+				break;
+			case kSingleExceptionCell:
+				[((SwitchCell*)cell) setOn:settings.quitSingleException];
+				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setQuitSingleException:)];
+				cell.textLabel.text=@"\"Quit app\" exception";
 				break;
 		}
 	}
