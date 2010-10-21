@@ -28,10 +28,18 @@
 		[name retain];
 		[settings retain];
 		[bundleID retain];
+	//	cells = [[NSMutableDictionary alloc] init];
 	}
 	return self;
 }
 
+- (void)dealloc {
+	[settings release];
+	[name release];
+	[bundleID release];
+//	[cells release];
+    [super dealloc];
+}
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -158,6 +166,11 @@ enum kAdditionalCells
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	/*UITableViewCell * cell = [cells objectForKey:[indexPath description]];
+	if ([cell isKindOfClass:[SwitchCell class]])
+	{
+		return tableView.rowHeight+[(SwitchCell*)cell additionalCellHeightForWidth:300];
+	}*/
 	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kMoveBackCell))
 		return floor(1.5*tableView.rowHeight);
 	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kNoMoveFrontCell))
@@ -325,6 +338,7 @@ enum kAdditionalCells
 		@"Dim all apps":
 		@"Always dim";
 	}
+	//[cells setObject:cell forKey:[indexPath description]];
 	return cell;
 }
 
@@ -397,15 +411,6 @@ enum kAdditionalCells
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
 }
-
-
-- (void)dealloc {
-	[settings release];
-	[name release];
-	[bundleID release];
-    [super dealloc];
-}
-
 
 @end
 

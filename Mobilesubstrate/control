@@ -7,6 +7,6 @@ Maintainer: Petcu Marius (da_petcu21) <dapetcu21@gmail.com>
 Author: Petcu Marius (da_petcu21) <dapetcu21@gmail.com>
 Section: Utilities
 Icon: file:///Applications/MultiCleaner.app/Icon.png
-Depends: mobilesubstrate, libactivator, firmware (>= 4.0)
+Depends: mobilesubstrate, libactivator, libhide, firmware (>= 4.0)
 Conflicts: firmware (<< 4.0)
 

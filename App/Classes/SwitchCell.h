@@ -19,6 +19,7 @@
 -(void)setOn:(BOOL)value;
 -(void)setTarget:(id)target andSelector:(SEL)sel;
 -(void)setTarget:(id)target andPropertySetter:(SEL)sel;
+-(CGFloat)additionalCellHeightForWidth:(CGFloat) width;
 
 @property(nonatomic,getter=isOn) BOOL on;
 @end

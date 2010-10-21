@@ -17,14 +17,15 @@
 #pragma mark -
 #pragma mark Initialization
 
-/*
+
 - (id)initWithStyle:(UITableViewStyle)style {
     // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
     if ((self = [super initWithStyle:style])) {
+//		cells = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
-*/
+
 
 
 #pragma mark -
@@ -74,8 +75,21 @@ enum kAdvancedSections {
 	kStartupSec,
 	kMiscSec,
 	kReorderSec,
+	kIconSec,
+	kLegacySec,
 	NUMADVANCEDSECTIONS
 };
+
+enum kLegacyCells {
+	kLegacyCell = 0,
+	NUMLEGACYCELL
+};
+
+enum kIconCells {
+	kIconCell = 0,
+	NUMICONCELLS
+};
+
 enum kQuitAllCells {
 	kQAActivator = 0,
 	kQAQuitCurrent,
@@ -109,6 +123,14 @@ enum kReorderCells
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+/*	NSLog(@"cell height");
+	UITableViewCell * cell = [cells objectForKey:[indexPath description]];
+	NSLog(@"cell: %@", cell);
+	if ([cell isKindOfClass:[SwitchCell class]])
+	{
+		return tableView.rowHeight+[(SwitchCell*)cell additionalCellHeightForWidth:100];	
+	}*/
+	
 	if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAActivator))
 		return floor(1.5*tableView.rowHeight);
 	if ((indexPath.section==kMiscSec)&&(indexPath.row==kMSCFastQuit))
@@ -116,6 +138,8 @@ enum kReorderCells
 	if ((indexPath.section==kMiscSec)&&(indexPath.row==kMSCAllowTap))
 		return floor(1.5*tableView.rowHeight);
 	if ((indexPath.section==kReorderSec)&&(indexPath.row==kROSwipeQuit))
+		return floor(1.5*tableView.rowHeight);
+	if ((indexPath.section==kIconSec)&&(indexPath.row==kIconCell))
 		return floor(1.5*tableView.rowHeight);
 	return tableView.rowHeight;
 }
@@ -137,6 +161,10 @@ enum kReorderCells
 			return NUMMISCCELLS;
 		case kReorderSec:
 			return NUMREORDERCELLS;
+		case kIconSec:
+			return NUMICONCELLS;
+		case kLegacySec:
+			return NUMLEGACYCELL;
 		default:
 			return 0;
 	}
@@ -290,11 +318,47 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 				}
 			}
 			break;
+		case kIconSec:
+			switch(indexPath.row)
+			{
+				case kIconCell:
+				{
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setSbIcon:)]; 
+					((SwitchCell*)cell).on=[MCSettings sharedInstance].sbIcon;
+					cell.textLabel.text = @"SpringBoard icon to activate the bar";
+					break;
+				}
+			}
+			break;
+			
+		case kLegacySec:
+			switch(indexPath.row)
+		{
+			case kLegacyCell:
+			{
+				cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+				[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setLegacyMode:)]; 
+				((SwitchCell*)cell).on=[MCSettings sharedInstance].legacyMode;
+				cell.textLabel.text = @"Legacy \"Quit all apps\"";
+				break;
+			}
+		}
+			break;
 	}
-	
+	//[cells setObject:cell forKey:[indexPath description]];
     return cell;
 }
 
+-(NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+	switch (section) {
+		case kLegacySec:
+			return @"More reliable, but slower. Use this only if you have trouble with \"quit all apps\"";
+		default:
+			return nil;
+	}
+}
 
 #pragma mark -
 #pragma mark Table view delegate
@@ -363,6 +427,7 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 
 
 - (void)dealloc {
+	//[cells release];
     [super dealloc];
 }
 

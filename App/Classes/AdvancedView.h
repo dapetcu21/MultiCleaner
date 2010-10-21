@@ -10,7 +10,7 @@
 #import "PickerTableController.h"
 
 @interface AdvancedView : UITableViewController<PickerTableControllerDelegate>{
-
+//	NSMutableDictionary * cells;
 }
 
 @end

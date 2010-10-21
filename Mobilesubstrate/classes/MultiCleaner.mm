@@ -16,6 +16,7 @@
 #include <substrate.h>
 #include <substrate2.h>
 #include <pthread.h>
+#include <notify.h>
 
 #import <SpringBoard/SpringBoard.h>
 
@@ -52,6 +53,7 @@ struct MultiCleanerVars {
 	BOOL isOut;
 	float sysVersion;
 	BOOL normalCloseTapped;
+	BOOL legacyMode;
 };
 static struct MultiCleanerVars MC;
 
@@ -75,6 +77,7 @@ inline BOOL versionBigger(float ver)
 @interface MCListener(MCMisc)
 -(void)resumeMenu;
 -(void)flipPageTimer:(id)userinfo;
+-(void)closeApp:(SBApplication*)app;
 @end
 
 void removeApplicationFromBar(SBAppSwitcherController * self, SBApplication * app);
@@ -85,6 +88,7 @@ void moveAppToBack(SBAppSwitcherController * self, SBApplication * app);
 void badgeApp(SBApplication * app);
 void quitForegroundAppAndReturn(BOOL keepIcon);
 void quitApp(SBApplication * app);
+void refreshAppStatus();
 
 
 @implementation MCListener(MCMisc)
@@ -113,6 +117,11 @@ void quitApp(SBApplication * app);
 	MC.currentIcon.center=iconCenter;
 	[UIView commitAnimations];
 	
+}
+
+-(void)closeApp:(SBApplication*)app
+{
+	quitApp(app);
 }
 @end
 
@@ -193,6 +202,7 @@ void settingsReloaded()
 		}
 		[icons release];
 	}
+	refreshAppStatus();
 }
 
 #pragma mark App hiding
@@ -438,8 +448,14 @@ void * quitAppsThread(void * ui)
 {
 	threadPriority();
 	NSArray * appsToQuit = (NSArray*)ui;
-	for (SBApplication * app in appsToQuit)
-		quitApp(app);
+	if (MC.legacyMode)
+	{
+		for (SBApplication * app in appsToQuit)
+			[[MCListener sharedInstance] performSelectorOnMainThread:@selector(closeApp:) withObject:app waitUntilDone:YES];
+	} else {
+		for (SBApplication * app in appsToQuit)
+			quitApp(app);
+	}
 	[appsToQuit release];
 	return NULL;
 }
@@ -488,6 +504,7 @@ void quitAllApps()
 	if ((MC.settings.quitCurrentApp)&&!([MC.settingsController settingsForBundleID:
 										  [[SBWActiveDisplayStack topApplication] displayIdentifier] ].quitException))
 		quitForegroundAppAndReturn(NO);
+	MC.legacyMode = MC.settings.legacyMode;
 	pthread_t quitThread;
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
@@ -866,6 +883,59 @@ bool SBASM_hasApp_(SBAppSwitcherModel * self, SEL _cmd, SBApplication * app)
 	return [apps containsObject:bundleID];
 }
 
+#pragma mark App Icon
+
+DefineObjCHook(void, SBAppIcon_launch, SBApplicationIcon * self, SEL _cmd)
+{
+//	MCLog(@"launched: %@",self);
+	if ([[[self application] displayIdentifier]isEqual:@"com.dapetcu21.SwitcherBar"])
+		[[$SBUIController sharedInstance] activateSwitcher];
+	else
+		Original(SBAppIcon_launch)(self,_cmd);
+}
+
+typedef BOOL (*LibHidePrototype)(NSString * bundleID);
+
+void refreshAppStatus()
+{
+	MCLog(@"refreshAppStatus()");
+	void * libHandle = dlopen("/usr/lib/hide.dylib", RTLD_LAZY);
+	if (libHandle == NULL)
+	{
+		MCLog(@"can't open libhide");
+	}
+	LibHidePrototype IsIconHiddenDisplayId = (LibHidePrototype)dlsym(libHandle, "IsIconHiddenDisplayId");
+	if (!IsIconHiddenDisplayId) 
+	{
+		MCLog(@"can't get function pointer: IsIconHiddenDisplayId");
+		dlclose(libHandle);
+		return;
+	}
+	BOOL sett = !IsIconHiddenDisplayId(@"com.dapetcu21.SwitcherBar");
+	BOOL shouldSett = MC.settings.sbIcon;
+	if (sett==shouldSett)
+	{
+		MCLog(@"app status is fine: %d",sett);
+		dlclose(libHandle);
+		return;
+	}
+	
+	LibHidePrototype LibHideIconDisplayID = (LibHidePrototype)dlsym(libHandle, shouldSett?"UnHideIconViaDisplayId":"HideIconViaDisplayId");
+	if (!LibHideIconDisplayID)
+	{
+		MCLog(@"can't get function pointer: %s",shouldSett?"UnHideIconViaDisplayId":"HideIconViaDisplayId");
+		dlclose(libHandle);
+		return;
+	}
+	if (!LibHideIconDisplayID(@"com.dapetcu21.SwitcherBar"))
+	{
+		MCLog(@"can't hide/unhide icon");
+	}
+	notify_post("com.libhide.hiddeniconschanged");
+	dlclose(libHandle);
+	MCLog(@"refreshAppStatus() done");
+}
+
 #pragma mark Init Hooks
 
 DefineObjCHook(void, SB_applicationDidFinishLaunching_,SpringBoard * self, SEL _cmd, id app)
@@ -887,6 +957,7 @@ extern "C" void MultiCleanerInitialize() {
 		MC.flipTimer = nil;
 		MC.isOut = NO;
 		MC.normalCloseTapped = NO;
+		MC.legacyMode = NO;
 		MC.sysVersion = [[[UIDevice currentDevice] systemVersion] floatValue];
 			
 		$SBAppSwitcherController = objc_getClass("SBAppSwitcherController");
@@ -920,6 +991,7 @@ extern "C" void MultiCleanerInitialize() {
 		InstallObjCInstanceHook($SBAppSwitcherModel,@selector(addToFront:),SBM_addToFront_);
 		InstallObjCInstanceHook($SBDisplayStack,@selector(init),SBDS_init);
 		InstallObjCInstanceHook($SBDisplayStack,@selector(dealloc),SBDS_dealloc);
+		InstallObjCInstanceHook($SBApplicationIcon,@selector(launch),SBAppIcon_launch);
 		
 		class_addMethod($SBAppSwitcherModel, @selector(addToBack:), (IMP)&SBASM_addToBack_ , "v@:@");
 		class_addMethod($SBAppSwitcherModel, @selector(addBeforeClosed:), (IMP)&SBASM_addBeforeClosed_ , "v@:@");

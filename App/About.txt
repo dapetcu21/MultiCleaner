@@ -1,7 +1,12 @@
 MultiCleaner
-version 2.3.2
+version 2.4
 
 CHANGELOG:
+v2.4
+ - SBSettings "Quit all apps" toggle
+ - switcher bar springboard icon
+ - "quit app" exceptions
+ - localization
 v2.3.2
  - minor compatibility fixes
 v2.3.1

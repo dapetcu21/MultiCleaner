@@ -1,4 +1,4 @@
 /build
 MultiCleaner.deb
 *.dylib
-/Root/Applications/*
+/Root/Applications/MultiCleaner.app/*

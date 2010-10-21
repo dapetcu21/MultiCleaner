@@ -28,6 +28,8 @@
 @synthesize hidePrompt;
 @synthesize hidePromptSingle;
 @synthesize quitAllEnabled;
+@synthesize sbIcon;
+@synthesize legacyMode;
 
 +(MCSettings*)sharedInstance
 {
@@ -66,6 +68,8 @@
 	quitMode = kQuitModeRemoveIcons;
 	badgeCorner = 0;
 	quitAllEnabled = YES;
+	sbIcon = NO;
+	legacyMode = NO;
 }
 
 -(void)loadFromDict:(NSDictionary *)def
@@ -133,10 +137,17 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		hidePromptSingle = [num boolValue];
 	
-	
 	num = [def objectForKey:@"QuitAllEnabled"];
 	if ([num isKindOfClass:[NSNumber class]])
 		quitAllEnabled = [num boolValue];
+	
+	num = [def objectForKey:@"LegacyMode"];
+	if ([num isKindOfClass:[NSNumber class]])
+		legacyMode = [num boolValue];
+	
+	num = [def objectForKey:@"SBIcon"];
+	if ([num isKindOfClass:[NSNumber class]])
+		sbIcon = [num boolValue];
 	
 	num = [def objectForKey:@"QuitMode"];
 	if ([num isKindOfClass:[NSNumber class]])
@@ -174,6 +185,8 @@
 	[def setObject:[NSNumber numberWithBool:hidePrompt] forKey:@"HidePrompt"];
 	[def setObject:[NSNumber numberWithBool:hidePromptSingle] forKey:@"HidePromptSingle"];
 	[def setObject:[NSNumber numberWithBool:quitAllEnabled] forKey:@"QuitAllEnabled"];
+	[def setObject:[NSNumber numberWithBool:sbIcon] forKey:@"SBIcon"];
+	[def setObject:[NSNumber numberWithBool:legacyMode] forKey:@"LegacyMode"];
 	//NSLog(@"saving common settings: %@",def);
 }
 @end

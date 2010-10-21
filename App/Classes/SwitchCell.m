@@ -86,5 +86,21 @@
     [super dealloc];
 }
 
+-(CGFloat)additionalCellHeightForWidth:(CGFloat)width;
+{
+	UILabel * label = self.textLabel;
+	NSString * text = label.text;
+	static CGFloat subs = 0;
+	if (subs==0)
+	{
+		UISwitch * sw = [[UISwitch alloc] init];
+		subs=sw.bounds.size.width;
+		[sw release];
+		subs+=30;
+	}
+	NSLog(@"text: %@ subs:%f",text,subs);
+	return [text sizeWithFont:label.font constrainedToSize:CGSizeMake(width-subs, FLT_MAX)].height-
+	[@"A" sizeWithFont:label.font constrainedToSize:CGSizeMake(width-subs, FLT_MAX)].height;
+}
 
 @end

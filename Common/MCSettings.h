@@ -34,6 +34,8 @@ enum kQuitModes
 	BOOL hidePrompt;
 	BOOL hidePromptSingle;
 	BOOL quitAllEnabled;
+	BOOL sbIcon;
+	BOOL legacyMode;
 }
 @property(nonatomic,assign) BOOL startupiPod;
 @property(nonatomic,assign) BOOL startupEdit;
@@ -53,6 +55,8 @@ enum kQuitModes
 @property(nonatomic,assign) BOOL hidePrompt;
 @property(nonatomic,assign) BOOL hidePromptSingle;
 @property(nonatomic,assign) BOOL quitAllEnabled;
+@property(nonatomic,assign) BOOL sbIcon;
+@property(nonatomic,assign) BOOL legacyMode;
 
 -(void)loadFromDict:(NSDictionary*)def;
 -(void)saveToDict:(NSMutableDictionary*)def;

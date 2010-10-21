@@ -16,6 +16,7 @@
 	NSString * bundleID;
 	NSString * name;
 	BOOL global;
+//	NSMutableDictionary * cells;
 }
 
 - (id)initWithSettings:(MCIndividualSettings*)settings bundleID:(NSString*)bundleID andName:(NSString*) name;

@@ -46,6 +46,11 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 	settingsReloaded();
 }
 
+-(void)performSettingsReloaded
+{
+	settingsReloaded();
+}
+
 -(id)init
 {
 	if (self=[super init])
@@ -57,6 +62,7 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 			[self release];
 			return nil;
 		}
+		[self performSelectorOnMainThread:@selector(performSettingsReloaded) withObject:nil waitUntilDone:NO];
 		Class $CPDistributedMessagingCenter = objc_getClass("CPDistributedMessagingCenter");
 		center = [$CPDistributedMessagingCenter centerNamed:@"com.dapetcu21.MultiCleaner.center"];
 		[center retain];
@@ -71,29 +77,6 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 {
 	[center release];
 	[super dealloc];
-}
-
--(BOOL)timeSpec:(struct timespec const * const)a isSoonerThan:(struct timespec const * const)b
-{
-	if (a->tv_sec==b->tv_sec)
-		return a->tv_nsec<b->tv_nsec;
-	else
-		return a->tv_sec<b->tv_sec;
-}
-
--(void)checkModified
-{
-	struct stat attrib;
-	stat([prefsPath UTF8String], &attrib);
-	if ([self timeSpec:&lasttime isSoonerThan:&(attrib.st_mtimespec)])
-	{
-		struct timeval time;
-		gettimeofday(&time, NULL);
-		lasttime.tv_sec=time.tv_sec;
-		lasttime.tv_nsec=time.tv_usec*1000;
-		[self loadSettings];
-		settingsReloaded();
-	}
 }
 			   
 -(BOOL)loadSettings
