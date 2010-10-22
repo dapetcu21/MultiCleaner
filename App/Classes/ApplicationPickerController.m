@@ -96,9 +96,10 @@ static NSArray *applicationDisplayIdentifiers()
             //        folders are apps, but when used with CategoriesSB they are
             //        non-apps.
             if (identifier
-                    && ![identifier hasPrefix:@"jp.ashikase.springjumps."]
-                    //&& ![identifier isEqualToString:@"com.iptm.bigboss.sbsettings"]
-                    && ![identifier isEqualToString:@"com.apple.webapp"])
+				&& ![identifier hasPrefix:@"jp.ashikase.springjumps."]
+				&& ![identifier isEqualToString:@"com.dapetcu21.SwitcherBar"]
+				//&& ![identifier isEqualToString:@"com.iptm.bigboss.sbsettings"]
+				&& ![identifier isEqualToString:@"com.apple.webapp"])
             [identifiers addObject:identifier];
         }
     }

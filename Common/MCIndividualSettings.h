@@ -19,6 +19,7 @@ enum kQuitTypes {
 	kQTAppAndIcon = 0,
 	kQTApp,
 	kQTIcon,
+	kQTAppTap,
 	NUMQUITTYPES
 };
 

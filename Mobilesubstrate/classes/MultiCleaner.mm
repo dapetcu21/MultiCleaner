@@ -292,11 +292,27 @@ DefineObjCHook(void, SBM_addToFront_, SBAppSwitcherModel * self, SEL _cmd, SBApp
 
 void badgeAppIcon(SBApplicationIcon * app)
 {
+	if (![app isApplicationIcon]) return;
 	NSString * bundleID = [[app application] displayIdentifier];
 	MCIndividualSettings * settings = [MC.settingsController settingsForBundleID:bundleID];
+	BOOL editing = [[$SBAppSwitcherController sharedInstance] _inEditMode];
 	BOOL running = ([MC.runningApps objectForKey:bundleID]!=nil);
-	BOOL badge = ((running&&(settings.runningBadge))&&!([[$SBAppSwitcherController sharedInstance] _inEditMode]&&(MC.settings.badgeCorner==0)));
+	BOOL badge = ((running&&(settings.runningBadge))&&!(editing&&(MC.settings.badgeCorner==0)));
 	BOOL dim = (((!running)||(settings.alwaysDim))&&(settings.dimClosed));
+	BOOL showquit = editing&&!((settings.quitType==kQTApp)&&!running);
+	
+	if (showquit!=[app isShowingCloseBox])
+	{
+		if (versionBigger(4.1))
+		{
+			[app setShowsCloseBox:showquit];
+		} else {
+			if (!showquit)
+				[app setCloseBox:nil];
+			else;
+		}
+	}
+
 	if (dim)
 	{
 		[app setIconImageAlpha:0.5f];
@@ -367,26 +383,28 @@ BOOL iconCloseTapped(SBAppSwitcherController * self,SBApplicationIcon * icon)
 {
 	SBApplication * app = [icon application];
 	MCIndividualSettings * sett = [MC.settingsController settingsForBundleID:[app displayIdentifier]];
+	int quitType = sett.quitType;
 	if (MC.normalCloseTapped)
 	{
-		if (app == [SBWActiveDisplayStack topApplication])
-		{
-			quitForegroundAppAndReturn(NO);
-			return NO;
-		}
-		return YES;
+		quitType = kQTAppAndIcon;
+		MC.normalCloseTapped = NO;
 	}
-	if (sett.quitType==kQTIcon)
+	if (quitType==kQTAppTap)
+	{
+		quitType = [MC.runningApps objectForKey:[app displayIdentifier]]?kQTApp:kQTIcon;
+	}
+	MCLog(@"iconCloseTapped:%d %d %@",quitType,MC.normalCloseTapped,icon);
+	if (quitType==kQTIcon)
 	{
 		removeApplicationFromBar(self, app);
 		return NO;
 	}
 	if (app == [SBWActiveDisplayStack topApplication])
 	{
-		quitForegroundAppAndReturn(sett.quitType==kQTApp);
+		quitForegroundAppAndReturn(quitType==kQTApp);
 		return NO;
 	} 
-	if (sett.quitType==kQTApp)
+	if (quitType==kQTApp)
 	{
 		quitApp(app);
 		return NO;
@@ -713,6 +731,7 @@ void SBASC_icon_touchMovedwithEvent_(SBAppSwitcherController * self, SEL _cmd, S
 
 void SBASC_icon_touchEnded_(SBAppSwitcherController * self, SEL _cmd, SBIcon * icon, BOOL ended)
 {
+	MCLog(@"icon:%@ touchEnded:%d",icon,ended);
 	if ((icon!=MC.currentIcon)||(!MC.moved)) return;
 	SBAppSwitcherBarView * bar = MSHookIvar<SBAppSwitcherBarView*>(self, "_bottomBar");
 	NSMutableArray * icons = (NSMutableArray*)[bar appIcons];
@@ -728,6 +747,7 @@ void SBASC_icon_touchEnded_(SBAppSwitcherController * self, SEL _cmd, SBIcon * i
 	
 	[scroll setCanCancelContentTouches:YES];
 	[icon setExclusiveTouch:NO]; 
+	[icon setIsGrabbed:NO];
 	if (MC.isOut&&MC.settings.swipeQuit)
 	{
 		[icons addObject:icon];
@@ -747,7 +767,6 @@ void SBASC_icon_touchEnded_(SBAppSwitcherController * self, SEL _cmd, SBIcon * i
 				[self performSelectorOnMainThread:@selector(_quitButtonHit:) withObject:quitButton waitUntilDone:NO];
 				[quitButton release];
 			}
-			MC.normalCloseTapped = NO;
 		}
 	} else {
 		[icons insertObject:icon atIndex:MC.index];
@@ -756,7 +775,6 @@ void SBASC_icon_touchEnded_(SBAppSwitcherController * self, SEL _cmd, SBIcon * i
 		[UIView setAnimationCurve:UIViewAnimationCurveLinear];
 		[UIView setAnimationDuration:0.1f];
 		badgeAppIcon((SBApplicationIcon*)icon);
-		[icon setIsGrabbed:NO];
 		[UIView commitAnimations];
 		[bar _reflowContent:YES];
 		if (MC.index!=MC.oldindex)
@@ -806,15 +824,14 @@ DefineObjCHook(void, SBAS__beginEditing, SBAppSwitcherController * self, SEL _cm
 		}
 	}
 	Original(SBAS__beginEditing)(self,_cmd);
+	SBAppSwitcherBarView * bottomBar = MSHookIvar<SBAppSwitcherBarView*>(self, "_bottomBar");
+	NSArray * icons = [bottomBar appIcons];
+	for (SBApplicationIcon * icon in icons)
+		badgeAppIcon(icon);
 	if (MC.settings.dontWriggle)
 	{
-		SBAppSwitcherBarView * bottomBar = MSHookIvar<SBAppSwitcherBarView*>(self, "_bottomBar");
-		NSArray * icons = [bottomBar appIcons];
 		for (SBApplicationIcon * icon in icons)
-		{
 			[icon setIsJittering:NO];
-		}
-		
 	}
 }
 

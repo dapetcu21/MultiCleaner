@@ -251,6 +251,9 @@ enum kAdditionalCells
 					case kQTApp:
 						cell.detailTextLabel.text=@"close app";
 						break;
+					case kQTAppTap:
+						cell.detailTextLabel.text=@"second tap";
+						break;
 				}
 				break;
 			}
@@ -377,7 +380,7 @@ enum kAdditionalCells
 		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
 		vc.title = @"Quit button behavior";
 		vc.delegate = self;
-		vc.items = [NSArray arrayWithObjects:@"Quit app and remove icon",@"Quit app and leave icon",@"Just remove icon",nil];
+		vc.items = [NSArray arrayWithObjects:@"Quit app and remove icon",@"Quit app and leave icon",@"Just remove icon",@"Quit app,tap again to remove icon",nil];
 		vc.tag = kQuitTypeTag;
 		vc.currentSelection = settings.quitType;
 		[self.navigationController pushViewController:vc animated:YES];
