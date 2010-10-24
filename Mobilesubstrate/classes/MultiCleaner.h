@@ -23,5 +23,5 @@ NSString * foregroundAppDisplayIdentifier();
 #endif
 
 #define MCLog(args...) NSLog(@"MultiCleaner: %@",[NSString stringWithFormat:args]);
-
+#define loc(x,y) [[NSBundle bundleWithPath:@"/Applications/MultiCleaner.app"] localizedStringForKey:(x) value:(y) table:nil]
 #endif

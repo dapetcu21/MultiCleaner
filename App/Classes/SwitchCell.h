@@ -19,7 +19,7 @@
 -(void)setOn:(BOOL)value;
 -(void)setTarget:(id)target andSelector:(SEL)sel;
 -(void)setTarget:(id)target andPropertySetter:(SEL)sel;
--(CGFloat)additionalCellHeightForWidth:(CGFloat) width;
++(CGFloat)additionalCellHeightForText:(NSString*)text;
 
 @property(nonatomic,getter=isOn) BOOL on;
 @end

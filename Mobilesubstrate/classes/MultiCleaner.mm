@@ -246,6 +246,7 @@ DefineObjCHook(void, SBAS_applicationLaunched_,SBAppSwitcherController* self, SE
 		}
 		
 	}
+	badgeApp(app);
 	//NSMutableArray * apps = MSHookIvar<NSMutableArray*>(model, "_recentDisplayIdentifiers");
 }
 
@@ -393,7 +394,6 @@ BOOL iconCloseTapped(SBAppSwitcherController * self,SBApplicationIcon * icon)
 	{
 		quitType = [MC.runningApps objectForKey:[app displayIdentifier]]?kQTApp:kQTIcon;
 	}
-	MCLog(@"iconCloseTapped:%d %d %@",quitType,MC.normalCloseTapped,icon);
 	if (quitType==kQTIcon)
 	{
 		removeApplicationFromBar(self, app);
@@ -548,6 +548,15 @@ DefineObjCHook(void,SBAS_viewWillAppear,SBAppSwitcherController * self, SEL _cmd
 		pnt.x-=[scrollView bounds].size.width;
 		[scrollView setContentOffset:pnt animated:YES]; //for some reason it doesen't work with animated=NO
 	}
+}
+
+static void (*SBAS_viewDidDisappear_orig)(SBAppSwitcherController * self, SEL _cmd) = NULL;
+void SBAS_viewDidDisappear(SBAppSwitcherController * self, SEL _cmd)
+{
+	if ((MC.currentIcon)&&(MC.moved))
+		[self icon:MC.currentIcon touchEnded:YES];
+	if (SBAS_viewDidDisappear_orig)
+		SBAS_viewDidDisappear_orig(self,_cmd);
 }
 
 DefineObjCHook(void,SB_menuButtonUp_,SpringBoard * self, SEL _cmd, GSEventRef event)
@@ -731,7 +740,6 @@ void SBASC_icon_touchMovedwithEvent_(SBAppSwitcherController * self, SEL _cmd, S
 
 void SBASC_icon_touchEnded_(SBAppSwitcherController * self, SEL _cmd, SBIcon * icon, BOOL ended)
 {
-	MCLog(@"icon:%@ touchEnded:%d",icon,ended);
 	if ((icon!=MC.currentIcon)||(!MC.moved)) return;
 	SBAppSwitcherBarView * bar = MSHookIvar<SBAppSwitcherBarView*>(self, "_bottomBar");
 	NSMutableArray * icons = (NSMutableArray*)[bar appIcons];
@@ -904,7 +912,6 @@ bool SBASM_hasApp_(SBAppSwitcherModel * self, SEL _cmd, SBApplication * app)
 
 DefineObjCHook(void, SBAppIcon_launch, SBApplicationIcon * self, SEL _cmd)
 {
-//	MCLog(@"launched: %@",self);
 	if ([[[self application] displayIdentifier]isEqual:@"com.dapetcu21.SwitcherBar"])
 		[[$SBUIController sharedInstance] activateSwitcher];
 	else
@@ -915,7 +922,6 @@ typedef BOOL (*LibHidePrototype)(NSString * bundleID);
 
 void refreshAppStatus()
 {
-	MCLog(@"refreshAppStatus()");
 	void * libHandle = dlopen("/usr/lib/hide.dylib", RTLD_LAZY);
 	if (libHandle == NULL)
 	{
@@ -932,7 +938,6 @@ void refreshAppStatus()
 	BOOL shouldSett = MC.settings.sbIcon;
 	if (sett==shouldSett)
 	{
-		MCLog(@"app status is fine: %d",sett);
 		dlclose(libHandle);
 		return;
 	}
@@ -950,7 +955,6 @@ void refreshAppStatus()
 	}
 	notify_post("com.libhide.hiddeniconschanged");
 	dlclose(libHandle);
-	MCLog(@"refreshAppStatus() done");
 }
 
 #pragma mark Init Hooks
@@ -988,7 +992,7 @@ extern "C" void MultiCleanerInitialize() {
 		$SBUIController =objc_getClass("SBUIController");
 		$SBAppIconQuitButton = objc_getClass("SBAppIconQuitButton");
 		$SBMediaController = objc_getClass("SBMediaController");
-		
+
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(applicationDied:),SBAS_applicationDied_);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(applicationLaunched:),SBAS_applicationLaunched_);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(_iconForApplication:),SBAS__iconForApplication_);
@@ -1015,7 +1019,10 @@ extern "C" void MultiCleanerInitialize() {
 		class_addMethod($SBAppSwitcherModel, @selector(hasApp:), (IMP)&SBASM_hasApp_ , "B@:@");
 		class_addMethod($SBAppSwitcherController, @selector(icon:touchMovedWithEvent:), (IMP)&SBASC_icon_touchMovedwithEvent_, "v@:@@");
 		class_addMethod($SBAppSwitcherController, @selector(icon:touchEnded:), (IMP)&SBASC_icon_touchEnded_, "v@:@c");
-		
+		if ([$SBAppSwitcherController instancesRespondToSelector:@selector(viewDidDisappear)])
+			MSHookMessageEx($SBAppSwitcherController,@selector(viewDidDisappear),(IMP)SBAS_viewDidDisappear,(IMP*)&SBAS_viewDidDisappear_orig);
+		else
+			class_addMethod($SBAppSwitcherController,@selector(viewDidDisappear),(IMP)SBAS_viewDidDisappear,"v@:");
 		[MCListener sharedInstance];
 		[MCListenerQuitAll sharedInstance];
 	}

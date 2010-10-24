@@ -6,7 +6,10 @@ v2.4
  - SBSettings "Quit all apps" toggle
  - switcher bar springboard icon
  - "quit app" exceptions
- - localization
+ - localization support and romanian translation
+ - legacy "quit all apps" mode for people having trouble with this feature
+ - improved behavior of the red button when it's set to leave the icon in the bar
+ - a lot of bugfixes, mostly related to 4.1
 v2.3.2
  - minor compatibility fixes
 v2.3.1

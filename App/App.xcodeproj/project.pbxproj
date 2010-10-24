@@ -20,9 +20,9 @@
 		C116D86F123B5ABC00667659 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C116D86B123B5ABC00667659 /* Icon.png */; };
 		C116D870123B5ABC00667659 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C116D86C123B5ABC00667659 /* Icon@2x.png */; };
 		C116D872123B5AE100667659 /* defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = C116D871123B5AE100667659 /* defaults.plist */; };
-		C116D87A123B5B4800667659 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = C116D879123B5B4800667659 /* Default.png */; };
 		C14A681E1258A0D5003B95B9 /* MCIndividualSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = C14A681D1258A0D4003B95B9 /* MCIndividualSettings.m */; };
 		C158BE1D12380BB100A43941 /* AppSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C158BE1C12380BB100A43941 /* AppSupport.framework */; };
+		C1666409127428EF0086C99E /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = C1666407127428EF0086C99E /* Default.png */; };
 		C17903CE1236E22800D8CD8E /* SettingsView.m in Sources */ = {isa = PBXBuildFile; fileRef = C17903CD1236E22800D8CD8E /* SettingsView.m */; };
 		C179045C1236F49C00D8CD8E /* SwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C179045B1236F49C00D8CD8E /* SwitchCell.m */; };
 		C17904D81237028700D8CD8E /* libactivator.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C17904D71237028700D8CD8E /* libactivator.dylib */; };
@@ -32,6 +32,7 @@
 		C1A51150124F3409006D3842 /* AdvancedView.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A5114F124F3409006D3842 /* AdvancedView.m */; };
 		C1A51153124F3849006D3842 /* MCSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A51152124F3849006D3842 /* MCSettings.m */; };
 		C1A51156124F42D2006D3842 /* PickerTableController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A51155124F42D2006D3842 /* PickerTableController.m */; };
+		C1C35C631271981B0024F5F8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C1C35C611271981B0024F5F8 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,10 +55,11 @@
 		C116D86B123B5ABC00667659 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		C116D86C123B5ABC00667659 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		C116D871123B5AE100667659 /* defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = defaults.plist; sourceTree = "<group>"; };
-		C116D879123B5B4800667659 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		C14A681C1258A0D4003B95B9 /* MCIndividualSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCIndividualSettings.h; path = ../Common/MCIndividualSettings.h; sourceTree = SOURCE_ROOT; };
 		C14A681D1258A0D4003B95B9 /* MCIndividualSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCIndividualSettings.m; path = ../../Common/MCIndividualSettings.m; sourceTree = "<group>"; };
 		C158BE1C12380BB100A43941 /* AppSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppSupport.framework; path = System/Library/PrivateFrameworks/AppSupport.framework; sourceTree = SDKROOT; };
+		C1666408127428EF0086C99E /* ro */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ro; path = ro.lproj/Default.png; sourceTree = "<group>"; };
+		C166640A127429060086C99E /* en */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = en; path = en.lproj/Default.png; sourceTree = "<group>"; };
 		C17903CC1236E22800D8CD8E /* SettingsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsView.h; sourceTree = "<group>"; };
 		C17903CD1236E22800D8CD8E /* SettingsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsView.m; sourceTree = "<group>"; };
 		C179045A1236F49C00D8CD8E /* SwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchCell.h; sourceTree = "<group>"; };
@@ -74,6 +76,8 @@
 		C1A51152124F3849006D3842 /* MCSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCSettings.m; path = ../Common/MCSettings.m; sourceTree = SOURCE_ROOT; };
 		C1A51154124F42D2006D3842 /* PickerTableController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerTableController.h; sourceTree = "<group>"; };
 		C1A51155124F42D2006D3842 /* PickerTableController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerTableController.m; sourceTree = "<group>"; };
+		C1C35C621271981B0024F5F8 /* ro */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ro; path = ro.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C1C35C68127198520024F5F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,9 +163,10 @@
 				C116D86A123B5ABC00667659 /* Icon-small@2x.png */,
 				C116D86B123B5ABC00667659 /* Icon.png */,
 				C116D86C123B5ABC00667659 /* Icon@2x.png */,
-				C116D879123B5B4800667659 /* Default.png */,
+				C1666407127428EF0086C99E /* Default.png */,
 				C116D871123B5AE100667659 /* defaults.plist */,
 				C10D4E72123CA7410038042D /* About.txt */,
+				C1C35C611271981B0024F5F8 /* Localizable.strings */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -214,6 +219,7 @@
 				French,
 				German,
 				en,
+				ro,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -234,8 +240,9 @@
 				C116D86F123B5ABC00667659 /* Icon.png in Resources */,
 				C116D870123B5ABC00667659 /* Icon@2x.png in Resources */,
 				C116D872123B5AE100667659 /* defaults.plist in Resources */,
-				C116D87A123B5B4800667659 /* Default.png in Resources */,
 				C10D4E73123CA7410038042D /* About.txt in Resources */,
+				C1C35C631271981B0024F5F8 /* Localizable.strings in Resources */,
+				C1666409127428EF0086C99E /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +269,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		C1666407127428EF0086C99E /* Default.png */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1666408127428EF0086C99E /* ro */,
+				C166640A127429060086C99E /* en */,
+			);
+			name = Default.png;
+			sourceTree = "<group>";
+		};
+		C1C35C611271981B0024F5F8 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C1C35C68127198520024F5F8 /* en */,
+				C1C35C621271981B0024F5F8 /* ro */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {

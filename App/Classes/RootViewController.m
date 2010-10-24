@@ -110,7 +110,7 @@
     [super viewDidLoad];
 	self.navigationItem.title=@"MultiCleaner";
 	//[self setEditing:YES];
-	UIBarButtonItem * button = [[UIBarButtonItem alloc] initWithTitle:@"Add" 
+	UIBarButtonItem * button = [[UIBarButtonItem alloc] initWithTitle:loc(@"Add")
 																style:UIBarButtonItemStylePlain 
 															   target:self 
 															   action:@selector(addApp)];
@@ -172,12 +172,35 @@ enum kClosedAppCells {
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
 	if (section==kAppSettings)
-		return @"Per-application settings";
+		return loc(@"PerAppSettings");
 	return nil;
+}
+
+- (NSString*)switchKeyForIndexPath:(NSIndexPath*)path
+{
+	switch(path.section)
+	{
+		case kCloseAppSection:
+			switch(path.row)
+			{
+				case kCAHidePrompt:
+					return @"HidePrompt";
+				case kCAConfirm:
+					return @"ConfirmQuit";
+				default:
+					return nil;
+			}
+			break;
+		default:
+			return nil;
+	}
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	NSString * key = [self switchKeyForIndexPath:indexPath];
+	if (key)
+		return self.tableView.rowHeight + [SwitchCell additionalCellHeightForText:loc(key)];
 	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAActivator))
 		return round(self.tableView.rowHeight*1.4f);
 	return self.tableView.rowHeight;
@@ -216,15 +239,15 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	
 	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAActivator))
 	{
-		cell.textLabel.text=@"Quit current app";
+		cell.textLabel.text=loc(@"QuitSingle");
 		cell.selectionStyle=UITableViewCellSelectionStyleBlue;
 		cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
-		cell.detailTextLabel.text=@"Activator trigger";
+		cell.detailTextLabel.text=loc(@"Activator");
 	}
 	
 	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAConfirm))
 	{
-		cell.textLabel.text=@"Confirm quit";
+		cell.textLabel.text=loc(@"ConfirmQuit");
 		[(SwitchCell*)cell setOn:[MCSettings sharedInstance].confirmQuitSingle];
 		[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setConfirmQuitSingle:)];
 		cell.selectionStyle=UITableViewCellSelectionStyleNone;
@@ -233,7 +256,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	
 	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAHidePrompt))
 	{
-		cell.textLabel.text=@"Hide prompt";
+		cell.textLabel.text=loc(@"HidePrompt");
 		[(SwitchCell*)cell setOn:[MCSettings sharedInstance].hidePromptSingle];
 		[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setHidePromptSingle:)];
 		cell.selectionStyle=UITableViewCellSelectionStyleNone;
@@ -242,7 +265,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	
 	if (indexPath.section==kAboutSection)
 	{
-		cell.textLabel.text=@"About";
+		cell.textLabel.text=loc(@"About");
 		cell.selectionStyle=UITableViewCellSelectionStyleBlue;
 		cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
 	}
@@ -251,10 +274,10 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	{
 		switch (indexPath.row) {
 			case 0:
-				cell.textLabel.text=@"Global settings";
+				cell.textLabel.text=loc(@"GlobalSettings");
 				break;
 			case 1:
-				cell.textLabel.text=@"Advanced settings";
+				cell.textLabel.text=loc(@"AdvancedSettings");
 				break;
 		}
 	}

@@ -22,9 +22,15 @@
 			<false/>
 			<key>QuitException</key>
 			<false/>
+			<key>QuitSingleException</key>
+			<false/>
+			<key>QuitType</key>
+			<integer>0</integer>
 			<key>RunningBadge</key>
 			<false/>
 			<key>ShowCurrentApp</key>
+			<false/>
+			<key>SwipeNoQuit</key>
 			<false/>
 		</dict>
 	</dict>
@@ -32,9 +38,17 @@
 	<integer>0</integer>
 	<key>ConfirmQuit</key>
 	<false/>
+	<key>ConfirmQuitSingle</key>
+	<false/>
 	<key>DontWriggle</key>
 	<false/>
 	<key>FastExit</key>
+	<false/>
+	<key>HidePrompt</key>
+	<false/>
+	<key>HidePromptSingle</key>
+	<false/>
+	<key>LegacyMode</key>
 	<false/>
 	<key>NoEditMode</key>
 	<false/>
@@ -42,6 +56,8 @@
 	<array>
 		<string>_global</string>
 	</array>
+	<key>QuitAllEnabled</key>
+	<true/>
 	<key>QuitCurrentApp</key>
 	<false/>
 	<key>QuitMode</key>
@@ -49,6 +65,8 @@
 	<key>ReorderEdit</key>
 	<true/>
 	<key>ReorderNonEdit</key>
+	<false/>
+	<key>SBIcon</key>
 	<false/>
 	<key>StartupEdit</key>
 	<false/>

@@ -157,8 +157,70 @@ enum kAdditionalCells
 	{
 		case kAutoquitSec:
 			return global?
-			@"Automatically remove closed apps from the multitask bar":
-			@"Automatically remove the app from the multitask bar when quit";
+			loc(@"RemoveClosedFooter"):
+			loc(@"RemoveClosedFooterIndiv");
+		default:
+			return nil;
+	}
+}
+
+- (NSString*)switchKeyForIndexPath:(NSIndexPath*)path
+{
+	switch(path.section)
+	{
+		case kAutoquitSec:
+			switch(path.row)
+			{
+				case 0:
+					return global?@"RemoveClosed":@"RemoveClosedIndiv";
+				default:
+					return nil;
+			}
+			break;
+		case kOptionsSec:
+			switch(path.row)
+			{
+				case kRunningBadgeCell:
+					return global?@"Badge":@"BadgeIndiv";
+				case kDimClosedCell:
+					return global?@"Dim":@"DimIndiv";
+				default:
+					return nil;
+			}
+			break;
+		case kAlwaysDimSec:
+			switch(path.row)
+			{
+				case 0:
+					return global?@"AlwaysDim":@"AlwaysDimIndiv"; 
+				default:
+					return nil;
+			}
+			break;
+		case kAdditionalSec:
+			switch(path.row)
+			{
+				case kShowCurrCell:
+					return global?@"ShowCurrent":@"ShowCurrentIndiv";
+				case kHiddenCell:
+					return @"Hide";
+				case kExceptionCell:
+					return @"AllException";
+				case kSingleExceptionCell:
+					return @"SingleException";
+				default:
+					return nil;
+			}
+		case kRearrangeSec:
+			switch(path.row)
+			{
+				case kMoveBackCell:
+					return global?@"MoveBack":@"MoveBackIndiv";
+				case kNoMoveFrontCell:
+					return @"NoMoveFront";
+				default:
+					return nil;
+			}
 		default:
 			return nil;
 	}
@@ -166,15 +228,13 @@ enum kAdditionalCells
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	/*UITableViewCell * cell = [cells objectForKey:[indexPath description]];
-	if ([cell isKindOfClass:[SwitchCell class]])
-	{
-		return tableView.rowHeight+[(SwitchCell*)cell additionalCellHeightForWidth:300];
-	}*/
-	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kMoveBackCell))
-		return floor(1.5*tableView.rowHeight);
-	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kNoMoveFrontCell))
-		return floor(2.0*tableView.rowHeight);
+	NSString * key = [self switchKeyForIndexPath:indexPath];
+	if (key)
+		return tableView.rowHeight+[SwitchCell additionalCellHeightForText:loc(key)];
+//	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kMoveBackCell))
+//		return floor(1.5*tableView.rowHeight);
+//	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kNoMoveFrontCell))
+//		return floor(2.0*tableView.rowHeight);
 	return tableView.rowHeight;
 }
 
@@ -192,8 +252,8 @@ enum kAdditionalCells
 	if (indexPath.section==kAutoquitSec)
 	{
 		cell.textLabel.text=global?
-			@"Remove closed apps":
-			@"Remove on quit";
+			loc(@"RemoveClosed"):
+			loc(@"RemoveClosedIndiv");
 		[((SwitchCell*)cell) setOn:settings.autoclose];
 		[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setAutoclose:)];
     } 
@@ -207,8 +267,8 @@ enum kAdditionalCells
 				[((SwitchCell*)cell) setOn:settings.runningBadge];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setRunningBadge:)];
 				cell.textLabel.text=global?
-					@"Badge running apps":
-					@"Badge if running";
+					loc(@"Badge"):
+					loc(@"BadgeIndiv");
 				break;
 			}
 			case kDimClosedCell:
@@ -216,8 +276,8 @@ enum kAdditionalCells
 				[((SwitchCell*)cell) setOn:settings.dimClosed];
 				[((SwitchCell*)cell) setTarget:self andSelector:@selector(modifiedDimClosed:)];
 				cell.textLabel.text=global?
-					@"Dim closed apps":
-					@"Dim icon if closed";
+					loc(@"Dim"):
+					loc(@"DimIndiv");
 				break;
 			}
 		}
@@ -232,27 +292,27 @@ enum kAdditionalCells
 			{
 				[((SwitchCell*)cell) setOn:settings.hidden];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setHidden:)];
-				cell.textLabel.text=@"Hide app from bar";
+				cell.textLabel.text=loc(@"Hide");
 				break;
 			}
 			case kQuitTypeCell:
 			{
 				cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-				cell.textLabel.text=@"Red button action";
+				cell.textLabel.text=loc(@"QuitType");
 				switch(settings.quitType)
 				{
 					case kQTAppAndIcon:
-						cell.detailTextLabel.text=@"app&icon";
+						cell.detailTextLabel.text=loc(@"QTappicon");
 						break;
 					case kQTIcon:
-						cell.detailTextLabel.text=@"remove icon";
+						cell.detailTextLabel.text=loc(@"QTicon");
 						break;
 					case kQTApp:
-						cell.detailTextLabel.text=@"close app";
+						cell.detailTextLabel.text=loc(@"QTapp");
 						break;
 					case kQTAppTap:
-						cell.detailTextLabel.text=@"second tap";
+						cell.detailTextLabel.text=loc(@"QT2tap");
 						break;
 				}
 				break;
@@ -261,11 +321,11 @@ enum kAdditionalCells
 			{
 				cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-				cell.textLabel.text=@"Swipe to quit action";
+				cell.textLabel.text=loc(@"SwipeType");
 				if (settings.swipeNoQuit)
-					cell.detailTextLabel.text=@"rem icon";
+					cell.detailTextLabel.text=loc(@"STicon");
 				else
-					cell.detailTextLabel.text=@"quit";
+					cell.detailTextLabel.text=loc(@"STapp");
 				break;
 			}
 			case kShowCurrCell:
@@ -273,19 +333,19 @@ enum kAdditionalCells
 				[((SwitchCell*)cell) setOn:settings.showCurrent];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setShowCurrent:)];
 				cell.textLabel.text=global?
-				@"Show current app":
-				@"Show if frontmost";
+				loc(@"ShowCurrent"):
+				loc(@"ShowCurrentIndiv");
 				break;
 			}
 			case kExceptionCell:
 				[((SwitchCell*)cell) setOn:settings.quitException];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setQuitException:)];
-				cell.textLabel.text=@"\"Quit all\" exception";
+				cell.textLabel.text=loc(@"AllException");
 				break;
 			case kSingleExceptionCell:
 				[((SwitchCell*)cell) setOn:settings.quitSingleException];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setQuitSingleException:)];
-				cell.textLabel.text=@"\"Quit app\" exception";
+				cell.textLabel.text=loc(@"SingleException");
 				break;
 		}
 	}
@@ -298,15 +358,15 @@ enum kAdditionalCells
 				[((SwitchCell*)cell) setOn:settings.moveBack];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setMoveBack:)];
 				cell.textLabel.text=global?
-				@"Move closed apps to the back of the bar":
-				@"Move to the back of the bar when closed";
+				loc(@"MoveBack"):
+				loc(@"MoveBackIndiv");
 				break;
 			}
 			case kNoMoveFrontCell:
 			{
 				[((SwitchCell*)cell) setOn:settings.dontMoveToFront];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setDontMoveToFront:)];
-				cell.textLabel.text=@"Don't move icon to the front of the bar when switching";
+				cell.textLabel.text=loc(@"NoMoveFront");
 				break;
 			}
 			case kLaunchTypeCell:
@@ -314,18 +374,18 @@ enum kAdditionalCells
 				cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 				cell.accessoryType  = UITableViewCellAccessoryDisclosureIndicator;
 				cell.textLabel.text=global?
-				@"On app launch":
-				@"When launched";
+				loc(@"LaunchPos"):
+				loc(@"LaunchPosIndiv");
 				switch(settings.launchType)
 				{
 					case 0:
-						cell.detailTextLabel.text=@"add to front";
+						cell.detailTextLabel.text=loc(@"LPfront");
 						break;
 					case 1:
-						cell.detailTextLabel.text=@"add to back";
+						cell.detailTextLabel.text=loc(@"LPback");
 						break;
 					case 2:
-						cell.detailTextLabel.text=@"add before closed";
+						cell.detailTextLabel.text=loc(@"LPbeforeclosed");
 						break;
 				}
 				break;
@@ -338,8 +398,8 @@ enum kAdditionalCells
 		[((SwitchCell*)cell) setOn:settings.alwaysDim];
 		[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setAlwaysDim:)];
 		cell.textLabel.text=global?
-		@"Dim all apps":
-		@"Always dim";
+		loc(@"AlwaysDim"):
+		loc(@"AlwaysDimIndiv");
 	}
 	//[cells setObject:cell forKey:[indexPath description]];
 	return cell;
@@ -367,9 +427,9 @@ enum kAdditionalCells
     if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kLaunchTypeCell))
 	{
 		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
-		vc.title = @"Launch position";
+		vc.title = loc(@"LPtitle");
 		vc.delegate = self;
-		vc.items = [NSArray arrayWithObjects:@"Front of the bar (default)",@"Back of the bar",@"Before closed apps moved back",nil];
+		vc.items = [NSArray arrayWithObjects:loc(@"LPfrontDetail"),loc(@"LPbackDetail"),loc(@"LPbeforeclosedDetail"),nil];
 		vc.tag = kLaunchPositionTag;
 		vc.currentSelection = settings.launchType;
 		[self.navigationController pushViewController:vc animated:YES];
@@ -378,9 +438,9 @@ enum kAdditionalCells
 	if ((indexPath.section==kAdditionalSec)&&(indexPath.row==kQuitTypeCell))
 	{
 		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
-		vc.title = @"Quit button behavior";
+		vc.title = loc(@"QTtitle");
 		vc.delegate = self;
-		vc.items = [NSArray arrayWithObjects:@"Quit app and remove icon",@"Quit app and leave icon",@"Just remove icon",@"Quit app,tap again to remove icon",nil];
+		vc.items = [NSArray arrayWithObjects:loc(@"QTappiconDetail"),loc(@"QTappDetail"),loc(@"QTiconDetail"),loc(@"QT2tapDetail"),nil];
 		vc.tag = kQuitTypeTag;
 		vc.currentSelection = settings.quitType;
 		[self.navigationController pushViewController:vc animated:YES];
@@ -389,9 +449,9 @@ enum kAdditionalCells
 	if ((indexPath.section==kAdditionalSec)&&(indexPath.row==kSwipeTypeCell))
 	{
 		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
-		vc.title = @"Swipe to quit behavior";
+		vc.title = loc(@"STtitle");
 		vc.delegate = self;
-		vc.items = [NSArray arrayWithObjects:@"Quit app and remove icon",@"Just remove icon",nil];
+		vc.items = [NSArray arrayWithObjects:loc(@"STappDetail"),loc(@"STiconDetail"),nil];
 		vc.tag = kSwipeTypeTag;
 		vc.currentSelection = (int)(settings.swipeNoQuit);
 		[self.navigationController pushViewController:vc animated:YES];

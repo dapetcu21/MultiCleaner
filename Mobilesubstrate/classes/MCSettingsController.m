@@ -123,9 +123,9 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 -(void)showWelcomeScreen
 {
 	UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"MultiCleaner"
-													 message:@"Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar while in edit (wriggle) mode. You can customize these settings and much more in the MultiCleaner settings app"
+													 message:loc(@"WelcomeDialog",@"Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar while in edit (wriggle) mode. You can customize these settings and much more in the MultiCleaner settings app")
 													delegate:nil 
-										   cancelButtonTitle:@"OK" 
+										   cancelButtonTitle:loc(@"OK",@"OK")
 										   otherButtonTitles:nil];
 	[alert show];
 	[alert release];

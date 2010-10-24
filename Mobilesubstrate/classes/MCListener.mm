@@ -59,14 +59,14 @@
 	if (sett.confirmQuitSingle&&!sett.hidePromptSingle)
 	{
 		alert.title = @"MultiCleaner";
-		alert.message = @"Quit app?";
-		[alert addButtonWithTitle:@"Yes"];
-		[alert addButtonWithTitle:@"No"];
+		alert.message = loc(@"Quit app?",@"Quit app?");
+		[alert addButtonWithTitle:loc(@"Yes",@"Yes")];
+		[alert addButtonWithTitle:loc(@"No",@"No")];
 		alert.cancelButtonIndex = 1;
 		[alert show];
 		[alert release];
 	} else {
-		alert.title = @"Quit app";
+		alert.title = loc(@"Quit app",@"Quit app");
 		[alert show];
 		[alert release];
 		if ([event.name isEqual:LAEventNameMenuHoldShort])
@@ -87,11 +87,6 @@
 		[alert dismissAnimated:YES];
 		alert=nil;
 	}
-}
-
--(void) activator:(LAActivator *)activator didChangeToEventMode:(NSString *)eventMode
-{
-	//NSLog(@"MultiCleaner: %@",eventMode);
 }
 
 +(MCListener*) sharedInstance

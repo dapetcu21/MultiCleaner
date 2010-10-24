@@ -121,26 +121,96 @@ enum kReorderCells
 	NUMREORDERCELLS
 };
 
+- (NSString*)switchKeyForIndexPath:(NSIndexPath*)path
+{
+	switch(path.section)
+	{
+		case kQuitAllSec:
+			switch(path.row)
+			{
+				case kQAQuitCurrent:
+					return @"QuitCurrent";
+				case kQAHidePrompt:
+					return @"HidePrompt";
+				case kQAConfirm:
+					return @"ConfirmQuit";
+				default:
+					return nil;
+			}
+			break;
+		case kStartupSec:
+			switch(path.row)
+			{
+				case kSUiPod:
+					return @"StartiPod";
+				case kSUiPodOnlyPlaying:
+					return @"StartiPodOnlyPlaying";
+				case kSUEditMode:
+					return @"StartEdit";
+				default:
+					return nil;
+			}
+			break;
+		case kMiscSec:
+			switch(path.row)
+			{
+				case kMSCNoEdit:
+					return @"NoEditMode";
+				case kMSCFastQuit:
+					return @"FastExit";
+				case kMSCDontWriggle:
+					return @"DontWriggle";
+				case kMSCAllowTap:
+					return @"LaunchFromEdit";
+				default:
+					return nil;
+			}
+			break;
+		case kReorderSec:
+			switch(path.row)
+			{
+				case kROInEditMode:
+					return @"ReorderEdit";
+				case kROOutsideEditMode:
+					return @"ReorderNonEdit";
+				case kROSwipeQuit:
+					return @"SwipeToQuit";
+				default: 
+					return nil;
+			}
+			break;
+		case kIconSec:
+			switch(path.row)
+			{
+				case kIconCell:
+					return @"SBIcon";
+				default:
+					return nil;
+			}
+			break;
+		case kLegacySec:
+			switch(path.row)
+			{
+				case kLegacyCell:
+					return @"LegacyQuitAll";
+				default: 
+					return nil;
+			}
+			break;
+		default:
+			return nil;
+	}
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-/*	NSLog(@"cell height");
-	UITableViewCell * cell = [cells objectForKey:[indexPath description]];
-	NSLog(@"cell: %@", cell);
-	if ([cell isKindOfClass:[SwitchCell class]])
-	{
-		return tableView.rowHeight+[(SwitchCell*)cell additionalCellHeightForWidth:100];	
-	}*/
+	NSString * key = [self switchKeyForIndexPath:indexPath];
+	if (key)
+		return tableView.rowHeight + [SwitchCell additionalCellHeightForText:loc(key)];
 	
 	if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAActivator))
 		return floor(1.5*tableView.rowHeight);
-	if ((indexPath.section==kMiscSec)&&(indexPath.row==kMSCFastQuit))
-		return floor(1.5*tableView.rowHeight);
-	if ((indexPath.section==kMiscSec)&&(indexPath.row==kMSCAllowTap))
-		return floor(1.5*tableView.rowHeight);
-	if ((indexPath.section==kReorderSec)&&(indexPath.row==kROSwipeQuit))
-		return floor(1.5*tableView.rowHeight);
-	if ((indexPath.section==kIconSec)&&(indexPath.row==kIconCell))
-		return floor(1.5*tableView.rowHeight);
+	
 	return tableView.rowHeight;
 }
 
@@ -180,8 +250,6 @@ enum kReorderCells
 		[self.tableView deleteRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationLeft];
 }
 
-NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"};
-
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -193,8 +261,8 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 			switch (indexPath.row) {
 				case kQAActivator:
 					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil] autorelease];
-					cell.textLabel.text = @"Quit all apps";
-					cell.detailTextLabel.text = @"Activator trigger";
+					cell.textLabel.text = loc(@"QuitAll");
+					cell.detailTextLabel.text = loc(@"Activator");
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					break;
@@ -202,30 +270,30 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setQuitCurrentApp:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].quitCurrentApp;
-					cell.textLabel.text = @"Also quit current app";
+					cell.textLabel.text = loc(@"QuitCurrent");
 					break;
 				case kQAHidePrompt:
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setHidePrompt:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].hidePrompt;
-					cell.textLabel.text = @"Hide prompt";
+					cell.textLabel.text = loc(@"HidePrompt");
 					break;
 				case kQAConfirm:
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setConfirmQuit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].confirmQuit;
-					cell.textLabel.text = @"Confirm quit";
+					cell.textLabel.text = loc(@"ConfirmQuit");
 					break;
 				case kQAIconBehavior:
 					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
-					cell.textLabel.text = @"Icon Behavior";
+					cell.textLabel.text = loc(@"QuitMode");
 					switch ([MCSettings sharedInstance].quitMode)
 					{
 						case kQuitModeRemoveIcons:
-							cell.detailTextLabel.text = @"Remove";
+							cell.detailTextLabel.text = loc(@"QMRemove");
 							break;
 						case kQuitModeRules:
-							cell.detailTextLabel.text = @"Use rules";
+							cell.detailTextLabel.text = loc(@"QMUseRules");
 							break;
 					}
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
@@ -238,17 +306,17 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 			switch(indexPath.row)
 			{
 				case kSUiPod:
-					cell.textLabel.text = @"Start in iPod controls";
+					cell.textLabel.text = loc(@"StartiPod");
 					[(SwitchCell*)cell setTarget:self andSelector:@selector(setiPodStartup:)];
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].startupiPod;
 					break;
 				case kSUEditMode:
-					cell.textLabel.text = @"Start in edit mode";
+					cell.textLabel.text = loc(@"StartEdit");
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setStartupEdit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].startupEdit;
 					break;
 				case kSUiPodOnlyPlaying:
-					cell.textLabel.text = @"  only when playing";
+					cell.textLabel.text = loc(@"StartiPodOnlyPlaying");
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setOnlyWhenPlaying:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].onlyWhenPlaying;
 			}
@@ -258,34 +326,35 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 			{
 				case kMSCBadgePos:
 					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
-					cell.textLabel.text = @"Badge corner";
+					cell.textLabel.text = loc(@"BadgeCorner");
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					NSString * kCorners[4]={loc(@"BCtopleft"),loc(@"BCtopright"),loc(@"BCbottomright"),loc(@"BCbottomleft")};
 					cell.detailTextLabel.text = kCorners[[MCSettings sharedInstance].badgeCorner];
 					break;
 				case kMSCDontWriggle:
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setDontWriggle:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].dontWriggle;
-					cell.textLabel.text = @"Don't wriggle";
+					cell.textLabel.text = loc(@"DontWriggle");
 					break;
 				case kMSCNoEdit:
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setNoEditMode:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].noEditMode;
-					cell.textLabel.text = @"Disable edit mode";
+					cell.textLabel.text = loc(@"NoEditMode");
 					break;
 				case kMSCFastQuit:
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setFastExit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].fastExit;
-					cell.textLabel.text = @"Home exits edit mode and dissmissess bar";
+					cell.textLabel.text = loc(@"FastExit");
 					break;
 				case kMSCAllowTap:
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setAllowTap:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].allowTap;	
-					cell.textLabel.text = @"Allow launching apps from edit mode";
+					cell.textLabel.text = loc(@"LaunchFromEdit");
 					break;
 			}
 			break;
@@ -297,7 +366,7 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setReorderEdit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].reorderEdit;
-					cell.textLabel.text = @"Reorder in edit mode";
+					cell.textLabel.text = loc(@"ReorderEdit");
 					break;
 				}
 				case kROOutsideEditMode:
@@ -305,7 +374,7 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setReorderNonEdit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].reorderNonEdit;
-					cell.textLabel.text = @"Reorder outside edit";
+					cell.textLabel.text = loc(@"ReorderNonEdit");
 					break;
 				}
 				case kROSwipeQuit:
@@ -313,7 +382,7 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setSwipeQuit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].swipeQuit;
-					cell.textLabel.text = @"Swipe app out of the bar to quit it";
+					cell.textLabel.text = loc(@"SwipeToQuit");
 					break;
 				}
 			}
@@ -326,7 +395,7 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setSbIcon:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].sbIcon;
-					cell.textLabel.text = @"SpringBoard icon to activate the bar";
+					cell.textLabel.text = loc(@"SBIcon");
 					break;
 				}
 			}
@@ -340,7 +409,7 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 				cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
 				[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setLegacyMode:)]; 
 				((SwitchCell*)cell).on=[MCSettings sharedInstance].legacyMode;
-				cell.textLabel.text = @"Legacy \"Quit all apps\"";
+				cell.textLabel.text = loc(@"LegacyQuitAll");
 				break;
 			}
 		}
@@ -354,7 +423,7 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 {
 	switch (section) {
 		case kLegacySec:
-			return @"More reliable, but slower. Use this only if you have trouble with \"quit all apps\"";
+			return loc(@"LegacyQuitAllFooter");
 		default:
 			return nil;
 	}
@@ -386,8 +455,8 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 	if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAIconBehavior))
 	{
 		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
-		vc.title = @"Icon Behavior";
-		vc.items = [NSArray arrayWithObjects:@"Remove all icons",@"Remove using rules",nil];
+		vc.title = loc(@"QMtitle");
+		vc.items = [NSArray arrayWithObjects:loc(@"QMRemoveDetail"),loc(@"QMUseRulesDetail"),nil];
 		vc.delegate = self;
 		vc.tag = quitModeTag;
 		vc.currentSelection = [MCSettings sharedInstance].quitMode;
@@ -398,8 +467,8 @@ NSString * kCorners[4]={@"Top-left",@"Top-right",@"Bottom-right",@"Bottom-left"}
 	if ((indexPath.section==kMiscSec)&&(indexPath.row==kMSCBadgePos))
 	{
 		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
-		vc.title = @"Badge corner";
-		vc.items = [NSArray arrayWithObjects:kCorners[0],kCorners[1],kCorners[2],kCorners[3],nil];
+		vc.title = loc(@"BCtitle");
+		vc.items = [NSArray arrayWithObjects:loc(@"BCtopleftDetail"),loc(@"BCtoprightDetail"),loc(@"BCbottomrightDetail"),loc(@"BCbottomleftDetail"),nil];
 		vc.delegate = self;
 		vc.tag = badgeCornerTag;
 		vc.currentSelection = [MCSettings sharedInstance].badgeCorner;

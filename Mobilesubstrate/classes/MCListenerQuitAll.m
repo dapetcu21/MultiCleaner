@@ -36,14 +36,14 @@
 	if (sett.confirmQuit&!sett.hidePrompt)
 	{
 		alert.title = @"MultiCleaner";
-		alert.message = @"Quit all apps?";
-		[alert addButtonWithTitle:@"Yes"];
-		[alert addButtonWithTitle:@"No"];
+		alert.message = loc(@"Quit all apps?",@"Quit all apps?");
+		[alert addButtonWithTitle:loc(@"Yes",@"Yes")];
+		[alert addButtonWithTitle:loc(@"No",@"No")];
 		alert.cancelButtonIndex = 1;
 		[alert show];
 		[alert release];
 	} else {
-		alert.title = @"Quit all apps";
+		alert.title = loc(@"Quit all apps",@"Quit all apps");
 		[alert show];
 		[alert release];
 		if ([event.name isEqual:LAEventNameMenuHoldShort])
