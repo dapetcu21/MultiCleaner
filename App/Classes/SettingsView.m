@@ -114,6 +114,7 @@ enum kAdditionalCells
 	kShowCurrCell = 0,
 	kQuitTypeCell,
 	kSwipeTypeCell,
+	kAutostartCell,
 	kHiddenCell,
 	kExceptionCell,
 	kSingleExceptionCell,
@@ -202,6 +203,8 @@ enum kAdditionalCells
 			{
 				case kShowCurrCell:
 					return global?@"ShowCurrent":@"ShowCurrentIndiv";
+				case kAutostartCell:
+					return global?@"Autostart":@"AutostartIndiv";
 				case kHiddenCell:
 					return @"Hide";
 				case kExceptionCell:
@@ -293,6 +296,13 @@ enum kAdditionalCells
 				[((SwitchCell*)cell) setOn:settings.hidden];
 				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setHidden:)];
 				cell.textLabel.text=loc(@"Hide");
+				break;
+			}
+			case kAutostartCell:
+			{
+				[((SwitchCell*)cell) setOn:settings.autolaunch];
+				[((SwitchCell*)cell) setTarget:settings andPropertySetter:@selector(setAutolaunch:)];
+				cell.textLabel.text=global?loc(@"Autostart"):loc(@"AutostartIndiv");
 				break;
 			}
 			case kQuitTypeCell:

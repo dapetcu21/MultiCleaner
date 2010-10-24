@@ -274,8 +274,8 @@
 		C1666407127428EF0086C99E /* Default.png */ = {
 			isa = PBXVariantGroup;
 			children = (
-				C1666408127428EF0086C99E /* ro */,
 				C166640A127429060086C99E /* en */,
+				C1666408127428EF0086C99E /* ro */,
 			);
 			name = Default.png;
 			sourceTree = "<group>";

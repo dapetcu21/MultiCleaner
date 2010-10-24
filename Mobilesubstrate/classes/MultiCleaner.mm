@@ -966,6 +966,18 @@ DefineObjCHook(void, SB_applicationDidFinishLaunching_,SpringBoard * self, SEL _
 	Original(SB_applicationDidFinishLaunching_)(self,_cmd,app);
 }
 
+DefineObjCHook(BOOL, SBApp__shouldAutoLaunchOnBootOrInstall_,SBApplication * self, SEL _cmd, BOOL ok)
+{
+	BOOL res = Original(SBApp__shouldAutoLaunchOnBootOrInstall_)(self,_cmd,ok);
+	if (res)
+	{
+		NSString * bundleID = [self displayIdentifier];
+		if ((![MC.runningApps objectForKey:bundleID])&&([MC.settingsController settingsForBundleID:bundleID].autolaunch))
+			[[$SBAppSwitcherController sharedInstance] applicationLaunched:self];
+	}
+	return res;
+}
+
 extern "C" void MultiCleanerInitialize() {	
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	//Check open application and create hooks here:
@@ -1013,6 +1025,7 @@ extern "C" void MultiCleanerInitialize() {
 		InstallObjCInstanceHook($SBDisplayStack,@selector(init),SBDS_init);
 		InstallObjCInstanceHook($SBDisplayStack,@selector(dealloc),SBDS_dealloc);
 		InstallObjCInstanceHook($SBApplicationIcon,@selector(launch),SBAppIcon_launch);
+		InstallObjCInstanceHook($SBApplication,@selector(_shouldAutoLaunchOnBootOrInstall:),SBApp__shouldAutoLaunchOnBootOrInstall_);
 		
 		class_addMethod($SBAppSwitcherModel, @selector(addToBack:), (IMP)&SBASM_addToBack_ , "v@:@");
 		class_addMethod($SBAppSwitcherModel, @selector(addBeforeClosed:), (IMP)&SBASM_addBeforeClosed_ , "v@:@");

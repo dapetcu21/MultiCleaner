@@ -51,6 +51,8 @@
 "LPbeforeclosedDetail" = "Before closed apps moved back";
 "AlwaysDim" = "Dim all apps";
 "AlwaysDimIndiv" = "Always dim";
+"Autostart" = "Add apps that start on bootup";
+"AutostartIndiv" = "Add to bar if started on bootup";
 
 "QuitAll" = "Quit all apps";
 "QuitCurrent" = "Also quit current app";

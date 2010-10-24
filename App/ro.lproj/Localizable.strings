@@ -50,7 +50,9 @@
 "LPbackDetail" = "Sfârșitul barei";
 "LPbeforeclosedDetail" = "Înainte de aplicațiile închise";
 "AlwaysDim" = "Toate aplicațiile transparente";
-"AlwaysDimIndiv" = "Întotdeauna transparenta";
+"AlwaysDimIndiv" = "Întotdeauna transparentă";
+"Autostart" = "Adaugă aplicațiile care pornesc automat";
+"AutostartIndiv" = "Adaugă in bară daca ponește automat";
 
 "QuitAll" = "Închide toate aplicațiile";
 "QuitCurrent" = "Închide și aplicația curentă";
