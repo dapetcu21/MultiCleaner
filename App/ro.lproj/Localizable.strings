@@ -85,6 +85,13 @@
 "SBIcon" = "Pictogramă pentru activarea barei";
 "LegacyQuitAll" = "Mod compatibil de a închide toate aplicațiile";
 "LegacyQuitAllFooter" = "Mai fiabil, dar foarte încet. Folosiți asta doar dacă aveți probleme cu închiderea tuturor aplicațiilor";
+"SBSettingsType" = "SBSettings";
+"SBSTtitle" = "SBSettings";
+"SBSTToggle" = "întrerupator";
+"SBSTQuit" = "închide toate";
+"SBSTToggleDetail" = "Activează/Dezactivează scurtătura de Activator";
+"SBSTQuitDetail" = "Închide toate aplicațiile";
+
 
 "WelcomeDialog" = "Vă mulțumim că ați ales MultiCleaner! Puteți închide aplicații ținând apăsat pe butonul home (în loc să le minimizați doar), iar bara de multitasking nu va arata decat aplicațiile care rulează. De asemenea, încercati sa rearanjați aplicațiile in bară în modul de editare (modul in care pictogramele tremură). Puteți schimba aceste setări si multe altele în aplicația MultiCleaner de pe SpringBoard";
 "Quit app" = "Închide aplicația";

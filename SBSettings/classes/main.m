@@ -16,7 +16,8 @@
 #define appName MultiCleaner
 #define prefsPath @"/var/mobile/Library/Preferences/com.dapetcu21.MultiCleaner.plist"
 #define visible __attribute__((visibility("default")))
-BOOL MCQuitAllEnabled = YES;
+BOOL MCToggleState = YES;
+BOOL MCToggleType = 0;
 
 visible
 BOOL isCapable()
@@ -27,30 +28,51 @@ BOOL isCapable()
 visible
 BOOL getStateFast()
 {
-	return MCQuitAllEnabled;
+	NSLog(@"MultiCleaner Toggle: state fast:%d type:%d",MCToggleState,MCToggleType);
+	return MCToggleState;
+}
+
+void MCToggleReloadSettings()
+{
+	NSDictionary * dict = [[NSDictionary alloc] initWithContentsOfFile:prefsPath];
+	NSNumber * num = [dict objectForKey:@"QuitAllEnabled"];
+	if ([num isKindOfClass:[NSNumber class]])
+		MCToggleState = [num boolValue];
+	num = [dict objectForKey:@"ToggleType"];
+	if ([num isKindOfClass:[NSNumber class]])
+	{
+		MCToggleType = [num intValue];
+		if ((MCToggleType<0)||(MCToggleType>=2))
+			MCToggleType = 0;
+	}
+	if (MCToggleType)
+		MCToggleState = YES;
+	[dict release];
+	NSLog(@"MultiCleaner Toggle: state:%d type:%d",MCToggleState,MCToggleType);
 }
 
 visible
 BOOL isEnabled()
 {
-	NSDictionary * dict = [[NSDictionary alloc] initWithContentsOfFile:prefsPath];
-	NSNumber * num = [dict objectForKey:@"QuitAllEnabled"];
-	if ([num isKindOfClass:[NSNumber class]])
-		MCQuitAllEnabled = [num boolValue];
-	[dict release];
-	return MCQuitAllEnabled;
+	MCToggleReloadSettings();
+	return MCToggleState;
 }
 
 visible
 void setState(BOOL state)
 {
-	MCQuitAllEnabled = state;
-	NSMutableDictionary * dict = [[NSMutableDictionary alloc] initWithContentsOfFile:prefsPath];
-	[dict setObject:[NSNumber numberWithBool:MCQuitAllEnabled] forKey:@"QuitAllEnabled"];
-	[dict writeToFile:prefsPath atomically:YES];
-	[dict release];
 	CPDistributedMessagingCenter * center = [CPDistributedMessagingCenter centerNamed:@"com.dapetcu21.MultiCleaner.center"];
-	[center sendMessageName:@"reloadSettings" userInfo:nil];
+	if (MCToggleType)
+		[center sendMessageName:@"quitAllApps" userInfo:nil];
+	else
+	{
+		MCToggleState = state;
+		NSMutableDictionary * dict = [[NSMutableDictionary alloc] initWithContentsOfFile:prefsPath];
+		[dict setObject:[NSNumber numberWithBool:MCToggleState] forKey:@"QuitAllEnabled"];
+		[dict writeToFile:prefsPath atomically:YES];
+		[dict release];
+		[center sendMessageName:@"reloadSettings" userInfo:nil];
+	}
 }
 
 visible

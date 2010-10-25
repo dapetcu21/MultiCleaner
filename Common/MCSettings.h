@@ -15,6 +15,13 @@ enum kQuitModes
 	NUMQUITMODES
 };
 
+enum kToggleTypes
+{
+	kToggleTypeToggle = 0,
+	kToggleTypeQuit,
+	NUMTOGGLETYPES
+};
+
 @interface MCSettings : NSObject {
 	BOOL startupiPod;
 	BOOL startupEdit;
@@ -36,6 +43,7 @@ enum kQuitModes
 	BOOL quitAllEnabled;
 	BOOL sbIcon;
 	BOOL legacyMode;
+	int toggleType;
 }
 @property(nonatomic,assign) BOOL startupiPod;
 @property(nonatomic,assign) BOOL startupEdit;
@@ -57,6 +65,7 @@ enum kQuitModes
 @property(nonatomic,assign) BOOL quitAllEnabled;
 @property(nonatomic,assign) BOOL sbIcon;
 @property(nonatomic,assign) BOOL legacyMode;
+@property(nonatomic,assign) int toggleType;
 
 -(void)loadFromDict:(NSDictionary*)def;
 -(void)saveToDict:(NSMutableDictionary*)def;

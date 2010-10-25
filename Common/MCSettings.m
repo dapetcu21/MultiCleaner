@@ -30,6 +30,7 @@
 @synthesize quitAllEnabled;
 @synthesize sbIcon;
 @synthesize legacyMode;
+@synthesize toggleType;
 
 +(MCSettings*)sharedInstance
 {
@@ -70,6 +71,7 @@
 	quitAllEnabled = YES;
 	sbIcon = NO;
 	legacyMode = NO;
+	toggleType = kToggleTypeToggle;
 }
 
 -(void)loadFromDict:(NSDictionary *)def
@@ -157,8 +159,13 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		badgeCorner = [num intValue];
 	
-	//NSLog(@"loading common settings: %@",def);
+	num = [def objectForKey:@"ToggleType"];
+	if ([num isKindOfClass:[NSNumber class]])
+		toggleType = [num intValue];
 	
+	//NSLog(@"loading common settings: %@",def);
+	if ((toggleType>=NUMTOGGLETYPES)||(toggleType<0))
+		toggleType = kToggleTypeToggle;
 	if ((badgeCorner>=4)||(badgeCorner<0))
 		badgeCorner = 0;
 	if ((quitMode>=NUMQUITMODES)||(quitMode<0))
@@ -187,6 +194,7 @@
 	[def setObject:[NSNumber numberWithBool:quitAllEnabled] forKey:@"QuitAllEnabled"];
 	[def setObject:[NSNumber numberWithBool:sbIcon] forKey:@"SBIcon"];
 	[def setObject:[NSNumber numberWithBool:legacyMode] forKey:@"LegacyMode"];
+	[def setObject:[NSNumber numberWithInt:toggleType]forKey:@"ToggleType"];
 	//NSLog(@"saving common settings: %@",def);
 }
 @end

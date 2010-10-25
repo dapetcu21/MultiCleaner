@@ -24,4 +24,5 @@
 -(BOOL)loadSettings;
 -(MCIndividualSettings*)settingsForBundleID:(NSString*)bundleID;
 -(void)showWelcomeScreen;
+-(void)registerForMessage:(NSString*)name target:(id)tgt selector:(SEL)select;
 @end

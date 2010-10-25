@@ -87,6 +87,7 @@ enum kLegacyCells {
 
 enum kIconCells {
 	kIconCell = 0,
+	kSBSettingsCell,
 	NUMICONCELLS
 };
 
@@ -184,6 +185,8 @@ enum kReorderCells
 			{
 				case kIconCell:
 					return @"SBIcon";
+				case kSBSettingsCell:
+					return @"SBSettingsType";
 				default:
 					return nil;
 			}
@@ -398,6 +401,16 @@ enum kReorderCells
 					cell.textLabel.text = loc(@"SBIcon");
 					break;
 				}
+				case kSBSettingsCell:
+				{
+					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
+					cell.textLabel.text = loc(@"SBSettingsType");
+					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+					NSString * kToggleTypes[4]={loc(@"SBSTToggle"),loc(@"SBSTQuit")};
+					cell.detailTextLabel.text = kToggleTypes[[MCSettings sharedInstance].toggleType];
+					break;
+				}
 			}
 			break;
 			
@@ -434,6 +447,7 @@ enum kReorderCells
 
 #define quitModeTag 1001
 #define badgeCornerTag 1002
+#define toggleTypeTag 1003
 
 - (void)pickerTableController:(PickerTableController *)tvc changedSelectionTo:(int)sel
 {
@@ -441,6 +455,12 @@ enum kReorderCells
 		[MCSettings sharedInstance].quitMode=sel;
 	if (tvc.tag==badgeCornerTag)
 		[MCSettings sharedInstance].badgeCorner=sel;
+	if (tvc.tag==toggleTypeTag)
+	{
+		[MCSettings sharedInstance].toggleType=sel;
+		if (sel==kToggleTypeQuit)
+			[MCSettings sharedInstance].quitAllEnabled=YES;
+	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -460,6 +480,18 @@ enum kReorderCells
 		vc.delegate = self;
 		vc.tag = quitModeTag;
 		vc.currentSelection = [MCSettings sharedInstance].quitMode;
+		[self.navigationController pushViewController:vc animated:YES];
+		[vc release];
+		return;
+	}
+	if ((indexPath.section==kIconSec)&&(indexPath.row==kSBSettingsCell))
+	{
+		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
+		vc.title = loc(@"SBSTtitle");
+		vc.items = [NSArray arrayWithObjects:loc(@"SBSTToggleDetail"),loc(@"SBSTQuitDetail"),nil];
+		vc.delegate = self;
+		vc.tag = toggleTypeTag;
+		vc.currentSelection = [MCSettings sharedInstance].toggleType;
 		[self.navigationController pushViewController:vc animated:YES];
 		[vc release];
 		return;

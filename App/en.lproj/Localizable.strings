@@ -85,6 +85,12 @@
 "SBIcon" = "SpringBoard icon to activate the bar";
 "LegacyQuitAll" = "Legacy \"Quit all apps\"";
 "LegacyQuitAllFooter" = "More reliable, but slower. Use this only if you have trouble with \"quit all apps\"";
+"SBSettingsType" = "SBSettings toggle";
+"SBSTtitle" = "SBSettings toggle";
+"SBSTToggle" = "Toggle";
+"SBSTQuit" = "Quit all apps";
+"SBSTToggleDetail" = "Toggles the Activator shortcut";
+"SBSTQuitDetail" = "Quits all apps";
 
 "WelcomeDialog" = "Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar while in edit (wriggle) mode. You can customize these settings and much more in the MultiCleaner settings app";
 "Quit app" = "Quit app";

@@ -14,11 +14,17 @@
 
 @synthesize menuDown;
 
+-(void)performAction:(NSDictionary*)userinfo
+{
+	[self activator:nil receiveEvent:nil];
+}
+
 -(id)init
 {
 	if (self=[super init])
 	{
 		[[LAActivator sharedInstance] registerListener:self forName:@"com.dapetcu21.MultiCleaner_quitAllApps"];
+		[[MCSettingsController sharedInstance] registerForMessage:@"quitAllApps" target:self selector:@selector(performAction:)];
 	}
 	return self;
 }

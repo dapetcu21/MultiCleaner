@@ -51,6 +51,11 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 	settingsReloaded();
 }
 
+-(void)quitAllApps:(NSDictionary*)userData
+{
+	
+}
+
 -(id)init
 {
 	if (self=[super init])
@@ -68,9 +73,15 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 		[center retain];
 		[center runServerOnCurrentThread];
 		[center registerForMessageName:@"reloadSettings" target:self selector:@selector(reloadSettings:)];
+		[center registerForMessageName:@"quitAllApps" target:self selector:@selector(quitAllApps:)];
 
 	}
 	return self;
+}
+
+-(void)registerForMessage:(NSString*)name target:(id)tgt selector:(SEL)select
+{
+	[center registerForMessageName:name target:tgt selector:select];
 }
 
 -(void)dealloc
@@ -140,4 +151,5 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 		sett = nil;
 	return sett;
 }
+
 @end
