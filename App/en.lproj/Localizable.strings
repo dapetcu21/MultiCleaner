@@ -1,12 +1,20 @@
 "AdvancedSettings" = "Advanced settings";
 "GlobalSettings" = "Global settings";
+"About" = "About";
+
 "PerAppSettings" = "Per-application settings";
 "Add" = "Add";
 "QuitSingle" = "Quit current app";
 "Activator" = "Activator trigger";
 "ConfirmQuit" = "Confirm quit";
 "HidePrompt" = "Hide prompt";
-"About" = "About";
+
+"LoadingApps" = "Loading applications...";
+"Done" = "Done";
+"Applications" = "Applications";
+"AdvancedSettingsTitle" = "Advanced settings";
+"GlobalSettingsTitle" = "Global settings";
+"AboutTitle" = "About";
 
 "RemoveClosedFooter" = "Automatically remove closed apps from the multitask bar";
 "RemoveClosedFooterIndiv" = "Automatically remove the app from the multitask bar when quit";
@@ -18,7 +26,7 @@
 "DimIndiv" = "Dim icon if closed";
 "Hide" = "Hide app from bar";
 "QuitType" = "Red button action";
-"QTappicon" = "app&icon";
+"QTappicon" = "app and icon";
 "QTicon" = "remove icon";
 "QTapp" = "close app";
 "QT2tap" = "second tap";
@@ -28,7 +36,7 @@
 "QTappDetail" = "Quit app and leave icon";
 "QT2tapDetail" = "Quit app,tap again to remove icon";
 "SwipeType" = "Swipe to quit action";
-"STicon" = "rmv icon";
+"STicon" = "remove icon";
 "STapp" = "quit app";
 "STtitle" = "Swipe to quit behavior";
 "STiconDetail" = "Just remove icon";
@@ -70,7 +78,7 @@
 "BCtopleft" = "Top-left";
 "BCtopright" = "Top-right";
 "BCbottomright" = "Bottom-right";
-"BCbottomleftDetail" = "Bottom-left";
+"BCbottomleft" = "Bottom-left";
 "BCtopleftDetail" = "Top-left";
 "BCtoprightDetail" = "Top-right";
 "BCbottomrightDetail" = "Bottom-right";

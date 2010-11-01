@@ -18,6 +18,7 @@
 #import "About.h"
 #import "MCSettings.h"
 #import "MCIndividualSettings.h"
+#import "MultiLineCell.h"
 #import "AdvancedView.h"
 
 @implementation RootViewController
@@ -213,6 +214,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
     
     static NSString *CellIdentifier = @"Cell";
 	static NSString *AppCellIdentifier= @"AppCell";
+	static NSString *SwitchCellIdentifier = @"SwitchCell";
 	UITableViewCell *cell;
 	
 	if (indexPath.section==kAppSettings)
@@ -225,13 +227,13 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	else
 	if ((indexPath.section==kCloseAppSection)&&((indexPath.row==kCAHidePrompt)||(indexPath.row==kCAConfirm)))
 	{
-		cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+		cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:SwitchCellIdentifier] autorelease];
 	}
 	else
 	{
 		cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 		if (cell == nil) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+			cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
 		}
 		cell.detailTextLabel.text=nil;
     }
@@ -387,7 +389,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 			case 0:
 				vc = [[SettingsView alloc] initWithSettings:[settings objectForKey:@"_global"] 
 												   bundleID:@"_global" 
-													andName:@"Global settings"];
+													andName:loc(@"GlobalSettingsTitle")];
 				break;
 			case 1:
 				vc = [[AdvancedView alloc] initWithStyle:UITableViewStyleGrouped];

@@ -26,8 +26,18 @@
 	}
 }
 
+-(id)initWithReuseIdentifier:(NSString*)reuseIdentifier
+{
+	return [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+}
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+		if (style!=UITableViewCellStyleDefault)
+		{
+			[self release];
+			return nil;
+		}
         Switch=[[UISwitch alloc] init];
 		[Switch addTarget:self action:@selector(callback:) forControlEvents:UIControlEventValueChanged];
 		self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -71,7 +81,7 @@
 	CGRect textFrame = self.textLabel.frame;
 	textFrame.size.width = Switch.frame.origin.x-textFrame.origin.x-20;
 	self.textLabel.frame = textFrame;
-	NSLog(@"textWidth:%f fontName:%@ fontSize:%f",textFrame.size.width,self.textLabel.font.fontName,self.textLabel.font.pointSize);
+	//NSLog(@"textWidth:%f fontName:%@ fontSize:%f",textFrame.size.width,self.textLabel.font.fontName,self.textLabel.font.pointSize);
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -98,7 +108,7 @@
 		font = [UIFont fontWithName:@"Helvetica-Bold" size:17.0f];
 		[font retain];
 		height = [@"A" sizeWithFont:font constrainedToSize:CGSizeMake(width, FLT_MAX)].height;
-		NSLog(@"width:%f height:%f",width,height);
+		//NSLog(@"width:%f height:%f",width,height);
 	}
 	return [text sizeWithFont:font constrainedToSize:CGSizeMake(width, FLT_MAX)].height-height;
 }

@@ -9,6 +9,7 @@
 #import "AdvancedView.h"
 #import "MCSettings.h"
 #import "SwitchCell.h"
+#import "MultiLineCell.h"
 #import <libactivator/libactivator.h>
 
 @implementation AdvancedView
@@ -34,7 +35,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	self.navigationItem.title = @"Advanced settings";
+	self.navigationItem.title = loc(@"AdvancedSettingsTitle");
 }
 
 
@@ -185,8 +186,6 @@ enum kReorderCells
 			{
 				case kIconCell:
 					return @"SBIcon";
-				case kSBSettingsCell:
-					return @"SBSettingsType";
 				default:
 					return nil;
 			}
@@ -210,10 +209,38 @@ enum kReorderCells
 	NSString * key = [self switchKeyForIndexPath:indexPath];
 	if (key)
 		return tableView.rowHeight + [SwitchCell additionalCellHeightForText:loc(key)];
-	
+	NSString * text;
+	NSString * detail;
+	if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAIconBehavior))
+	{
+		text = loc(@"QuitMode");
+		switch ([MCSettings sharedInstance].quitMode)
+		{
+			case kQuitModeRemoveIcons:
+				detail = loc(@"QMRemove");
+				break;
+			case kQuitModeRules:
+				detail = loc(@"QMUseRules");
+				break;
+		}
+		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
+	}
+	if ((indexPath.section==kMiscSec)&&(indexPath.row==kMSCBadgePos))
+	{
+		text = loc(@"BadgeCorner");
+		NSString * kCorners[4]={loc(@"BCtopleft"),loc(@"BCtopright"),loc(@"BCbottomright"),loc(@"BCbottomleft")};
+		detail = kCorners[[MCSettings sharedInstance].badgeCorner];
+		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
+	}
+	if ((indexPath.section==kIconSec)&&(indexPath.row==kSBSettingsCell))
+	{
+		text = loc(@"SBSettingsType");
+		NSString * kToggleTypes[2]={loc(@"SBSTToggle"),loc(@"SBSTQuit")};
+		detail = kToggleTypes[[MCSettings sharedInstance].toggleType];
+		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
+	}
 	if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAActivator))
 		return floor(1.5*tableView.rowHeight);
-	
 	return tableView.rowHeight;
 }
 
@@ -257,38 +284,38 @@ enum kReorderCells
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewCell *cell = nil;
-	cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+	cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
     
     switch (indexPath.section) {
 		case kQuitAllSec:
 			switch (indexPath.row) {
 				case kQAActivator:
-					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil] autorelease];
+					cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil] autorelease];
 					cell.textLabel.text = loc(@"QuitAll");
 					cell.detailTextLabel.text = loc(@"Activator");
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 					break;
 				case kQAQuitCurrent:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setQuitCurrentApp:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].quitCurrentApp;
 					cell.textLabel.text = loc(@"QuitCurrent");
 					break;
 				case kQAHidePrompt:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setHidePrompt:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].hidePrompt;
 					cell.textLabel.text = loc(@"HidePrompt");
 					break;
 				case kQAConfirm:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setConfirmQuit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].confirmQuit;
 					cell.textLabel.text = loc(@"ConfirmQuit");
 					break;
 				case kQAIconBehavior:
-					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
+					cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"AdvancedNormalCell"] autorelease];
 					cell.textLabel.text = loc(@"QuitMode");
 					switch ([MCSettings sharedInstance].quitMode)
 					{
@@ -305,7 +332,7 @@ enum kReorderCells
 			} 
 			break;
 		case kStartupSec:
-			cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+			cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
 			switch(indexPath.row)
 			{
 				case kSUiPod:
@@ -328,7 +355,7 @@ enum kReorderCells
 			switch(indexPath.row)
 			{
 				case kMSCBadgePos:
-					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
+					cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"AdvancedNormalCell"] autorelease];
 					cell.textLabel.text = loc(@"BadgeCorner");
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -336,25 +363,25 @@ enum kReorderCells
 					cell.detailTextLabel.text = kCorners[[MCSettings sharedInstance].badgeCorner];
 					break;
 				case kMSCDontWriggle:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setDontWriggle:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].dontWriggle;
 					cell.textLabel.text = loc(@"DontWriggle");
 					break;
 				case kMSCNoEdit:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setNoEditMode:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].noEditMode;
 					cell.textLabel.text = loc(@"NoEditMode");
 					break;
 				case kMSCFastQuit:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setFastExit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].fastExit;
 					cell.textLabel.text = loc(@"FastExit");
 					break;
 				case kMSCAllowTap:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil]autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setAllowTap:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].allowTap;	
 					cell.textLabel.text = loc(@"LaunchFromEdit");
@@ -366,7 +393,7 @@ enum kReorderCells
 			{
 				case kROInEditMode:
 				{
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setReorderEdit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].reorderEdit;
 					cell.textLabel.text = loc(@"ReorderEdit");
@@ -374,7 +401,7 @@ enum kReorderCells
 				}
 				case kROOutsideEditMode:
 				{
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setReorderNonEdit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].reorderNonEdit;
 					cell.textLabel.text = loc(@"ReorderNonEdit");
@@ -382,7 +409,7 @@ enum kReorderCells
 				}
 				case kROSwipeQuit:
 				{
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setSwipeQuit:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].swipeQuit;
 					cell.textLabel.text = loc(@"SwipeToQuit");
@@ -395,7 +422,7 @@ enum kReorderCells
 			{
 				case kIconCell:
 				{
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
 					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setSbIcon:)]; 
 					((SwitchCell*)cell).on=[MCSettings sharedInstance].sbIcon;
 					cell.textLabel.text = loc(@"SBIcon");
@@ -403,11 +430,11 @@ enum kReorderCells
 				}
 				case kSBSettingsCell:
 				{
-					cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
+					cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"AdvancedNormalCell"] autorelease];
 					cell.textLabel.text = loc(@"SBSettingsType");
 					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					NSString * kToggleTypes[4]={loc(@"SBSTToggle"),loc(@"SBSTQuit")};
+					NSString * kToggleTypes[2]={loc(@"SBSTToggle"),loc(@"SBSTQuit")};
 					cell.detailTextLabel.text = kToggleTypes[[MCSettings sharedInstance].toggleType];
 					break;
 				}
@@ -419,7 +446,7 @@ enum kReorderCells
 		{
 			case kLegacyCell:
 			{
-				cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+				cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
 				[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setLegacyMode:)]; 
 				((SwitchCell*)cell).on=[MCSettings sharedInstance].legacyMode;
 				cell.textLabel.text = loc(@"LegacyQuitAll");

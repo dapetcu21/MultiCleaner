@@ -7,7 +7,7 @@
 //
 
 #import "PickerTableController.h"
-
+#import "MultiLineCell.h"
 
 @implementation PickerTableController
 
@@ -77,14 +77,21 @@
 }
 
 
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:[items objectAtIndex:indexPath.row]
+																 detailText:nil
+																   andStyle:UITableViewCellStyleDefault];
+}
+
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"PickerTableCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
 	cell.textLabel.text = [items objectAtIndex:indexPath.row];

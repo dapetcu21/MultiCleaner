@@ -41,6 +41,7 @@ struct MultiCleanerVars {
 	MCSettingsController * settingsController;
 	MCSettings * settings;
 	NSMutableDictionary * runningApps;
+	NSMutableDictionary * autostartedApps;
 	NSMutableArray * displayStacks;
 	SBIcon * currentIcon;
 	bool moved;
@@ -577,9 +578,17 @@ void moveIconToBack(SBAppSwitcherController * self, SBApplicationIcon * icon)
 	NSMutableArray * icons = (NSMutableArray*)[bottomBar appIcons];
 	if (![icons containsObject:icon]) return;
 	[icons removeObject:icon];
-	[icons addObject:icon];
+	int n = [icons count];
+	while (n)
+	{
+		NSString * bID = [[(SBApplicationIcon*)[icons objectAtIndex:n-1] application] displayIdentifier];
+		if (!((![MC.runningApps objectForKey:bID])&&([MC.settingsController settingsForBundleID:bID].moveBack)))
+			break;
+		n--;
+	}
+	[icons insertObject:icon atIndex:n];
+	[[$SBAppSwitcherModel sharedInstance] addBeforeClosed:[icon application]];
 	[bottomBar _reflowContent:YES];
-	[[$SBAppSwitcherModel sharedInstance] addToBack:[icon application]];
 }
 
 void moveAppToBack(SBAppSwitcherController * self, SBApplication * app)
@@ -592,7 +601,7 @@ void moveAppToBack(SBAppSwitcherController * self, SBApplication * app)
 	{
 		SBAppSwitcherModel * appModel = [$SBAppSwitcherModel sharedInstance];
 		if ([appModel hasApp:app])
-			[appModel addToBack:app];
+			[appModel addBeforeClosed:app];
 	}
 }
 
@@ -973,7 +982,13 @@ DefineObjCHook(BOOL, SBApp__shouldAutoLaunchOnBootOrInstall_,SBApplication * sel
 	{
 		NSString * bundleID = [self displayIdentifier];
 		if ((![MC.runningApps objectForKey:bundleID])&&([MC.settingsController settingsForBundleID:bundleID].autolaunch))
-			[[$SBAppSwitcherController sharedInstance] applicationLaunched:self];
+		{
+			if (![MC.autostartedApps objectForKey:bundleID])
+			{
+				[[$SBAppSwitcherController sharedInstance] applicationLaunched:self];
+				[MC.autostartedApps setObject:self forKey:bundleID];
+			}
+		}
 	}
 	return res;
 }
@@ -984,6 +999,7 @@ extern "C" void MultiCleanerInitialize() {
 	NSString *identifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([identifier isEqualToString:@"com.apple.springboard"]) {
 		MC.runningApps = [[NSMutableDictionary alloc] init];
+		MC.autostartedApps = [[NSMutableDictionary alloc] init];
 		MC.displayStacks = [[NSMutableArray alloc] initWithCapacity:4];
 		MC.moved = NO;
 		MC.currentIcon = nil;

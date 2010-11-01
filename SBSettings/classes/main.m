@@ -12,12 +12,38 @@
 //
 
 #import <AppSupport/CPDistributedMessagingCenter.h>
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#include <unistd.h>
 
 #define appName MultiCleaner
 #define prefsPath @"/var/mobile/Library/Preferences/com.dapetcu21.MultiCleaner.plist"
 #define visible __attribute__((visibility("default")))
 BOOL MCToggleState = YES;
 BOOL MCToggleType = 0;
+
+UIWindow* getAppWindow()
+{
+	UIWindow* TheWindow = nil;
+	UIApplication* App = [UIApplication sharedApplication];
+	NSArray* windows = [App windows];
+	int i;
+	for(i = 0; i < [windows count]; i++)
+	{
+		TheWindow = [windows objectAtIndex:i];
+		if([TheWindow respondsToSelector:@selector(getCurrentTheme)])
+		{
+			break;
+		}
+	}
+	
+	if(i == [windows count])
+	{
+		TheWindow = [App keyWindow];
+	}
+	
+	return TheWindow;
+}
 
 visible
 BOOL isCapable()
@@ -63,7 +89,11 @@ void setState(BOOL state)
 {
 	CPDistributedMessagingCenter * center = [CPDistributedMessagingCenter centerNamed:@"com.dapetcu21.MultiCleaner.center"];
 	if (MCToggleType)
+	{
 		[center sendMessageName:@"quitAllApps" userInfo:nil];
+		//usleep(999999);
+		[getAppWindow() closeButtonPressed];
+	}
 	else
 	{
 		MCToggleState = state;
@@ -78,5 +108,7 @@ void setState(BOOL state)
 visible
 float getDelayTime()
 {
+	if (MCToggleType)
+		return 1.0f;
 	return 0.1f;
 }

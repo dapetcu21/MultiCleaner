@@ -15,6 +15,7 @@
 	id target,settertarget;
 }
 
+-(id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
 -(BOOL)isOn;
 -(void)setOn:(BOOL)value;
 -(void)setTarget:(id)target andSelector:(SEL)sel;

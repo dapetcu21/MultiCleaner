@@ -145,8 +145,8 @@ static NSArray *allApplications = nil;
 	navBar.delegate = self;
 
 	// Add title and buttons to navigation bar
-	UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle:@"Applications"];
-    navItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Done"
+	UINavigationItem *navItem = [[UINavigationItem alloc] initWithTitle:loc(@"Applications")];
+    navItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:loc(@"Done")
             style:UIBarButtonItemStyleBordered target:self action:@selector(doneButtonTapped)] autorelease];
 	[navBar pushNavigationItem:navItem animated:NO];
 	[navItem release];
@@ -227,7 +227,7 @@ static NSArray *allApplications = nil;
     if (allApplications == nil) {
         // Show a progress indicator
         busyIndicator = [[UIProgressHUD alloc] initWithWindow:[[UIApplication sharedApplication] keyWindow]];
-        [busyIndicator setText:@"Loading applications..."];
+        [busyIndicator setText:loc(@"LoadingApps")];
         [busyIndicator show:YES];
 
         // Enumerate applications

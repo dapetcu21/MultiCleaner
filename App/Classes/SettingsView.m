@@ -9,9 +9,9 @@
 #import "SettingsView.h"
 #import "SwitchCell.h"
 #import "MCIndividualSettings.h"
+#import "MultiLineCell.h"
 
 @implementation SettingsView
-
 
 #pragma mark -
 #pragma mark Initialization
@@ -234,10 +234,56 @@ enum kAdditionalCells
 	NSString * key = [self switchKeyForIndexPath:indexPath];
 	if (key)
 		return tableView.rowHeight+[SwitchCell additionalCellHeightForText:loc(key)];
-//	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kMoveBackCell))
-//		return floor(1.5*tableView.rowHeight);
-//	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kNoMoveFrontCell))
-//		return floor(2.0*tableView.rowHeight);
+	NSString * text;
+	NSString * detail;
+	if ((indexPath.section==kAdditionalSec)&&(indexPath.row==kQuitTypeCell))
+	{
+		text=loc(@"QuitType");
+		switch(settings.quitType)
+		{
+			case kQTAppAndIcon:
+				detail=loc(@"QTappicon");
+				break;
+			case kQTIcon:
+				detail=loc(@"QTicon");
+				break;
+			case kQTApp:
+				detail=loc(@"QTapp");
+				break;
+			case kQTAppTap:
+				detail=loc(@"QT2tap");
+				break;
+		}
+		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
+	}
+	if ((indexPath.section==kAdditionalSec)&&(indexPath.row==kSwipeTypeCell))
+	{
+		text=loc(@"SwipeType");
+		if (settings.swipeNoQuit)
+			detail=loc(@"STicon");
+		else
+			detail=loc(@"STapp");
+		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
+	}
+	if ((indexPath.section==kRearrangeSec)&&(indexPath.row==kLaunchTypeCell))
+	{	
+		text=global?
+		loc(@"LaunchPos"):
+		loc(@"LaunchPosIndiv");
+		switch(settings.launchType)
+		{
+			case 0:
+				detail=loc(@"LPfront");
+				break;
+			case 1:
+				detail=loc(@"LPback");
+				break;
+			case 2:
+				detail=loc(@"LPbeforeclosed");
+				break;
+		}
+		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
+	}
 	return tableView.rowHeight;
 }
 
@@ -248,9 +294,9 @@ enum kAdditionalCells
 	if (((indexPath.section==kRearrangeSec)&&(indexPath.row==kLaunchTypeCell))||
 		((indexPath.section==kAdditionalSec)&&(indexPath.row==kQuitTypeCell))||
 		((indexPath.section==kAdditionalSec)&&(indexPath.row==kSwipeTypeCell)))
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil] autorelease];
+		cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"SettingsViewNormalCell"] autorelease];
 	else
-		cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
+		cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SettingsViewSwitchCell"] autorelease];
 	
 	if (indexPath.section==kAutoquitSec)
 	{

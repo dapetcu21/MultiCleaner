@@ -1,7 +1,14 @@
 MultiCleaner
-version 2.4
+version 2.4.2
 
 CHANGELOG:
+v2.4.2
+ - fixed bug not allowing you to remove mail and phone from the bar
+v2.4.1
+ - add apps started on bootup to the bar
+ - spanish translation
+ - italian translation
+ - SBSettings toggle can now be configured to quit all apps instead of just toggleing the Activator shortcut
 v2.4
  - SBSettings "Quit all apps" toggle
  - switcher bar springboard icon
