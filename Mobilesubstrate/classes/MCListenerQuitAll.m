@@ -34,6 +34,8 @@
 	MCSettings * sett = [MCSettings sharedInstance];
 	if (!(sett.quitAllEnabled))
 		return;
+	if (isMultitaskingOff())
+		return;
 	if (!sett.hidePrompt)
 		alert = [[UIAlertView alloc] init];
 	else

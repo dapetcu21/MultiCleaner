@@ -1,7 +1,10 @@
 MultiCleaner
-version 2.4.2
+version 2.4.3
 
 CHANGELOG:
+v2.4.3
+ - compatible with MyOS
+ - minor bugfixes 
 v2.4.2
  - fixed bug not allowing you to remove mail and phone from the bar
 v2.4.1

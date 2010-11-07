@@ -36,6 +36,7 @@ Class $SBUIController;
 Class $SBApplicationIcon;
 Class $SBAppIconQuitButton;
 Class $SBMediaController;
+Class $SBPlatformController;
 
 struct MultiCleanerVars {
 	MCSettingsController * settingsController;
@@ -55,6 +56,7 @@ struct MultiCleanerVars {
 	float sysVersion;
 	BOOL normalCloseTapped;
 	BOOL legacyMode;
+	BOOL shouldReturnToSwitcher;
 };
 static struct MultiCleanerVars MC;
 
@@ -76,7 +78,6 @@ inline BOOL versionBigger(float ver)
 }
 
 @interface MCListener(MCMisc)
--(void)resumeMenu;
 -(void)flipPageTimer:(id)userinfo;
 -(void)closeApp:(SBApplication*)app;
 @end
@@ -89,16 +90,10 @@ void moveAppToBack(SBAppSwitcherController * self, SBApplication * app);
 void badgeApp(SBApplication * app);
 void quitForegroundAppAndReturn(BOOL keepIcon);
 void quitApp(SBApplication * app);
-void refreshAppStatus();
+void refreshAppStatus(BOOL state);
 
 
 @implementation MCListener(MCMisc)
--(void)resumeMenu
-{
-	[[$SBUIController sharedInstance] activateSwitcher];
-	if (MC.editMode)
-		[[$SBAppSwitcherController sharedInstance] _beginEditing];
-}
 -(void)flipPageTimer:(id)userinfo
 {
 	MC.flipTimer = nil;
@@ -159,6 +154,11 @@ DefineObjCHook(void, SBDS_dealloc, SBDisplayStack * self, SEL _cmd)
 extern "C"
 void settingsReloaded()
 {
+	if (isMultitaskingOff())
+	{
+		refreshAppStatus(NO);
+		return;
+	}
 	SBAppSwitcherController * appSwitcher = [$SBAppSwitcherController sharedInstance];
 	SBAppSwitcherModel * appSwitcherModel = [$SBAppSwitcherModel sharedInstance];
 	SBApplicationController * appController = [$SBApplicationController sharedInstance];
@@ -203,7 +203,7 @@ void settingsReloaded()
 		}
 		[icons release];
 	}
-	refreshAppStatus();
+	refreshAppStatus(MC.settings.sbIcon);
 }
 
 #pragma mark App hiding
@@ -438,6 +438,20 @@ void quitForegroundApp()
 	[SBWSuspendingDisplayStack pushDisplay:app];
 }
 
+
+DefineObjCHook(void,SBUIC_animationDone,SBUIController * self, SEL _cmd, id applicationSuspendAnimation, id finished, void * context)
+{
+	if (MC.shouldReturnToSwitcher)
+	{
+		MCLog(@"resuming switcher");
+		[[$SBUIController sharedInstance] activateSwitcher];
+		if (MC.editMode)
+			[[$SBAppSwitcherController sharedInstance] _beginEditing];
+		MC.shouldReturnToSwitcher = NO;
+	}
+	Original(SBUIC_animationDone)(self,_cmd,applicationSuspendAnimation,finished,context);
+}
+
 void quitForegroundAppAndReturn(BOOL keepIcon)
 {
 	if ([[$SBUIController sharedInstance] isSwitcherShowing])
@@ -446,10 +460,9 @@ void quitForegroundAppAndReturn(BOOL keepIcon)
 		SBAppSwitcherController * appSwitcher = [$SBAppSwitcherController sharedInstance];
 		if (!keepIcon)
 			removeApplicationFromBar(appSwitcher, app);
-		//TODO: Find a better way to call resumeMenu
 		MC.editMode = [appSwitcher _inEditMode];
 		if ([[MSHookIvar<SBAppSwitcherBarView*>(appSwitcher,"_bottomBar") appIcons] count]!=0)
-			[[MCListener sharedInstance] performSelector:@selector(resumeMenu) withObject:nil afterDelay:0.3];
+			MC.shouldReturnToSwitcher = YES;
 	}
 	quitForegroundApp();
 }
@@ -921,7 +934,7 @@ bool SBASM_hasApp_(SBAppSwitcherModel * self, SEL _cmd, SBApplication * app)
 
 DefineObjCHook(void, SBAppIcon_launch, SBApplicationIcon * self, SEL _cmd)
 {
-	if ([[[self application] displayIdentifier]isEqual:@"com.dapetcu21.SwitcherBar"])
+	if ((!isMultitaskingOff())&&([[[self application] displayIdentifier]isEqual:@"com.dapetcu21.SwitcherBar"]))
 		[[$SBUIController sharedInstance] activateSwitcher];
 	else
 		Original(SBAppIcon_launch)(self,_cmd);
@@ -929,7 +942,7 @@ DefineObjCHook(void, SBAppIcon_launch, SBApplicationIcon * self, SEL _cmd)
 
 typedef BOOL (*LibHidePrototype)(NSString * bundleID);
 
-void refreshAppStatus()
+void refreshAppStatus(BOOL state)
 {
 	void * libHandle = dlopen("/usr/lib/hide.dylib", RTLD_LAZY);
 	if (libHandle == NULL)
@@ -944,17 +957,16 @@ void refreshAppStatus()
 		return;
 	}
 	BOOL sett = !IsIconHiddenDisplayId(@"com.dapetcu21.SwitcherBar");
-	BOOL shouldSett = MC.settings.sbIcon;
-	if (sett==shouldSett)
+	if (sett==state)
 	{
 		dlclose(libHandle);
 		return;
 	}
 	
-	LibHidePrototype LibHideIconDisplayID = (LibHidePrototype)dlsym(libHandle, shouldSett?"UnHideIconViaDisplayId":"HideIconViaDisplayId");
+	LibHidePrototype LibHideIconDisplayID = (LibHidePrototype)dlsym(libHandle, state?"UnHideIconViaDisplayId":"HideIconViaDisplayId");
 	if (!LibHideIconDisplayID)
 	{
-		MCLog(@"can't get function pointer: %s",shouldSett?"UnHideIconViaDisplayId":"HideIconViaDisplayId");
+		MCLog(@"can't get function pointer: %s",state?"UnHideIconViaDisplayId":"HideIconViaDisplayId");
 		dlclose(libHandle);
 		return;
 	}
@@ -970,9 +982,9 @@ void refreshAppStatus()
 
 DefineObjCHook(void, SB_applicationDidFinishLaunching_,SpringBoard * self, SEL _cmd, id app)
 {
+	Original(SB_applicationDidFinishLaunching_)(self,_cmd,app);
 	MC.settingsController = [MCSettingsController sharedInstance];
 	MC.settings = [MCSettings sharedInstance];
-	Original(SB_applicationDidFinishLaunching_)(self,_cmd,app);
 }
 
 DefineObjCHook(BOOL, SBApp__shouldAutoLaunchOnBootOrInstall_,SBApplication * self, SEL _cmd, BOOL ok)
@@ -993,11 +1005,22 @@ DefineObjCHook(BOOL, SBApp__shouldAutoLaunchOnBootOrInstall_,SBApplication * sel
 	return res;
 }
 
+BOOL isMultitaskingOff()
+{
+	return ![[$SBPlatformController sharedInstance] hasCapability:@"multitasking"];
+}
+
 extern "C" void MultiCleanerInitialize() {	
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	//Check open application and create hooks here:
 	NSString *identifier = [[NSBundle mainBundle] bundleIdentifier];
     if ([identifier isEqualToString:@"com.apple.springboard"]) {
+	/*	if (isMultitaskingOff())
+		{
+			refreshAppStatus(NO);
+			[pool release];
+			return;
+		}*/
 		MC.runningApps = [[NSMutableDictionary alloc] init];
 		MC.autostartedApps = [[NSMutableDictionary alloc] init];
 		MC.displayStacks = [[NSMutableArray alloc] initWithCapacity:4];
@@ -1020,7 +1043,8 @@ extern "C" void MultiCleanerInitialize() {
 		$SBUIController =objc_getClass("SBUIController");
 		$SBAppIconQuitButton = objc_getClass("SBAppIconQuitButton");
 		$SBMediaController = objc_getClass("SBMediaController");
-
+		$SBPlatformController = objc_getClass("SBPlatformController");
+		
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(applicationDied:),SBAS_applicationDied_);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(applicationLaunched:),SBAS_applicationLaunched_);
 		InstallObjCInstanceHook($SBAppSwitcherController,@selector(_iconForApplication:),SBAS__iconForApplication_);
@@ -1042,6 +1066,7 @@ extern "C" void MultiCleanerInitialize() {
 		InstallObjCInstanceHook($SBDisplayStack,@selector(dealloc),SBDS_dealloc);
 		InstallObjCInstanceHook($SBApplicationIcon,@selector(launch),SBAppIcon_launch);
 		InstallObjCInstanceHook($SBApplication,@selector(_shouldAutoLaunchOnBootOrInstall:),SBApp__shouldAutoLaunchOnBootOrInstall_);
+		InstallObjCInstanceHook($SBUIController,@selector(applicationSuspendAnimationDidStop:finished:context:),SBUIC_animationDone);
 		
 		class_addMethod($SBAppSwitcherModel, @selector(addToBack:), (IMP)&SBASM_addToBack_ , "v@:@");
 		class_addMethod($SBAppSwitcherModel, @selector(addBeforeClosed:), (IMP)&SBASM_addBeforeClosed_ , "v@:@");

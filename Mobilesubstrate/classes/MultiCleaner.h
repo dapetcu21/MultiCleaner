@@ -18,6 +18,7 @@ void settingsReloaded();
 void quitForegroundApp();
 void quitAllApps();
 NSString * foregroundAppDisplayIdentifier();
+BOOL isMultitaskingOff();
 #ifdef __cplusplus
 }
 #endif

@@ -319,7 +319,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "IP_ADDRESS=192.168.1.65\nscp -r \"MultiCleaner.deb\" \"root@${IP_ADDRESS}:/User/Documents/MultiCleaner.deb\"\nssh root@${IP_ADDRESS} dpkg --force-downgrade -i /User/Documents/MultiCleaner.deb";
+			shellScript = "IP_ADDRESS=iPhone.local\nscp -r \"MultiCleaner.deb\" \"root@${IP_ADDRESS}:/User/Documents/MultiCleaner.deb\"\nssh root@${IP_ADDRESS} dpkg --force-downgrade -i /User/Documents/MultiCleaner.deb";
 		};
 /* End PBXShellScriptBuildPhase section */
 
