@@ -40,9 +40,13 @@
 		C14DB874125915A0009C63EA /* MCSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = C14DB873125915A0009C63EA /* MCSettingsController.m */; };
 		C17904A01236FD4C00D8CD8E /* MCListener.mm in Sources */ = {isa = PBXBuildFile; fileRef = C179049F1236FD4C00D8CD8E /* MCListener.mm */; };
 		C17904B8123700A400D8CD8E /* libactivator.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C17904B7123700A400D8CD8E /* libactivator.dylib */; };
+		C18594021299004300CE8FEB /* MCImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C18594011299004300CE8FEB /* MCImageView.m */; };
 		C1A5122A124F5B91006D3842 /* MCListenerQuitAll.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A511AA124F51C8006D3842 /* MCListenerQuitAll.m */; };
 		C1C71F3412355D2D00B473E8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C71E8D12355D1400B473E8 /* UIKit.framework */; };
 		C1C71F3512355D2D00B473E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1C71E8E12355D1900B473E8 /* Foundation.framework */; };
+		C1EA959512AE96D70060BA70 /* MCListenerOpenBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EA959412AE96D70060BA70 /* MCListenerOpenBar.m */; };
+		C1EA95A912AE9FEF0060BA70 /* MCListenerLastClosed.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EA95A812AE9FEF0060BA70 /* MCListenerLastClosed.m */; };
+		C1EA971B12B0324B0060BA70 /* MCListenerJustMin.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EA971A12B0324B0060BA70 /* MCListenerJustMin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +98,8 @@
 		C179049F1236FD4C00D8CD8E /* MCListener.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MCListener.mm; sourceTree = "<group>"; };
 		C17904B7123700A400D8CD8E /* libactivator.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libactivator.dylib; path = JBToolkit/libactivator.dylib; sourceTree = DEVELOPER_DIR; };
 		C179057C1237881D00D8CD8E /* MultiCleaner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiCleaner.h; sourceTree = "<group>"; };
+		C18594001299004300CE8FEB /* MCImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCImageView.h; sourceTree = "<group>"; };
+		C18594011299004300CE8FEB /* MCImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCImageView.m; sourceTree = "<group>"; };
 		C1912A0A123677420047DA69 /* Root */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Root; sourceTree = "<group>"; };
 		C1A511A9124F51C8006D3842 /* MCListenerQuitAll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCListenerQuitAll.h; sourceTree = "<group>"; };
 		C1A511AA124F51C8006D3842 /* MCListenerQuitAll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCListenerQuitAll.m; sourceTree = "<group>"; };
@@ -101,6 +107,12 @@
 		C1C71E8D12355D1400B473E8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C1C71E8E12355D1900B473E8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C1C7207912363A8300B473E8 /* Preferences.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Preferences.framework; path = System/Library/PrivateFrameworks/Preferences.framework; sourceTree = SDKROOT; };
+		C1EA959312AE96D70060BA70 /* MCListenerOpenBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCListenerOpenBar.h; path = classes/MCListenerOpenBar.h; sourceTree = SOURCE_ROOT; };
+		C1EA959412AE96D70060BA70 /* MCListenerOpenBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCListenerOpenBar.m; path = classes/MCListenerOpenBar.m; sourceTree = SOURCE_ROOT; };
+		C1EA95A712AE9FEF0060BA70 /* MCListenerLastClosed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCListenerLastClosed.h; path = classes/MCListenerLastClosed.h; sourceTree = SOURCE_ROOT; };
+		C1EA95A812AE9FEF0060BA70 /* MCListenerLastClosed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCListenerLastClosed.m; path = classes/MCListenerLastClosed.m; sourceTree = SOURCE_ROOT; };
+		C1EA971912B0324B0060BA70 /* MCListenerJustMin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCListenerJustMin.h; path = classes/MCListenerJustMin.h; sourceTree = SOURCE_ROOT; };
+		C1EA971A12B0324B0060BA70 /* MCListenerJustMin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCListenerJustMin.m; path = classes/MCListenerJustMin.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +144,14 @@
 				C179049F1236FD4C00D8CD8E /* MCListener.mm */,
 				C1A511A9124F51C8006D3842 /* MCListenerQuitAll.h */,
 				C1A511AA124F51C8006D3842 /* MCListenerQuitAll.m */,
+				C1EA971912B0324B0060BA70 /* MCListenerJustMin.h */,
+				C1EA971A12B0324B0060BA70 /* MCListenerJustMin.m */,
+				C1EA959312AE96D70060BA70 /* MCListenerOpenBar.h */,
+				C1EA959412AE96D70060BA70 /* MCListenerOpenBar.m */,
+				C1EA95A712AE9FEF0060BA70 /* MCListenerLastClosed.h */,
+				C1EA95A812AE9FEF0060BA70 /* MCListenerLastClosed.m */,
+				C18594001299004300CE8FEB /* MCImageView.h */,
+				C18594011299004300CE8FEB /* MCImageView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -148,8 +168,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				C1BA9750126CACFD000EB691 /* SBSettings.xcodeproj */,
 				C158BFA6123A52AB00A43941 /* App.xcodeproj */,
+				C1BA9750126CACFD000EB691 /* SBSettings.xcodeproj */,
 				C1912A0A123677420047DA69 /* Root */,
 				C116D962123B6C3F00667659 /* control */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -319,7 +339,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "IP_ADDRESS=iPhone.local\nscp -r \"MultiCleaner.deb\" \"root@${IP_ADDRESS}:/User/Documents/MultiCleaner.deb\"\nssh root@${IP_ADDRESS} dpkg --force-downgrade -i /User/Documents/MultiCleaner.deb";
+			shellScript = "IP_ADDRESS=192.168.1.65\nscp -r \"MultiCleaner.deb\" \"root@${IP_ADDRESS}:/User/Documents/MultiCleaner.deb\"\nssh root@${IP_ADDRESS} dpkg --force-downgrade -i /User/Documents/MultiCleaner.deb";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -334,6 +354,10 @@
 				C14DB8701259158A009C63EA /* MCIndividualSettings.m in Sources */,
 				C14DB8711259158A009C63EA /* MCSettings.m in Sources */,
 				C14DB874125915A0009C63EA /* MCSettingsController.m in Sources */,
+				C18594021299004300CE8FEB /* MCImageView.m in Sources */,
+				C1EA959512AE96D70060BA70 /* MCListenerOpenBar.m in Sources */,
+				C1EA95A912AE9FEF0060BA70 /* MCListenerLastClosed.m in Sources */,
+				C1EA971B12B0324B0060BA70 /* MCListenerJustMin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

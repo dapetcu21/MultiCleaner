@@ -1,0 +1,8 @@
+{
+	title = "MultiCleaner Toggle Bar";
+	description = "Toggle the bar";
+	"compatible-modes" = (
+		springboard,
+		application,
+	);
+}

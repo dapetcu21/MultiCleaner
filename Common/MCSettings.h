@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+@class MCIndividualSettings;
 enum kQuitModes
 {
 	kQuitModeRemoveIcons = 0,
@@ -43,7 +43,13 @@ enum kToggleTypes
 	BOOL quitAllEnabled;
 	BOOL sbIcon;
 	BOOL legacyMode;
+	BOOL onlyWhenEmpty;
 	int toggleType;
+	BOOL startupPinned;
+	BOOL pinnedOnlyWhenEmpty;
+	BOOL toggleInLockscreen;
+	BOOL hidePromptMin;
+	MCIndividualSettings * sbIconSettings;
 }
 @property(nonatomic,assign) BOOL startupiPod;
 @property(nonatomic,assign) BOOL startupEdit;
@@ -65,7 +71,13 @@ enum kToggleTypes
 @property(nonatomic,assign) BOOL quitAllEnabled;
 @property(nonatomic,assign) BOOL sbIcon;
 @property(nonatomic,assign) BOOL legacyMode;
+@property(nonatomic,assign) BOOL onlyWhenEmpty;
 @property(nonatomic,assign) int toggleType;
+@property(nonatomic,assign) BOOL startupPinned;
+@property(nonatomic,assign) BOOL pinnedOnlyWhenEmpty;
+@property(nonatomic,assign) BOOL toggleInLockscreen;
+@property(nonatomic,assign) BOOL hidePromptMin;
+@property(nonatomic,readonly) MCIndividualSettings * sbIconSettings;
 
 -(void)loadFromDict:(NSDictionary*)def;
 -(void)saveToDict:(NSMutableDictionary*)def;

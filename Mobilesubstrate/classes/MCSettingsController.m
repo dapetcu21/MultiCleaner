@@ -60,6 +60,7 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 {
 	if (self=[super init])
 	{
+		order = nil;
 		prefsPath = @"/var/mobile/Library/Preferences/com.dapetcu21.MultiCleaner.plist";
 		defaultsPath = @"/Applications/MultiCleaner.app/defaults.plist";
 		if (![self loadSettings])
@@ -86,12 +87,15 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 
 -(void)dealloc
 {
+	[order release];
+	[settings release];
 	[center release];
 	[super dealloc];
 }
 			   
 -(BOOL)loadSettings
 {
+	static BOOL already_hooked = NO;
 	NSDictionary * dict = [[NSDictionary alloc] initWithContentsOfFile:prefsPath];
 	if (!dict)
 	{
@@ -103,15 +107,36 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 			return NO;
 		} else {
 			[dict writeToFile:prefsPath atomically:NO];
+			if (!already_hooked)
+			{
+				MCfirstRun = YES;
+				Class _SBAwayController=objc_getClass("SBAwayController");
+				InstallObjCInstanceHook(_SBAwayController,@selector(unlockWithSound:alertDisplay:isAutoUnlock:),SBAC_unlock___);
+				//[self showWelcomeScreen];
+				already_hooked = YES;
+			}
+		}
+	}
+#ifdef BETA_VERSION
+	else
+	{
+		if (!already_hooked)
+		{
 			MCfirstRun = YES;
 			Class _SBAwayController=objc_getClass("SBAwayController");
 			InstallObjCInstanceHook(_SBAwayController,@selector(unlockWithSound:alertDisplay:isAutoUnlock:),SBAC_unlock___);
-			//[self showWelcomeScreen];
+			already_hooked = YES;
 		}
 	}
+#endif
+	
 	[[MCSettings sharedInstance] loadFromDict:dict];	
 	[settings release];
 	settings = [dict objectForKey:@"Apps"];
+	NSArray * norder = [dict objectForKey:@"Order"];
+	[norder retain];
+	[order release];
+	order = norder;
 	if (![settings isKindOfClass:[NSDictionary class]])
 		settings=nil;
 	NSMutableDictionary * newSettings = [[NSMutableDictionary alloc] initWithCapacity:[settings count]];
@@ -131,10 +156,36 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 	return YES;
 }
 
+-(void)saveSettings
+{
+	NSMutableDictionary * file = [[NSMutableDictionary alloc] init];
+	[[MCSettings sharedInstance] saveToDict:file];
+	if (order)
+		[file setObject:order forKey:@"Order"];
+	NSMutableDictionary * apps = [[NSMutableDictionary alloc] init];
+	NSArray * keys = [settings allKeys];
+	for (NSString * key in keys)
+	{
+		NSMutableDictionary * dict = [[NSMutableDictionary alloc] init];
+		MCIndividualSettings * sett = (MCIndividualSettings*)[settings objectForKey:key];
+		[sett saveToDict:dict];
+		[apps setObject:dict forKey:key];
+		[dict release];
+	}
+	[file setObject:apps forKey:@"Apps"];
+	[apps release];
+	[file writeToFile:prefsPath atomically:YES];
+	[file release];
+}
+
 -(void)showWelcomeScreen
 {
 	UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"MultiCleaner"
+#ifdef BETA_VERSION
+													 message:[NSString stringWithFormat:@"This is a beta version of MultiCleaner that expires on %@. Please don't redistribute",BETA_VERSION]
+#else
 													 message:loc(@"WelcomeDialog",@"Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar while in edit (wriggle) mode. You can customize these settings and much more in the MultiCleaner settings app")
+#endif
 													delegate:nil 
 										   cancelButtonTitle:loc(@"OK",@"OK")
 										   otherButtonTitles:nil];
@@ -144,12 +195,46 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 
 -(MCIndividualSettings*)settingsForBundleID:(NSString*)bundleID
 {
+	if ([bundleID isEqual:@"com.dapetcu21.SpringBoard"])
+		return [[MCSettings sharedInstance] sbIconSettings];
 	MCIndividualSettings * sett = [settings objectForKey:bundleID];
 	if (![sett isKindOfClass:[MCIndividualSettings class]])
 		sett = [settings objectForKey:@"_global"];
 	if ((sett!=nil)&&![sett isKindOfClass:[MCIndividualSettings class]])
 		sett = nil;
 	return sett;
+}
+
+-(MCIndividualSettings*)newSettingsForBundleID:(NSString*)bundleID
+{
+	if ([bundleID isEqual:@"com.dapetcu21.SpringBoard"])
+		return [[MCSettings sharedInstance] sbIconSettings];
+	MCIndividualSettings * sett = [settings objectForKey:bundleID];
+	if (![sett isKindOfClass:[MCIndividualSettings class]])
+	{
+		sett = [[settings objectForKey:@"_global"] copy];
+		[settings setObject:sett forKey:bundleID];
+		if (![order isKindOfClass:[NSMutableArray class]])
+		{
+			NSMutableArray * arry = [[NSMutableArray alloc] initWithArray:order];
+			[order release];
+			order = arry;
+		}
+		[(NSMutableArray*)order addObject:bundleID];
+	}
+	return sett;
+}
+
+-(void)removeSettingsForBundleID:(NSString*)bundleID
+{
+	[settings removeObjectForKey:bundleID];
+	if (![order isKindOfClass:[NSMutableArray class]])
+	{
+		NSMutableArray * arry = [[NSMutableArray alloc] initWithArray:order];
+		[order release];
+		order = arry;
+	}
+	[(NSMutableArray*)order removeObject:bundleID];
 }
 
 @end

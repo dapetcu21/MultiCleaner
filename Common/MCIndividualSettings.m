@@ -22,8 +22,10 @@
 @synthesize dontMoveToFront;
 @synthesize launchType;
 @synthesize quitType;
-@synthesize swipeNoQuit;
+@synthesize swipeType;
 @synthesize autolaunch;
+@synthesize pinned;
+@synthesize badgePinned;
 
 -(id)init
 {
@@ -36,6 +38,7 @@
 
 -(void)reloadDefaults
 {
+	pinned = NO;
 	autoclose = YES;
 	hidden = NO;
 	dimClosed = NO;
@@ -49,6 +52,7 @@
 	autolaunch = YES;
 	launchType = kLTFront;
 	quitType = kQTAppAndIcon;
+	badgePinned = YES;
 }
 
 -(void)loadFromDict:(NSDictionary*)dict
@@ -56,6 +60,10 @@
 	[self reloadDefaults];
 	
 	NSNumber * num;
+	
+	num = [dict objectForKey:@"Pinned"];
+	if ([num isKindOfClass:[NSNumber class]])
+		pinned = [num boolValue];
 	
 	num = [dict objectForKey:@"Autoclose"];
 	if ([num isKindOfClass:[NSNumber class]])
@@ -97,13 +105,17 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		dontMoveToFront = [num boolValue];
 	
-	num = [dict objectForKey:@"SwipeNoQuit"];
-	if ([num isKindOfClass:[NSNumber class]])
-		swipeNoQuit = [num boolValue];
-	
 	num = [dict objectForKey:@"AutoLaunch"];
 	if ([num isKindOfClass:[NSNumber class]])
 		autolaunch = [num boolValue];
+	
+	num = [dict objectForKey:@"PinnedBadge"];
+	if ([num isKindOfClass:[NSNumber class]])
+		badgePinned = [num boolValue];
+	
+	num = [dict objectForKey:@"SwipeType"];
+	if ([num isKindOfClass:[NSNumber class]])
+		swipeType = [num intValue];
 	
 	num = [dict objectForKey:@"LaunchType"];
 	if ([num isKindOfClass:[NSNumber class]])
@@ -113,30 +125,39 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		quitType = [num intValue];
 	
+	if ((swipeType>=NUMSWIPETYPES)||(swipeType<0))
+		swipeType = kSTAppAndIcon;
+	
 	if ((launchType>=NUMLAUNCHTYPES)||(launchType<0))
 		launchType = kLTFront;
 	
 	if ((quitType>=NUMQUITTYPES)||(quitType<0))
 		quitType = kQTAppAndIcon;
 	
+	num = [dict objectForKey:@"SwipeNoQuit"];
+	if ([num isKindOfClass:[NSNumber class]]&&[num boolValue])
+		swipeType = kSTIcon;
+	
 }
 
 -(void)saveToDict:(NSMutableDictionary*)dict
 {
+	[dict setObject:[NSNumber numberWithBool:pinned] forKey:@"Pinned"];
 	[dict setObject:[NSNumber numberWithBool:autoclose] forKey:@"Autoclose"];
 	[dict setObject:[NSNumber numberWithBool:hidden] forKey:@"Hidden"];
 	[dict setObject:[NSNumber numberWithBool:dimClosed] forKey:@"DimClosed"];
+	[dict setObject:[NSNumber numberWithBool:alwaysDim] forKey:@"AlwaysDim"];
 	[dict setObject:[NSNumber numberWithBool:runningBadge] forKey:@"RunningBadge"];
 	[dict setObject:[NSNumber numberWithBool:showCurrent] forKey:@"ShowCurrentApp"];
 	[dict setObject:[NSNumber numberWithBool:quitException] forKey:@"QuitException"];
 	[dict setObject:[NSNumber numberWithBool:quitSingleException] forKey:@"QuitSingleException"];
 	[dict setObject:[NSNumber numberWithBool:moveBack] forKey:@"MoveBack"];
 	[dict setObject:[NSNumber numberWithBool:dontMoveToFront] forKey:@"DontMoveToFront"];
-	[dict setObject:[NSNumber numberWithBool:swipeNoQuit] forKey:@"SwipeNoQuit"];	
 	[dict setObject:[NSNumber numberWithBool:autolaunch] forKey:@"AutoLaunch"];
 	[dict setObject:[NSNumber numberWithInt:launchType] forKey:@"LaunchType"];
 	[dict setObject:[NSNumber numberWithInt:quitType] forKey:@"QuitType"];
-	
+	[dict setObject:[NSNumber numberWithInt:swipeType] forKey:@"SwipeType"];	
+	[dict setObject:[NSNumber numberWithBool:badgePinned] forKey:@"PinnedBadge"];
 }
 
 
@@ -151,13 +172,38 @@
 	cp.showCurrent=showCurrent;
 	cp.quitException=quitException;
 	cp.moveBack=moveBack;
-	cp.dontMoveToFront=dontMoveToFront;
+	cp.swipeType=kSTAppAndIcon;
 	cp.launchType=launchType;
 	cp.quitType=quitType;
-	cp.swipeNoQuit=swipeNoQuit;
+	cp.swipeType=swipeType;
 	cp.quitSingleException=quitSingleException;
 	cp.autolaunch = autolaunch;
+	cp.pinned = pinned;
+	cp.badgePinned=badgePinned;
 	return cp;
+}
+
+-(BOOL)isEqual:(id)object
+{
+	if (![object isKindOfClass:[self class]])
+		return NO;
+	MCIndividualSettings * ot = (MCIndividualSettings*)object;
+	if (ot.autoclose!=autoclose) return NO;
+	if (ot.hidden!=hidden) return NO;
+	if (ot.dimClosed!=dimClosed) return NO;
+	if (ot.alwaysDim!=alwaysDim) return NO;
+	if (ot.runningBadge!=runningBadge) return NO;
+	if (ot.showCurrent!=showCurrent) return NO;
+	if (ot.quitException!=quitException) return NO;
+	if (ot.moveBack!=moveBack) return NO;
+	if (ot.swipeType!=swipeType) return NO;
+	if (ot.launchType!=launchType) return NO;
+	if (ot.quitType!=quitType) return NO;
+	if (ot.quitSingleException!=quitSingleException) return NO;
+	if (ot.autolaunch!=autolaunch) return NO;
+	if (ot.pinned!=pinned) return NO;
+	if (ot.badgePinned!=badgePinned) return NO;
+	return YES;
 }
 
 @end

@@ -1,7 +1,21 @@
 MultiCleaner
-version 2.4.3
+version 2.6
 
 CHANGELOG:
+v2.6
+ - bugfixes to the pinning system
+ - "Start in pinned area only when the bar is empty"
+ - russian translation
+ - activator trigger for launching the last closed app
+ - activator trigger for toggling the bar
+ - activator trigger equivalent to the home button
+v2.5
+ - app pinning
+ - iOS4.2.1 compatibility and experimental iPad support
+ - start in iPod controls only when the bar is empty
+ - more swipe to quit options
+ - icon for springboard
+ - bugfixes
 v2.4.3
  - compatible with MyOS
  - minor bugfixes 
@@ -11,7 +25,7 @@ v2.4.1
  - add apps started on bootup to the bar
  - spanish translation
  - italian translation
- - SBSettings toggle can now be configured to quit all apps instead of just toggleing the Activator shortcut
+ - SBSettings toggle can now be configured to quit all apps instead of just toggling the Activator shortcut
 v2.4
  - SBSettings "Quit all apps" toggle
  - switcher bar springboard icon
@@ -23,7 +37,7 @@ v2.4
 v2.3.2
  - minor compatibility fixes
 v2.3.1
- - fixed silly typo causing versions smaller than 4.1 not to work anymore
+ - fixed silly typo causing iOS versions smaller than 4.1 not to work anymore
 v2.3
  - iOS4.1 compatibility fixes
  - more control over quit app prompts
@@ -63,10 +77,19 @@ v1.0.1
 v1.0
  - initial release
 
+TRANSLATORS:
+Spanish: ErMasLoko
+Italian: Jordiz
+Russian: tickelo
+Romanian: Marius Petcu (da_petcu21)
+
+GRAPHICS:
+Sorin Nița
+
 COPYRIGHT:
 
 Preferences application and MobileSubstrate plugin
-Copyright (C) 2010 Petcu Marius (aka. da_petcu21)
+Copyright (C) 2010 Marius Petcu (aka. da_petcu21)
 All rights reserved.
 
 Application picker view in preferences application

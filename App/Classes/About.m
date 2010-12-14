@@ -8,12 +8,14 @@
 
 #import "About.h"
 #define UIViewAutoresizingAll \
+(\
 UIViewAutoresizingFlexibleBottomMargin | \
 UIViewAutoresizingFlexibleHeight | \
 UIViewAutoresizingFlexibleLeftMargin | \
 UIViewAutoresizingFlexibleRightMargin | \
 UIViewAutoresizingFlexibleTopMargin | \
-UIViewAutoresizingFlexibleWidth
+UIViewAutoresizingFlexibleWidth\
+)
 
 
 @implementation About

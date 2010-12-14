@@ -8,15 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "PickerTableController.h"
-
+#import "SettingsViewController.h"
 @class MCIndividualSettings;
 
-@interface SettingsView : UITableViewController<PickerTableControllerDelegate> {
+@interface SettingsView : SettingsViewController {
 	MCIndividualSettings * settings;
 	NSString * bundleID;
-	NSString * name;
 	BOOL global;
-//	NSMutableDictionary * cells;
 }
 
 - (id)initWithSettings:(MCIndividualSettings*)settings bundleID:(NSString*)bundleID andName:(NSString*) name;

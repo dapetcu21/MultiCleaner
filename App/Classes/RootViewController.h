@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ApplicationPickerController.h"
+#import "SettingsViewController.h"
 
-@interface RootViewController : UITableViewController <ApplicationPickerControllerDelegate> {
+@interface RootViewController : SettingsViewController <ApplicationPickerControllerDelegate> {
 	NSMutableDictionary * settings;
 	NSMutableArray * order;
 }

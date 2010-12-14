@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PickerTableController.h"
+#import "SettingsViewController.h"
 
-@interface AdvancedView : UITableViewController<PickerTableControllerDelegate>{
-//	NSMutableDictionary * cells;
+@interface AdvancedView : SettingsViewController{
 }
 
 @end

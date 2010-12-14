@@ -7,11 +7,12 @@
 //
 
 #import "MCSettings.h"
-
+#import "MCIndividualSettings.h"
 
 @implementation MCSettings
 @synthesize startupiPod;
 @synthesize startupEdit;
+@synthesize startupPinned;
 @synthesize badgeCorner;
 @synthesize quitCurrentApp;
 @synthesize quitMode;
@@ -31,6 +32,11 @@
 @synthesize sbIcon;
 @synthesize legacyMode;
 @synthesize toggleType;
+@synthesize sbIconSettings;
+@synthesize onlyWhenEmpty;
+@synthesize pinnedOnlyWhenEmpty;
+@synthesize toggleInLockscreen;
+@synthesize hidePromptMin;
 
 +(MCSettings*)sharedInstance
 {
@@ -44,9 +50,16 @@
 {
 	if (self=[super init])
 	{
+		sbIconSettings = [[MCIndividualSettings alloc] init];
 		[self reloadDefaults];
 	}
 	return self;
+}
+
+-(void)dealloc
+{
+	[sbIconSettings release];
+	[super dealloc];
 }
 
 -(void)reloadDefaults
@@ -71,130 +84,112 @@
 	quitAllEnabled = YES;
 	sbIcon = NO;
 	legacyMode = NO;
+	onlyWhenEmpty = NO;
+	startupPinned = NO;
+	pinnedOnlyWhenEmpty = NO;
+	toggleInLockscreen = NO;
+	hidePromptMin = YES;
 	toggleType = kToggleTypeToggle;
+	
+	[sbIconSettings reloadDefaults];
+	sbIconSettings.hidden = YES;
+	sbIconSettings.quitException = YES;
+	sbIconSettings.quitSingleException = YES;
+	sbIconSettings.swipeType = kSTNothing;
 }
+
+#define loadBOOL(x,y) \
+num = [def objectForKey:(y)]; \
+if ([num isKindOfClass:[NSNumber class]])\
+(x) = [num boolValue]
+
+#define loadInt(x,y) \
+num = [def objectForKey:(y)]; \
+if ([num isKindOfClass:[NSNumber class]])\
+(x) = [num intValue]
 
 -(void)loadFromDict:(NSDictionary *)def
 {
 	[self reloadDefaults];
 	NSNumber * num;
 	
-	num = [def objectForKey:@"StartupiPod"];
-	if ([num isKindOfClass:[NSNumber class]])
-		startupiPod = [num boolValue];
+	loadBOOL(startupiPod,@"StartupiPod");
+	loadBOOL(startupEdit,@"StartupEdit");
+	loadBOOL(quitCurrentApp,@"QuitCurrentApp");
+	loadBOOL(allowTap,@"AllowTapEditing");
+	loadBOOL(dontWriggle,@"DontWriggle");
+	loadBOOL(reorderEdit,@"ReorderEdit");
+	loadBOOL(reorderNonEdit,@"ReorderNonEdit");
+	loadBOOL(onlyWhenPlaying,@"iPodOnlyWhenPlaying");
+	loadBOOL(noEditMode,@"NoEditMode");
+	loadBOOL(fastExit,@"FastExit");
+	loadBOOL(swipeQuit,@"SwipeToQuit");
+	loadBOOL(confirmQuit,@"ConfirmQuit");
+	loadBOOL(confirmQuitSingle,@"ConfirmQuitSingle");
+	loadBOOL(hidePrompt,@"HidePrompt");
+	loadBOOL(hidePromptSingle,@"HidePromptSingle");
+	loadBOOL(quitAllEnabled,@"QuitAllEnabled");
+	loadBOOL(legacyMode,@"LegacyMode");
+	loadBOOL(sbIcon,@"SBIcon");
+	loadBOOL(onlyWhenEmpty,@"iPodOnlyWhenEmpty");
+	loadBOOL(startupPinned,@"StartupPinned");
+	loadBOOL(pinnedOnlyWhenEmpty,@"PinnedOnlyWhenEmpty");
+	loadBOOL(toggleInLockscreen,@"ToggleInLockscreen");
+	loadBOOL(quitAllEnabled,@"QuitAllEnabled");
+	loadBOOL(quitAllEnabled,@"QuitAllEnabled");
+	loadInt(quitMode,@"QuitMode");
+	loadInt(badgeCorner,@"BadgeCorner");
+	loadInt(toggleType,@"ToggleType");
+	loadBOOL(hidePromptMin,@"HidePromptMinimize");
 	
-	num = [def objectForKey:@"StartupEdit"];
-	if ([num isKindOfClass:[NSNumber class]])
-		startupEdit = [num boolValue];
-	
-	num = [def objectForKey:@"QuitCurrentApp"];
-	if ([num isKindOfClass:[NSNumber class]])
-		quitCurrentApp = [num boolValue];
-	
-	num = [def objectForKey:@"AllowTapEditing"];
-	if ([num isKindOfClass:[NSNumber class]])
-		allowTap = [num boolValue];
-	
-	num = [def objectForKey:@"DontWriggle"];
-	if ([num isKindOfClass:[NSNumber class]])
-		dontWriggle = [num boolValue];
-	
-	num = [def objectForKey:@"ReorderEdit"];
-	if ([num isKindOfClass:[NSNumber class]])
-		reorderEdit = [num boolValue];
-	
-	num = [def objectForKey:@"ReorderNonEdit"];
-	if ([num isKindOfClass:[NSNumber class]])
-		reorderNonEdit = [num boolValue];
-	
-	num = [def objectForKey:@"iPodOnlyWhenPlaying"];
-	if ([num isKindOfClass:[NSNumber class]])
-		onlyWhenPlaying = [num boolValue];
-	
-	num = [def objectForKey:@"NoEditMode"];
-	if ([num isKindOfClass:[NSNumber class]])
-		noEditMode = [num boolValue];
-	
-	num = [def objectForKey:@"FastExit"];
-	if ([num isKindOfClass:[NSNumber class]])
-		fastExit = [num boolValue];
-	
-	num = [def objectForKey:@"SwipeToQuit"];
-	if ([num isKindOfClass:[NSNumber class]])
-		swipeQuit = [num boolValue];
-	
-	num = [def objectForKey:@"ConfirmQuit"];
-	if ([num isKindOfClass:[NSNumber class]])
-		confirmQuit = [num boolValue];
-	
-	num = [def objectForKey:@"ConfirmQuitSingle"];
-	if ([num isKindOfClass:[NSNumber class]])
-		confirmQuitSingle = [num boolValue];
-	
-	num = [def objectForKey:@"HidePrompt"];
-	if ([num isKindOfClass:[NSNumber class]])
-		hidePrompt = [num boolValue];
-	
-	num = [def objectForKey:@"HidePromptSingle"];
-	if ([num isKindOfClass:[NSNumber class]])
-		hidePromptSingle = [num boolValue];
-	
-	num = [def objectForKey:@"QuitAllEnabled"];
-	if ([num isKindOfClass:[NSNumber class]])
-		quitAllEnabled = [num boolValue];
-	
-	num = [def objectForKey:@"LegacyMode"];
-	if ([num isKindOfClass:[NSNumber class]])
-		legacyMode = [num boolValue];
-	
-	num = [def objectForKey:@"SBIcon"];
-	if ([num isKindOfClass:[NSNumber class]])
-		sbIcon = [num boolValue];
-	
-	num = [def objectForKey:@"QuitMode"];
-	if ([num isKindOfClass:[NSNumber class]])
-		quitMode = [num intValue];
-	
-	num = [def objectForKey:@"BadgeCorner"];
-	if ([num isKindOfClass:[NSNumber class]])
-		badgeCorner = [num intValue];
-	
-	num = [def objectForKey:@"ToggleType"];
-	if ([num isKindOfClass:[NSNumber class]])
-		toggleType = [num intValue];
-	
-	//NSLog(@"loading common settings: %@",def);
 	if ((toggleType>=NUMTOGGLETYPES)||(toggleType<0))
 		toggleType = kToggleTypeToggle;
 	if ((badgeCorner>=4)||(badgeCorner<0))
 		badgeCorner = 0;
 	if ((quitMode>=NUMQUITMODES)||(quitMode<0))
 		quitMode = kQuitModeRemoveIcons;
+	
+	NSDictionary * dict = [def objectForKey:@"SBIconSettings"];
+	if ([dict isKindOfClass:[NSDictionary class]])
+		[sbIconSettings loadFromDict:dict];
 }
+
+#define saveBOOL(x,y) [def setObject:[NSNumber numberWithBool:(x)] forKey:(y)];
+#define saveInt(x,y) [def setObject:[NSNumber numberWithInt:(x)] forKey:(y)];
 
 -(void)saveToDict:(NSMutableDictionary *)def
 {
-	[def setObject:[NSNumber numberWithBool:startupiPod] forKey:@"StartupiPod"];
-	[def setObject:[NSNumber numberWithBool:startupEdit] forKey:@"StartupEdit"];
-	[def setObject:[NSNumber numberWithBool:quitCurrentApp] forKey:@"QuitCurrentApp"];
-	[def setObject:[NSNumber numberWithBool:dontWriggle] forKey:@"DontWriggle"];
-	[def setObject:[NSNumber numberWithInt:quitMode] forKey:@"QuitMode"];
-	[def setObject:[NSNumber numberWithInt:badgeCorner] forKey:@"BadgeCorner"];
-	[def setObject:[NSNumber numberWithBool:allowTap]  forKey:@"AllowTapEditing"];
-	[def setObject:[NSNumber numberWithBool:reorderEdit] forKey:@"ReorderEdit"];
-	[def setObject:[NSNumber numberWithBool:reorderNonEdit] forKey:@"ReorderNonEdit"];
-	[def setObject:[NSNumber numberWithBool:swipeQuit] forKey:@"SwipeToQuit"];;
-	[def setObject:[NSNumber numberWithBool:onlyWhenPlaying] forKey:@"iPodOnlyWhenPlaying"];
-	[def setObject:[NSNumber numberWithBool:noEditMode] forKey:@"NoEditMode"];
-	[def setObject:[NSNumber numberWithBool:fastExit] forKey:@"FastExit"];
-	[def setObject:[NSNumber numberWithBool:confirmQuit] forKey:@"ConfirmQuit"];
-	[def setObject:[NSNumber numberWithBool:confirmQuitSingle] forKey:@"ConfirmQuitSingle"];
-	[def setObject:[NSNumber numberWithBool:hidePrompt] forKey:@"HidePrompt"];
-	[def setObject:[NSNumber numberWithBool:hidePromptSingle] forKey:@"HidePromptSingle"];
-	[def setObject:[NSNumber numberWithBool:quitAllEnabled] forKey:@"QuitAllEnabled"];
-	[def setObject:[NSNumber numberWithBool:sbIcon] forKey:@"SBIcon"];
-	[def setObject:[NSNumber numberWithBool:legacyMode] forKey:@"LegacyMode"];
-	[def setObject:[NSNumber numberWithInt:toggleType]forKey:@"ToggleType"];
+	saveBOOL(startupiPod,@"StartupiPod");
+	saveBOOL(startupEdit,@"StartupEdit");
+	saveBOOL(quitCurrentApp,@"QuitCurrentApp");
+	saveBOOL(dontWriggle,@"DontWriggle");
+	saveInt(quitMode,@"QuitMode");
+	saveInt(badgeCorner,@"BadgeCorner");
+	saveBOOL(allowTap,@"AllowTapEditing");
+	saveBOOL(reorderEdit,@"ReorderEdit");
+	saveBOOL(reorderNonEdit,@"ReorderNonEdit");
+	saveBOOL(swipeQuit,@"SwipeToQuit");
+	saveBOOL(onlyWhenPlaying,@"iPodOnlyWhenPlaying");
+	saveBOOL(onlyWhenEmpty,@"iPodOnlyWhenEmpty");
+	saveBOOL(noEditMode,@"NoEditMode");
+	saveBOOL(fastExit,@"FastExit");
+	saveBOOL(confirmQuit,@"ConfirmQuit");
+	saveBOOL(confirmQuitSingle,@"ConfirmQuitSingle");
+	saveBOOL(hidePrompt,@"HidePrompt");
+	saveBOOL(hidePromptSingle,@"HidePromptSingle");
+	saveBOOL(quitAllEnabled,@"QuitAllEnabled");
+	saveBOOL(sbIcon,@"SBIcon");
+	saveBOOL(legacyMode,@"LegacyMode");
+	saveBOOL(startupPinned,@"StartupPinned");
+	saveBOOL(toggleInLockscreen,@"ToggleInLockscreen");
+	saveInt(toggleType,@"ToggleType");
+	saveBOOL(pinnedOnlyWhenEmpty,@"PinnedOnlyWhenEmpty");
+	saveBOOL(hidePromptMin,@"HidePromptMinimize");
+	
+	NSMutableDictionary * dict = [[NSMutableDictionary alloc] init];
+	[sbIconSettings saveToDict:dict];
+	[def setObject:dict forKey:@"SBIconSettings"];
+	[dict release];
 	//NSLog(@"saving common settings: %@",def);
 }
 @end

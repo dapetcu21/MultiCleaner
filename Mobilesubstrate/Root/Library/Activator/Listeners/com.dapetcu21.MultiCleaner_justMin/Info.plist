@@ -1,0 +1,7 @@
+{
+	title = "MultiCleaner Minimize";
+	description = "Just minimize the current app";
+	"compatible-modes" = (
+		application,
+	);
+}

@@ -13,7 +13,8 @@
 #import "MCSettings.h"
 
 @interface MCSettingsController : NSObject {
-	NSDictionary * settings;
+	NSMutableDictionary * settings;
+	NSArray * order;
 	NSString * prefsPath;
 	NSString * defaultsPath;
 	struct timespec lasttime;
@@ -22,7 +23,10 @@
 
 +(MCSettingsController*)sharedInstance;
 -(BOOL)loadSettings;
+-(void)saveSettings;
 -(MCIndividualSettings*)settingsForBundleID:(NSString*)bundleID;
+-(MCIndividualSettings*)newSettingsForBundleID:(NSString*)bundleID;
+-(void)removeSettingsForBundleID:(NSString*)bundleID;
 -(void)showWelcomeScreen;
 -(void)registerForMessage:(NSString*)name target:(id)tgt selector:(SEL)select;
 @end

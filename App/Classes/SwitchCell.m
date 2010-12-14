@@ -21,6 +21,8 @@
 		[inv setSelector:setter];
 		[inv setTarget:settertarget];
 		BOOL arg = Switch.on;
+		if (reverse)
+			arg=!arg;
 		[inv setArgument:&arg atIndex:2];
 		[inv invoke];
 	}
@@ -62,12 +64,20 @@
 {
 	target = _target;
 	selector = sel;
+	reverse = NO;
 }
 
 -(void)setTarget:(id)_target andPropertySetter:(SEL)sel
 {
 	settertarget = _target;
 	setter = sel;
+	reverse = NO;
+}
+
+-(void)setTarget:(id)_target andReversePropertySetter:(SEL)sel
+{
+	[self setTarget:_target andPropertySetter:sel];
+	reverse = YES;
 }
 
 - (void)layoutSubviews

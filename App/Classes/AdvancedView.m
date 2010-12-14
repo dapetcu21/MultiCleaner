@@ -8,557 +8,204 @@
 
 #import "AdvancedView.h"
 #import "MCSettings.h"
+#import "MCIndividualSettings.h"
 #import "SwitchCell.h"
 #import "MultiLineCell.h"
 #import <libactivator/libactivator.h>
 
 @implementation AdvancedView
 
+-(TableModel*)generateModel
+{
+	MCSettings * settings = [MCSettings sharedInstance];
+	TableModel * _model = [[[TableModel alloc] init] autorelease];
+	
+	TableGroup * kStartupSec = [[[TableGroup alloc] init] autorelease];
+	TableGroup * kMiscSec = [[[TableGroup alloc] init] autorelease];
+	TableGroup * kReorderSec = [[[TableGroup alloc] init] autorelease];
+	TableGroup * kIconSec = [[[TableGroup alloc] init] autorelease];
+	TableGroup * kSBIconSec = [[[TableGroup alloc] init] autorelease];
+	TableGroup * kLegacySec = [[[TableGroup alloc] init] autorelease];
 
-#pragma mark -
-#pragma mark Initialization
+	
+	TableCellSwitch * kSUEditMode = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kSUPinned = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kSUPinnedOnlyEmpty = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kSUiPod = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kSUiPodOnlyPlaying = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kSUiPodOnlyEmpty = [[[TableCellSwitch alloc] init] autorelease];
+	
+	TableCellChoice * kMSCBadgePos = [[[TableCellChoice alloc] init] autorelease];
+	TableCellSwitch * kMSCDontWriggle = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kMSCAllowTap = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kMSCNoEdit = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kMSCFastQuit = [[[TableCellSwitch alloc] init] autorelease];
+	
+	TableCellSwitch * kROInEditMode = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kROOutsideEditMode = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kROSwipeQuit = [[[TableCellSwitch alloc] init] autorelease];
+	
+	TableCellSwitch * kIconCell = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellChoice * kSBSettingsCell = [[[TableCellChoice alloc] init] autorelease];
 
+	TableCellSwitch * kSBIEnable = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kSBIShow = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellChoice * kSBIPosition = [[[TableCellChoice alloc] init] autorelease];
+	
+	TableCellSwitch * kLegacyCell = [[[TableCellSwitch alloc] init] autorelease];
+	
+	
+	//kStartupSec
+	kSUEditMode.text = loc(@"StartEdit"); 
+	kSUEditMode.on = settings.startupEdit;
+	[kSUEditMode addTarget:settings andBOOLPropertySetter:@selector(setStartupEdit:)];
+	
+	kSUPinned.text = loc(@"StartPinned");
+	kSUPinned.on = settings.startupPinned;
+	[kSUPinned addTarget:settings andBOOLPropertySetter:@selector(setStartupPinned:)];
+	[kSUPinned addTarget:kSUPinnedOnlyEmpty andReverseBOOLPropertySetter:@selector(setHidden:)];
+	 
+	kSUPinnedOnlyEmpty.text = loc(@"StartPinnedOnlyEmpty");
+	kSUPinnedOnlyEmpty.on = settings.pinnedOnlyWhenEmpty;
+	[kSUPinnedOnlyEmpty addTarget:settings andBOOLPropertySetter:@selector(setPinnedOnlyWhenEmpty:)];
+	kSUPinnedOnlyEmpty.hidden = !settings.startupPinned;
+	
+	kSUiPod.text = loc(@"StartiPod");
+	kSUiPod.on = settings.startupiPod;
+	[kSUiPod addTarget:settings andBOOLPropertySetter:@selector(setStartupiPod:)];
+	[kSUiPod addTarget:kSUiPodOnlyPlaying andReverseBOOLPropertySetter:@selector(setHidden:)];
+	[kSUiPod addTarget:kSUiPodOnlyEmpty andReverseBOOLPropertySetter:@selector(setHidden:)];
+	
+	kSUiPodOnlyPlaying.text = loc(@"StartiPodOnlyPlaying");
+	kSUiPodOnlyPlaying.on = settings.onlyWhenPlaying;
+	[kSUiPodOnlyPlaying addTarget:settings andBOOLPropertySetter:@selector(setOnlyWhenPlaying:)];
+	kSUiPodOnlyPlaying.hidden = !settings.startupiPod;
+	
+	kSUiPodOnlyEmpty.text = loc(@"StartiPodOnlyEmpty");
+	kSUiPodOnlyEmpty.on = settings.onlyWhenEmpty;
+	[kSUiPodOnlyEmpty addTarget:settings andBOOLPropertySetter:@selector(setOnlyWhenEmpty:)];
+	kSUiPodOnlyEmpty.hidden = !settings.startupiPod;
+	
+	[kStartupSec addCell:kSUEditMode];
+	[kStartupSec addCell:kSUPinned];
+	[kStartupSec addCell:kSUPinnedOnlyEmpty];
+	[kStartupSec addCell:kSUiPod];
+	[kStartupSec addCell:kSUiPodOnlyPlaying];
+	[kStartupSec addCell:kSUiPodOnlyEmpty];
+	
+	
+	//kMiscSec
+	kMSCBadgePos.text = loc(@"BadgeCorner");
+	kMSCBadgePos.title = loc(@"BCtitle");
+	kMSCBadgePos.choices = [NSArray arrayWithObjects:loc(@"BCtopleft"),loc(@"BCtopright"),loc(@"BCbottomright"),loc(@"BCbottomleft"),nil];
+	kMSCBadgePos.detailChoices = [NSArray arrayWithObjects:loc(@"BCtopleftDetail"),loc(@"BCtoprightDetail"),loc(@"BCbottomrightDetail"),loc(@"BCbottomleftDetail"),nil]; 
+	kMSCBadgePos.state = settings.badgeCorner;
+	[kMSCBadgePos addTarget:settings andIntPropertySetter:@selector(setBadgeCorner:)];
+	
+	kMSCDontWriggle.text = loc(@"DontWriggle");
+	kMSCDontWriggle.on = settings.dontWriggle;
+	[kMSCDontWriggle addTarget:settings andBOOLPropertySetter:@selector(setDontWriggle:)];
+	
+	kMSCAllowTap.text = loc(@"LaunchFromEdit");
+	kMSCAllowTap.on = settings.allowTap;
+	[kMSCAllowTap addTarget:settings andBOOLPropertySetter:@selector(setAllowTap:)];
+	
+	kMSCNoEdit.text = loc(@"NoEditMode");
+	kMSCNoEdit.on = settings.noEditMode;
+	[kMSCNoEdit addTarget:settings andBOOLPropertySetter:@selector(setNoEditMode:)];
+	
+	kMSCFastQuit.text = loc(@"FastExit");
+	kMSCFastQuit.on = settings.fastExit;
+	[kMSCFastQuit addTarget:settings andBOOLPropertySetter:@selector(setFastExit:)];
+	
+	[kMiscSec addCell:kMSCBadgePos];
+	[kMiscSec addCell:kMSCDontWriggle];
+	[kMiscSec addCell:kMSCAllowTap];
+	[kMiscSec addCell:kMSCNoEdit];
+	[kMiscSec addCell:kMSCFastQuit];
+	
+	//kReorderSec
+	kROInEditMode.text = loc(@"ReorderEdit");
+	kROInEditMode.on = settings.reorderEdit;
+	[kROInEditMode addTarget:settings andBOOLPropertySetter:@selector(setReorderEdit:)];
+	
+	kROOutsideEditMode.text = loc(@"ReorderNonEdit");
+	kROOutsideEditMode.on = settings.reorderNonEdit;
+	[kROOutsideEditMode addTarget:settings andBOOLPropertySetter:@selector(setReorderNonEdit:)];
+	
+	kROSwipeQuit.text = loc(@"SwipeToQuit");
+	kROSwipeQuit.on = settings.swipeQuit;
+	[kROSwipeQuit addTarget:settings andBOOLPropertySetter:@selector(setSwipeQuit:)];
+	
+	[kReorderSec addCell:kROInEditMode];
+	[kReorderSec addCell:kROOutsideEditMode];
+	[kReorderSec addCell:kROSwipeQuit];
+	
+	
+	//kIconSec
+	kIconCell.text = loc(@"SBIcon");
+	kIconCell.on = settings.sbIcon;
+	[kIconCell addTarget:settings andBOOLPropertySetter:@selector(setSbIcon:)];
+
+	kSBSettingsCell.text = loc(@"SBSettingsType");
+	kSBSettingsCell.title = loc(@"SBSTtitle");
+	kSBSettingsCell.choices = [NSArray arrayWithObjects:loc(@"SBSTToggle"),loc(@"SBSTQuit"),nil];
+	kSBSettingsCell.detailChoices = [NSArray arrayWithObjects:loc(@"SBSTToggleDetail"),loc(@"SBSTQuitDetail"),nil]; 
+	kSBSettingsCell.state = settings.toggleType;
+	[kSBSettingsCell addTarget:settings andIntPropertySetter:@selector(setToggleType:)];
+	
+	[kIconSec addCell:kIconCell];
+	[kIconSec addCell:kSBSettingsCell];
+	
+	
+	//kSBIconSec
+	kSBIEnable.text = loc(@"SBIEnable");
+	kSBIEnable.on = !settings.sbIconSettings.hidden;
+	[kSBIEnable addTarget:settings.sbIconSettings andReverseBOOLPropertySetter:@selector(setHidden:)];
+	
+	kSBIShow.text = loc(@"SBIShow");
+	kSBIShow.on = !settings.sbIconSettings.autoclose;
+	[kSBIShow addTarget:settings.sbIconSettings andReverseBOOLPropertySetter:@selector(setAutoclose:)];
+	
+	kSBIPosition.text = loc(@"SBIPosition"); 
+	kSBIPosition.title = loc(@"SBIPositionTitle");
+	kSBIPosition.choices = [NSArray arrayWithObjects:loc(@"LPfront"),loc(@"LPback"),loc(@"LPbeforeclosed"),nil];
+	kSBIPosition.detailChoices = [NSArray arrayWithObjects:loc(@"LPfrontDetail"),loc(@"LPbackDetail"),loc(@"LPbeforeclosedDetail"),nil];
+	kSBIPosition.state = settings.sbIconSettings.launchType;
+	[kSBIPosition addTarget:settings.sbIconSettings andIntPropertySetter:@selector(setLaunchType:)];
+	
+ 	[kSBIconSec addCell:kSBIEnable];
+	[kSBIconSec addCell:kSBIShow];
+	[kSBIconSec addCell:kSBIPosition];
+	kSBIconSec.header = loc(@"SBIHeader");
+	
+	
+	//kLegacySec
+	kLegacyCell.text = loc(@"LegacyQuitAll");
+	kLegacyCell.on = settings.legacyMode;
+	[kLegacyCell addTarget:settings andBOOLPropertySetter:@selector(setLegacyMode:)];
+	
+	kLegacySec.footer = loc(@"LegacyQuitAllFooter"); 
+	[kLegacySec addCell:kLegacyCell];
+	
+	
+	[_model addGroup:kStartupSec];
+	[_model addGroup:kMiscSec];
+	[_model addGroup:kReorderSec];
+	[_model addGroup:kIconSec];
+	[_model addGroup:kSBIconSec];
+	[_model addGroup:kLegacySec];
+	
+	return _model;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style {
-    // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
     if ((self = [super initWithStyle:style])) {
-//		cells = [[NSMutableDictionary alloc] init];
-    }
+		self.model = [self generateModel];
+		self.title = loc(@"AdvancedSettingsTitle");
+	}
     return self;
 }
-
-
-
-#pragma mark -
-#pragma mark View lifecycle
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-	self.navigationItem.title = loc(@"AdvancedSettingsTitle");
-}
-
-
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-	[self.tableView reloadData];
-}
-
-/*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
-/*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
-/*
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-*/
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
-
-
-#pragma mark -
-#pragma mark Table view data source
-enum kAdvancedSections {
-	kQuitAllSec = 0,
-	kStartupSec,
-	kMiscSec,
-	kReorderSec,
-	kIconSec,
-	kLegacySec,
-	NUMADVANCEDSECTIONS
-};
-
-enum kLegacyCells {
-	kLegacyCell = 0,
-	NUMLEGACYCELL
-};
-
-enum kIconCells {
-	kIconCell = 0,
-	kSBSettingsCell,
-	NUMICONCELLS
-};
-
-enum kQuitAllCells {
-	kQAActivator = 0,
-	kQAQuitCurrent,
-	kQAIconBehavior,
-	kQAHidePrompt,
-	kQAConfirm,
-	NUMQACELLS
-};
-enum kStartupCells {
-	kSUEditMode= 0,
-	kSUiPod,
-	kSUiPodOnlyPlaying,
-	NUMSTARTUPCELLS
-};
-enum kMiscCells
-{
-	kMSCBadgePos = 0,
-	kMSCDontWriggle,
-	kMSCAllowTap,
-	kMSCNoEdit,
-	kMSCFastQuit,
-	NUMMISCCELLS
-};
-enum kReorderCells
-{
-	kROInEditMode,
-	kROOutsideEditMode,
-	kROSwipeQuit,
-	NUMREORDERCELLS
-};
-
-- (NSString*)switchKeyForIndexPath:(NSIndexPath*)path
-{
-	switch(path.section)
-	{
-		case kQuitAllSec:
-			switch(path.row)
-			{
-				case kQAQuitCurrent:
-					return @"QuitCurrent";
-				case kQAHidePrompt:
-					return @"HidePrompt";
-				case kQAConfirm:
-					return @"ConfirmQuit";
-				default:
-					return nil;
-			}
-			break;
-		case kStartupSec:
-			switch(path.row)
-			{
-				case kSUiPod:
-					return @"StartiPod";
-				case kSUiPodOnlyPlaying:
-					return @"StartiPodOnlyPlaying";
-				case kSUEditMode:
-					return @"StartEdit";
-				default:
-					return nil;
-			}
-			break;
-		case kMiscSec:
-			switch(path.row)
-			{
-				case kMSCNoEdit:
-					return @"NoEditMode";
-				case kMSCFastQuit:
-					return @"FastExit";
-				case kMSCDontWriggle:
-					return @"DontWriggle";
-				case kMSCAllowTap:
-					return @"LaunchFromEdit";
-				default:
-					return nil;
-			}
-			break;
-		case kReorderSec:
-			switch(path.row)
-			{
-				case kROInEditMode:
-					return @"ReorderEdit";
-				case kROOutsideEditMode:
-					return @"ReorderNonEdit";
-				case kROSwipeQuit:
-					return @"SwipeToQuit";
-				default: 
-					return nil;
-			}
-			break;
-		case kIconSec:
-			switch(path.row)
-			{
-				case kIconCell:
-					return @"SBIcon";
-				default:
-					return nil;
-			}
-			break;
-		case kLegacySec:
-			switch(path.row)
-			{
-				case kLegacyCell:
-					return @"LegacyQuitAll";
-				default: 
-					return nil;
-			}
-			break;
-		default:
-			return nil;
-	}
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	NSString * key = [self switchKeyForIndexPath:indexPath];
-	if (key)
-		return tableView.rowHeight + [SwitchCell additionalCellHeightForText:loc(key)];
-	NSString * text;
-	NSString * detail;
-	if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAIconBehavior))
-	{
-		text = loc(@"QuitMode");
-		switch ([MCSettings sharedInstance].quitMode)
-		{
-			case kQuitModeRemoveIcons:
-				detail = loc(@"QMRemove");
-				break;
-			case kQuitModeRules:
-				detail = loc(@"QMUseRules");
-				break;
-		}
-		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
-	}
-	if ((indexPath.section==kMiscSec)&&(indexPath.row==kMSCBadgePos))
-	{
-		text = loc(@"BadgeCorner");
-		NSString * kCorners[4]={loc(@"BCtopleft"),loc(@"BCtopright"),loc(@"BCbottomright"),loc(@"BCbottomleft")};
-		detail = kCorners[[MCSettings sharedInstance].badgeCorner];
-		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
-	}
-	if ((indexPath.section==kIconSec)&&(indexPath.row==kSBSettingsCell))
-	{
-		text = loc(@"SBSettingsType");
-		NSString * kToggleTypes[2]={loc(@"SBSTToggle"),loc(@"SBSTQuit")};
-		detail = kToggleTypes[[MCSettings sharedInstance].toggleType];
-		return tableView.rowHeight + [MultiLineCell additionalCellHeightForText:text detailText:detail andStyle:UITableViewCellStyleValue1];
-	}
-	if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAActivator))
-		return floor(1.5*tableView.rowHeight);
-	return tableView.rowHeight;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of sections.
-    return NUMADVANCEDSECTIONS;
-}
-
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of rows in the section.
-	switch (section) {
-		case kQuitAllSec:
-			return NUMQACELLS;
-		case kStartupSec:
-			return NUMSTARTUPCELLS-(([MCSettings sharedInstance].startupiPod)?0:1);
-		case kMiscSec:
-			return NUMMISCCELLS;
-		case kReorderSec:
-			return NUMREORDERCELLS;
-		case kIconSec:
-			return NUMICONCELLS;
-		case kLegacySec:
-			return NUMLEGACYCELL;
-		default:
-			return 0;
-	}
-}
-
--(void)setiPodStartup:(SwitchCell*)sender
-{
-	[MCSettings sharedInstance].startupiPod = sender.on;
-	NSArray * rows = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:kSUiPodOnlyPlaying inSection:kStartupSec]];
-	if (sender.on)
-		[self.tableView insertRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationLeft];
-	else
-		[self.tableView deleteRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationLeft];
-}
-
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    UITableViewCell *cell = nil;
-	cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil] autorelease];
-    
-    switch (indexPath.section) {
-		case kQuitAllSec:
-			switch (indexPath.row) {
-				case kQAActivator:
-					cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil] autorelease];
-					cell.textLabel.text = loc(@"QuitAll");
-					cell.detailTextLabel.text = loc(@"Activator");
-					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					break;
-				case kQAQuitCurrent:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setQuitCurrentApp:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].quitCurrentApp;
-					cell.textLabel.text = loc(@"QuitCurrent");
-					break;
-				case kQAHidePrompt:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setHidePrompt:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].hidePrompt;
-					cell.textLabel.text = loc(@"HidePrompt");
-					break;
-				case kQAConfirm:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setConfirmQuit:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].confirmQuit;
-					cell.textLabel.text = loc(@"ConfirmQuit");
-					break;
-				case kQAIconBehavior:
-					cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"AdvancedNormalCell"] autorelease];
-					cell.textLabel.text = loc(@"QuitMode");
-					switch ([MCSettings sharedInstance].quitMode)
-					{
-						case kQuitModeRemoveIcons:
-							cell.detailTextLabel.text = loc(@"QMRemove");
-							break;
-						case kQuitModeRules:
-							cell.detailTextLabel.text = loc(@"QMUseRules");
-							break;
-					}
-					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					break;
-			} 
-			break;
-		case kStartupSec:
-			cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
-			switch(indexPath.row)
-			{
-				case kSUiPod:
-					cell.textLabel.text = loc(@"StartiPod");
-					[(SwitchCell*)cell setTarget:self andSelector:@selector(setiPodStartup:)];
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].startupiPod;
-					break;
-				case kSUEditMode:
-					cell.textLabel.text = loc(@"StartEdit");
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setStartupEdit:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].startupEdit;
-					break;
-				case kSUiPodOnlyPlaying:
-					cell.textLabel.text = loc(@"StartiPodOnlyPlaying");
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setOnlyWhenPlaying:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].onlyWhenPlaying;
-			}
-			break;
-		case kMiscSec:
-			switch(indexPath.row)
-			{
-				case kMSCBadgePos:
-					cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"AdvancedNormalCell"] autorelease];
-					cell.textLabel.text = loc(@"BadgeCorner");
-					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					NSString * kCorners[4]={loc(@"BCtopleft"),loc(@"BCtopright"),loc(@"BCbottomright"),loc(@"BCbottomleft")};
-					cell.detailTextLabel.text = kCorners[[MCSettings sharedInstance].badgeCorner];
-					break;
-				case kMSCDontWriggle:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setDontWriggle:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].dontWriggle;
-					cell.textLabel.text = loc(@"DontWriggle");
-					break;
-				case kMSCNoEdit:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setNoEditMode:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].noEditMode;
-					cell.textLabel.text = loc(@"NoEditMode");
-					break;
-				case kMSCFastQuit:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setFastExit:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].fastExit;
-					cell.textLabel.text = loc(@"FastExit");
-					break;
-				case kMSCAllowTap:
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"]autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setAllowTap:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].allowTap;	
-					cell.textLabel.text = loc(@"LaunchFromEdit");
-					break;
-			}
-			break;
-		case kReorderSec:
-			switch(indexPath.row)
-			{
-				case kROInEditMode:
-				{
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setReorderEdit:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].reorderEdit;
-					cell.textLabel.text = loc(@"ReorderEdit");
-					break;
-				}
-				case kROOutsideEditMode:
-				{
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setReorderNonEdit:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].reorderNonEdit;
-					cell.textLabel.text = loc(@"ReorderNonEdit");
-					break;
-				}
-				case kROSwipeQuit:
-				{
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setSwipeQuit:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].swipeQuit;
-					cell.textLabel.text = loc(@"SwipeToQuit");
-					break;
-				}
-			}
-			break;
-		case kIconSec:
-			switch(indexPath.row)
-			{
-				case kIconCell:
-				{
-					cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
-					[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setSbIcon:)]; 
-					((SwitchCell*)cell).on=[MCSettings sharedInstance].sbIcon;
-					cell.textLabel.text = loc(@"SBIcon");
-					break;
-				}
-				case kSBSettingsCell:
-				{
-					cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"AdvancedNormalCell"] autorelease];
-					cell.textLabel.text = loc(@"SBSettingsType");
-					cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-					NSString * kToggleTypes[2]={loc(@"SBSTToggle"),loc(@"SBSTQuit")};
-					cell.detailTextLabel.text = kToggleTypes[[MCSettings sharedInstance].toggleType];
-					break;
-				}
-			}
-			break;
-			
-		case kLegacySec:
-			switch(indexPath.row)
-		{
-			case kLegacyCell:
-			{
-				cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AdvancedSwitchCell"] autorelease];
-				[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setLegacyMode:)]; 
-				((SwitchCell*)cell).on=[MCSettings sharedInstance].legacyMode;
-				cell.textLabel.text = loc(@"LegacyQuitAll");
-				break;
-			}
-		}
-			break;
-	}
-	//[cells setObject:cell forKey:[indexPath description]];
-    return cell;
-}
-
--(NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
-{
-	switch (section) {
-		case kLegacySec:
-			return loc(@"LegacyQuitAllFooter");
-		default:
-			return nil;
-	}
-}
-
-#pragma mark -
-#pragma mark Table view delegate
-
-#define quitModeTag 1001
-#define badgeCornerTag 1002
-#define toggleTypeTag 1003
-
-- (void)pickerTableController:(PickerTableController *)tvc changedSelectionTo:(int)sel
-{
-	if (tvc.tag==quitModeTag)
-		[MCSettings sharedInstance].quitMode=sel;
-	if (tvc.tag==badgeCornerTag)
-		[MCSettings sharedInstance].badgeCorner=sel;
-	if (tvc.tag==toggleTypeTag)
-	{
-		[MCSettings sharedInstance].toggleType=sel;
-		if (sel==kToggleTypeQuit)
-			[MCSettings sharedInstance].quitAllEnabled=YES;
-	}
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAActivator))
-	{
-		LAListenerSettingsViewController * vc = [[LAListenerSettingsViewController alloc] init];
-		vc.listenerName=@"com.dapetcu21.MultiCleaner_quitAllApps";
-		[self.navigationController pushViewController:vc animated:YES];
-		[vc release];
-		return;
-	}
-	if ((indexPath.section==kQuitAllSec)&&(indexPath.row==kQAIconBehavior))
-	{
-		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
-		vc.title = loc(@"QMtitle");
-		vc.items = [NSArray arrayWithObjects:loc(@"QMRemoveDetail"),loc(@"QMUseRulesDetail"),nil];
-		vc.delegate = self;
-		vc.tag = quitModeTag;
-		vc.currentSelection = [MCSettings sharedInstance].quitMode;
-		[self.navigationController pushViewController:vc animated:YES];
-		[vc release];
-		return;
-	}
-	if ((indexPath.section==kIconSec)&&(indexPath.row==kSBSettingsCell))
-	{
-		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
-		vc.title = loc(@"SBSTtitle");
-		vc.items = [NSArray arrayWithObjects:loc(@"SBSTToggleDetail"),loc(@"SBSTQuitDetail"),nil];
-		vc.delegate = self;
-		vc.tag = toggleTypeTag;
-		vc.currentSelection = [MCSettings sharedInstance].toggleType;
-		[self.navigationController pushViewController:vc animated:YES];
-		[vc release];
-		return;
-	}
-	if ((indexPath.section==kMiscSec)&&(indexPath.row==kMSCBadgePos))
-	{
-		PickerTableController * vc = [[PickerTableController alloc] initWithStyle:UITableViewStyleGrouped];
-		vc.title = loc(@"BCtitle");
-		vc.items = [NSArray arrayWithObjects:loc(@"BCtopleftDetail"),loc(@"BCtoprightDetail"),loc(@"BCbottomrightDetail"),loc(@"BCbottomleftDetail"),nil];
-		vc.delegate = self;
-		vc.tag = badgeCornerTag;
-		vc.currentSelection = [MCSettings sharedInstance].badgeCorner;
-		[self.navigationController pushViewController:vc animated:YES];
-		[vc release];
-	}
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-
-#pragma mark -
-#pragma mark Memory management
-
-- (void)didReceiveMemoryWarning {
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Relinquish ownership any cached data, images, etc that aren't in use.
-}
-
-- (void)viewDidUnload {
-    // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
-    // For example: self.myOutlet = nil;
-}
-
-
-- (void)dealloc {
-	//[cells release];
-    [super dealloc];
-}
-
 
 @end
 

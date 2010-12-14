@@ -20,13 +20,15 @@
 #import "MCIndividualSettings.h"
 #import "MultiLineCell.h"
 #import "AdvancedView.h"
+#import "SettingsViewController.h"
+#import "ActivatorToggles.h"
 
 @implementation RootViewController
 
 
 -(NSArray*) applications
 {
-	return [[order retain] autorelease];
+	return order;
 }
 
 -(id)initWithStyle:(UITableViewStyle)style
@@ -34,6 +36,45 @@
 	if (self=[super initWithStyle:style])
 	{
 		[self loadSettings];
+		TableModel * _model = [[[TableModel alloc] init] autorelease];
+		
+		TableGroup * AboutSection = [[[TableGroup alloc] init] autorelease];
+		TableGroup * GeneralSettings = [[[TableGroup alloc] init] autorelease];
+		
+		
+		TableCellNavigation * AboutCell = [[[TableCellNavigation alloc] init] autorelease];
+		
+		TableCellNavigation * ActivatorCell = [[[TableCellNavigation alloc] init] autorelease];
+		TableCellNavigation * GlobalSettingsCell = [[[TableCellNavigation alloc] init] autorelease];
+		TableCellNavigation * AdvancedSettingsCell = [[[TableCellNavigation alloc] init] autorelease];
+		
+		
+		//AboutSection
+		AboutCell.text = loc(@"About");
+		[AboutCell setTarget:self andSelector:@selector(about:)];
+		
+		[AboutSection addCell:AboutCell];
+		
+		//GeneralSettings
+		ActivatorCell.text = loc(@"ActivatorToggles");
+		[ActivatorCell setTarget:self andSelector:@selector(activatorToggles:)];
+		
+		GlobalSettingsCell.text = loc(@"GlobalSettings");
+		[GlobalSettingsCell setTarget:self andSelector:@selector(globalSettings:)];
+		
+		AdvancedSettingsCell.text = loc(@"AdvancedSettings");
+		[AdvancedSettingsCell setTarget:self andSelector:@selector(advancedSettings:)];
+
+		[GeneralSettings addCell:ActivatorCell];
+		[GeneralSettings addCell:GlobalSettingsCell];
+		[GeneralSettings addCell:AdvancedSettingsCell];
+	
+		
+		[_model addGroup:AboutSection];
+		[_model addGroup:GeneralSettings];
+		
+		self.model = _model;
+		self.title = @"MultiCleaner";
 	}
 	return self;
 }
@@ -109,8 +150,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	self.navigationItem.title=@"MultiCleaner";
-	//[self setEditing:YES];
 	UIBarButtonItem * button = [[UIBarButtonItem alloc] initWithTitle:loc(@"Add")
 																style:UIBarButtonItemStylePlain 
 															   target:self 
@@ -130,14 +169,6 @@
 #pragma mark -
 #pragma mark Table view data source
 
-enum kSections {
-	kCloseAppSection = 0,
-	kAboutSection,
-	kGeneralSettings,
-	kAppSettings,
-	NUMSECTIONS
-};
-
 enum kClosedAppCells {
 	kCAActivator = 0,
 	kCAHidePrompt,
@@ -148,63 +179,40 @@ enum kClosedAppCells {
 
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return NUMSECTIONS;
+    return [super numberOfSectionsInTableView:tableView]+1;
 }
 
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    switch (section) {
-		case kCloseAppSection:
-			return NUMCLOSEDAPPCELLS;
-		case kGeneralSettings:
-			return 2;
-		case kAppSettings:
-			return [settings count]-1;
-		case kAboutSection:
-			return 1;
-			break;
-
-		default:
-			return 0;
-	}
+    if (self.model.count==section)
+		return [settings count]-1;
+	//else
+	return [super tableView:tableView numberOfRowsInSection:section];
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-	if (section==kAppSettings)
+	if (section==self.model.count)
 		return loc(@"PerAppSettings");
-	return nil;
+	return [super tableView:tableView titleForHeaderInSection:section];
 }
 
-- (NSString*)switchKeyForIndexPath:(NSIndexPath*)path
+- (NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-	switch(path.section)
-	{
-		case kCloseAppSection:
-			switch(path.row)
-			{
-				case kCAHidePrompt:
-					return @"HidePrompt";
-				case kCAConfirm:
-					return @"ConfirmQuit";
-				default:
-					return nil;
-			}
-			break;
-		default:
-			return nil;
-	}
+	if (section==self.model.count)
+		return nil;
+	return [super tableView:tableView titleForFooterInSection:section];
 }
+
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSString * key = [self switchKeyForIndexPath:indexPath];
-	if (key)
-		return self.tableView.rowHeight + [SwitchCell additionalCellHeightForText:loc(key)];
-	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAActivator))
-		return round(self.tableView.rowHeight*1.4f);
-	return self.tableView.rowHeight;
+	if (indexPath.section==self.model.count)
+		return self.tableView.rowHeight;
+	//else
+	return [super tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
 extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *identifier);
@@ -212,91 +220,20 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"Cell";
-	static NSString *AppCellIdentifier= @"AppCell";
-	static NSString *SwitchCellIdentifier = @"SwitchCell";
-	UITableViewCell *cell;
-	
-	if (indexPath.section==kAppSettings)
+	if (self.model.count==indexPath.section)
 	{
-		cell = [tableView dequeueReusableCellWithIdentifier:AppCellIdentifier];
+		ApplicationCell * cell = (ApplicationCell*)[tableView dequeueReusableCellWithIdentifier:@"AppCell"];
 		if (cell == nil) {
-			cell = [[[ApplicationCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:AppCellIdentifier] autorelease];
+			cell = [[[ApplicationCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AppCell"] autorelease];
 		}
-	}
-	else
-	if ((indexPath.section==kCloseAppSection)&&((indexPath.row==kCAHidePrompt)||(indexPath.row==kCAConfirm)))
-	{
-		cell = [[[SwitchCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:SwitchCellIdentifier] autorelease];
-	}
-	else
-	{
-		cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-		if (cell == nil) {
-			cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
-		}
-		cell.detailTextLabel.text=nil;
-    }
-	
-	
-	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAActivator))
-	{
-		cell.textLabel.text=loc(@"QuitSingle");
-		cell.selectionStyle=UITableViewCellSelectionStyleBlue;
-		cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
-		cell.detailTextLabel.text=loc(@"Activator");
-	}
-	
-	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAConfirm))
-	{
-		cell.textLabel.text=loc(@"ConfirmQuit");
-		[(SwitchCell*)cell setOn:[MCSettings sharedInstance].confirmQuitSingle];
-		[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setConfirmQuitSingle:)];
-		cell.selectionStyle=UITableViewCellSelectionStyleNone;
-		cell.accessoryType=UITableViewCellAccessoryNone;
-	}
-	
-	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAHidePrompt))
-	{
-		cell.textLabel.text=loc(@"HidePrompt");
-		[(SwitchCell*)cell setOn:[MCSettings sharedInstance].hidePromptSingle];
-		[(SwitchCell*)cell setTarget:[MCSettings sharedInstance] andPropertySetter:@selector(setHidePromptSingle:)];
-		cell.selectionStyle=UITableViewCellSelectionStyleNone;
-		cell.accessoryType=UITableViewCellAccessoryNone;
-	}
-	
-	if (indexPath.section==kAboutSection)
-	{
-		cell.textLabel.text=loc(@"About");
-		cell.selectionStyle=UITableViewCellSelectionStyleBlue;
-		cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
-	}
-	
-	if (indexPath.section==kGeneralSettings)
-	{
-		switch (indexPath.row) {
-			case 0:
-				cell.textLabel.text=loc(@"GlobalSettings");
-				break;
-			case 1:
-				cell.textLabel.text=loc(@"AdvancedSettings");
-				break;
-		}
-	}
-	
-	if (indexPath.section==kAppSettings)
-	{
 		NSString * bundleID = [order objectAtIndex:indexPath.row+1];
-		[(ApplicationCell*)cell setDisplayId:bundleID];
-	}
-	
-	if ((indexPath.section==kGeneralSettings)||(indexPath.section==kAppSettings))
-	{
+		[cell setDisplayId:bundleID];
 		cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
-		cell.selectionStyle=UITableViewCellSelectionStyleBlue;
+		cell.selectionStyle=UITableViewCellSelectionStyleBlue;		
+		return cell;
 	}
-	
-    return cell;
+	//else
+	return [super tableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
 
@@ -304,12 +241,13 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
-    return (indexPath.section==kAppSettings);
+    return (indexPath.section==self.model.count);
 }
 
 
 -(NSIndexPath*)tableView:(UITableView *)tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *)sourceIndexPath toProposedIndexPath:(NSIndexPath *)proposedDestinationIndexPath
 {
+	int kAppSettings = self.model.count;
 	if (sourceIndexPath.section!=kAppSettings)
 		return sourceIndexPath;
 	if (proposedDestinationIndexPath.section!=kAppSettings)
@@ -323,7 +261,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-		if (indexPath.section==kAppSettings)
+		if (indexPath.section==self.model.count)
 		{
 			NSString * bundleID = [order objectAtIndex:indexPath.row+1];
 			[settings removeObjectForKey:bundleID];
@@ -331,10 +269,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 			[self saveSettings];
 			[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 		}
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
-    }   
+    }
 }
 
 
@@ -342,6 +277,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+	int kAppSettings = self.model.count;
 	if (fromIndexPath.section!=kAppSettings)
 		return;
 	if (toIndexPath.section!=kAppSettings)
@@ -357,7 +293,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the item to be re-orderable.
-    return indexPath.section==kAppSettings;
+    return indexPath.section==self.model.count;
 }
 
 
@@ -365,43 +301,51 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 #pragma mark -
 #pragma mark Table view delegate
 
+-(void)globalSettings:(id)sender
+{
+	SettingsView * vc = [[SettingsView alloc] initWithSettings:[settings objectForKey:@"_global"] 
+													  bundleID:@"_global" 
+													   andName:loc(@"GlobalSettingsTitle")];
+	[self.navigationController pushViewController:vc animated:YES];
+	[vc release];
+}
+
+-(void)activatorToggles:(id)sender
+{
+	ActivatorToggles * vc = [[ActivatorToggles alloc] initWithStyle:UITableViewStyleGrouped];
+	[self.navigationController pushViewController:vc animated:YES];
+	[vc release];
+}
+
+-(void)advancedSettings:(id)sender
+{
+	AdvancedView * vc = [[AdvancedView alloc] initWithStyle:UITableViewStyleGrouped];
+	[self.navigationController pushViewController:vc animated:YES];
+	[vc release];
+}
+
+-(void)about:(id)sender
+{
+	About * vc = [[About alloc] initWithNibName:nil bundle:nil];
+	[self.navigationController pushViewController:vc animated:YES];
+	[vc release];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    UIViewController * vc = nil;
-	if ((indexPath.section==kCloseAppSection)&&(indexPath.row==kCAActivator))
-	{
-		vc = [[LAListenerSettingsViewController alloc] init];
-		((LAListenerSettingsViewController*)vc).listenerName=@"com.dapetcu21.MultiCleaner";
-	} else
-	if (indexPath.section==kAppSettings)
+	if (indexPath.section==self.model.count)
 	{
 		ApplicationCell * cell = (ApplicationCell*) [tableView cellForRowAtIndexPath:indexPath];
 		NSString * bundleID = [order objectAtIndex:indexPath.row+1];
 		NSLog(@"selected bundleID: 0x%x",bundleID);
 		MCIndividualSettings * sett = [settings objectForKey:bundleID];
 		NSLog(@"selected count:%d",[bundleID retainCount]);
-		vc = [[SettingsView alloc] initWithSettings:sett
-										   bundleID:bundleID
-											andName:cell.textLabel.text];
+		SettingsView * vc = [[SettingsView alloc] initWithSettings:sett
+														  bundleID:bundleID
+														   andName:cell.textLabel.text];
+		[self.navigationController pushViewController:vc animated:YES];
+		[vc release];
 	} else
-	if (indexPath.section==kGeneralSettings)
-	{
-		switch (indexPath.row) {
-			case 0:
-				vc = [[SettingsView alloc] initWithSettings:[settings objectForKey:@"_global"] 
-												   bundleID:@"_global" 
-													andName:loc(@"GlobalSettingsTitle")];
-				break;
-			case 1:
-				vc = [[AdvancedView alloc] initWithStyle:UITableViewStyleGrouped];
-				break;
-		}
-	} else
-	if (indexPath.section==kAboutSection)
-	{
-		vc = [[About alloc] initWithNibName:nil bundle:nil];
-	}
-	[self.navigationController pushViewController:vc animated:YES];
-	[vc release];
+		[super tableView:tableView didSelectRowAtIndexPath:indexPath];
 }
 
 

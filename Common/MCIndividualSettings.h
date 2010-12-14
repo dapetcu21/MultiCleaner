@@ -23,7 +23,16 @@ enum kQuitTypes {
 	NUMQUITTYPES
 };
 
+enum kSwipeTypes {
+	kSTAppAndIcon = 0,
+	kSTIcon,
+	kSTApp,
+	kSTNothing,
+	NUMSWIPETYPES
+};
+
 @interface MCIndividualSettings : NSObject<NSCopying> {	
+	BOOL pinned;
 	BOOL autoclose;
 	BOOL hidden;
 	BOOL dimClosed;
@@ -35,15 +44,17 @@ enum kQuitTypes {
 	BOOL dontMoveToFront;
 	int launchType;
 	int quitType;
-	BOOL swipeNoQuit;
+	int swipeType;
 	BOOL quitSingleException;
 	BOOL autolaunch;
+	BOOL badgePinned;
 }
 
 -(void)saveToDict:(NSMutableDictionary*)dict;
 -(void)loadFromDict:(NSDictionary*)dict;
 -(void)reloadDefaults;
 
+@property(nonatomic,assign) BOOL pinned;
 @property(nonatomic,assign) BOOL autoclose;
 @property(nonatomic,assign) BOOL hidden;
 @property(nonatomic,assign) BOOL dimClosed;
@@ -56,7 +67,8 @@ enum kQuitTypes {
 @property(nonatomic,assign) BOOL dontMoveToFront;
 @property(nonatomic,assign) int launchType;
 @property(nonatomic,assign) int quitType;
-@property(nonatomic,assign) BOOL swipeNoQuit;
+@property(nonatomic,assign) int swipeType;
 @property(nonatomic,assign) BOOL autolaunch;
+@property(nonatomic,assign) BOOL badgePinned;
 
 @end
