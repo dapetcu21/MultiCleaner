@@ -10,7 +10,7 @@
 #ifndef MULTICLEANER_H
 #define MULTICLEANER_H
 
-#define BETA_VERSION @"2010-12-17 00:00:00 +0200"
+//#define BETA_VERSION @"2010-12-17 00:00:00 +0200"
 
 #ifdef __cplusplus
 extern "C" 

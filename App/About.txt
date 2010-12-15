@@ -9,6 +9,7 @@ v2.6
  - activator trigger for launching the last closed app
  - activator trigger for toggling the bar
  - activator trigger equivalent to the home button
+ - new icons
 v2.5
  - app pinning
  - iOS4.2.1 compatibility and experimental iPad support
@@ -77,14 +78,14 @@ v1.0.1
 v1.0
  - initial release
 
+GRAPHICS:
+Sorin Nița
+
 TRANSLATORS:
 Spanish: ErMasLoko
 Italian: Jordiz
 Russian: tickelo
 Romanian: Marius Petcu (da_petcu21)
-
-GRAPHICS:
-Sorin Nița
 
 COPYRIGHT:
 
