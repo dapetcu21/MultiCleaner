@@ -51,6 +51,7 @@
 	TableCellChoice * kSwipeTypeCell = [[[TableCellChoice alloc] init] autorelease];
 	TableCellSwitch * kAutostartCell = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kHiddenCell = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kQuitAppRemoveCell = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kExceptionCell = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kSingleExceptionCell = [[[TableCellSwitch alloc] init] autorelease];
 	
@@ -68,6 +69,8 @@
 	[kPinnedCell addTarget:kShowCurrCell andBOOLPropertySetter:@selector(setHidden:)];
 	[kPinnedCell addTarget:kQuitTypeCell andBOOLPropertySetter:@selector(setHidden:)];
 	//[kPinnedCell addTarget:kSwipeTypeCell andBOOLPropertySetter:@selector(setHidden:)];
+	[kPinnedCell addTarget:kQuitAppRemoveCell andBOOLPropertySetter:@selector(setHidden:)];
+	[kPinnedCell addTarget:kHiddenCell andBOOLPropertySetter:@selector(setHidden:)];
 	[kPinnedCell addTarget:kRearrangeSec andBOOLPropertySetter:@selector(setHidden:)];
 	
 	kPinnedSec.footer = loc(@"PinnedFooter");
@@ -138,6 +141,12 @@
 	kHiddenCell.text = loc(@"Hide");
 	kHiddenCell.on = settings.hidden;
 	[kHiddenCell addTarget:settings andBOOLPropertySetter:@selector(setHidden:)];
+	kHiddenCell.hidden = settings.pinned;
+	
+	kQuitAppRemoveCell.text = global?loc(@"QuitAppRemovesIcon"):loc(@"QuitAppRemovesIconIndiv");
+	kQuitAppRemoveCell.on = settings.removeOnQuitApp;
+	[kQuitAppRemoveCell addTarget:settings andBOOLPropertySetter:@selector(setRemoveOnQuitApp:)];
+	kQuitAppRemoveCell.hidden = settings.pinned;
 	
 	kExceptionCell.text = loc(@"AllException");
 	kExceptionCell.on = settings.quitException;
@@ -151,6 +160,7 @@
 	[kAdditionalSec addCell:kQuitTypeCell];
 	[kAdditionalSec addCell:kSwipeTypeCell];
 	[kAdditionalSec addCell:kAutostartCell];
+	[kAdditionalSec addCell:kQuitAppRemoveCell];
 	if (!global)
 	{
 		[kAdditionalSec addCell:kHiddenCell];

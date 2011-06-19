@@ -47,6 +47,7 @@
 		C1EA959512AE96D70060BA70 /* MCListenerOpenBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EA959412AE96D70060BA70 /* MCListenerOpenBar.m */; };
 		C1EA95A912AE9FEF0060BA70 /* MCListenerLastClosed.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EA95A812AE9FEF0060BA70 /* MCListenerLastClosed.m */; };
 		C1EA971B12B0324B0060BA70 /* MCListenerJustMin.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EA971A12B0324B0060BA70 /* MCListenerJustMin.m */; };
+		C1EFE96212DDCBF100AB24A4 /* MCListenerOpenEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = C1EFE96112DDCBF100AB24A4 /* MCListenerOpenEdit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,8 @@
 		C1EA95A812AE9FEF0060BA70 /* MCListenerLastClosed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCListenerLastClosed.m; path = classes/MCListenerLastClosed.m; sourceTree = SOURCE_ROOT; };
 		C1EA971912B0324B0060BA70 /* MCListenerJustMin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCListenerJustMin.h; path = classes/MCListenerJustMin.h; sourceTree = SOURCE_ROOT; };
 		C1EA971A12B0324B0060BA70 /* MCListenerJustMin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCListenerJustMin.m; path = classes/MCListenerJustMin.m; sourceTree = SOURCE_ROOT; };
+		C1EFE96012DDCBF100AB24A4 /* MCListenerOpenEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MCListenerOpenEdit.h; path = classes/MCListenerOpenEdit.h; sourceTree = SOURCE_ROOT; };
+		C1EFE96112DDCBF100AB24A4 /* MCListenerOpenEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MCListenerOpenEdit.m; path = classes/MCListenerOpenEdit.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +151,8 @@
 				C1EA971A12B0324B0060BA70 /* MCListenerJustMin.m */,
 				C1EA959312AE96D70060BA70 /* MCListenerOpenBar.h */,
 				C1EA959412AE96D70060BA70 /* MCListenerOpenBar.m */,
+				C1EFE96012DDCBF100AB24A4 /* MCListenerOpenEdit.h */,
+				C1EFE96112DDCBF100AB24A4 /* MCListenerOpenEdit.m */,
 				C1EA95A712AE9FEF0060BA70 /* MCListenerLastClosed.h */,
 				C1EA95A812AE9FEF0060BA70 /* MCListenerLastClosed.m */,
 				C18594001299004300CE8FEB /* MCImageView.h */,
@@ -312,7 +317,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "rm -R \"Root/Applications/MultiCleaner.app\"\ncp -R \"../App/build/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/MultiCleaner.app\" \"Root/Applications/MultiCleaner.app\"\nrm -R \"Root/Applications/MultiCleaner.app/_CodeSignature\"\nrm -R \"Root/Applications/MultiCleaner.app/CodeResources\"\ncp \"../SBsettings/MultiCleaner.dylib\" \"Root/var/mobile/Library/SBSettings/Toggles/Quit Apps/Toggle.dylib\"\nfind -d \"Root\" -name \".DS_Store\" -exec rm -r '{}' \\; -print\ncp ${DEB_CONTROL_FILE} ./controltmp1\nexport COPYFILE_DISABLE=true\nexport COPY_EXTENDED_ATTRIBUTES_DISABLE=true\nTMP=`du -d0 -k Root`\nFILESIZE=`expr \"$TMP\" : '\\([0-9]*\\).*'`\necho Installed-Size: $FILESIZE >> controltmp2\necho Installed-Size: $FILESIZE\nmkdir \"Root/DEBIAN\"\ncat controltmp1 controltmp2 | tr -s '\\012' > Root/DEBIAN/control\nrm controltmp*\n/usr/local/bin/dpkg-deb -D -b Root #change if you installed dpkg somewhere else\nmv Root.deb MultiCleaner.deb\nrm -R \"Root/DEBIAN\"\nexit 0;";
+			shellScript = "rm -Rf \"Root/Applications/MultiCleaner.app\"\ncp -Rf \"../App/build/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/MultiCleaner.app\" \"Root/Applications/MultiCleaner.app\"\nrm -Rf \"Root/Applications/MultiCleaner.app/_CodeSignature\"\nrm -Rf \"Root/Applications/MultiCleaner.app/CodeResources\"\ncp \"../SBsettings/MultiCleaner.dylib\" \"Root/var/mobile/Library/SBSettings/Toggles/Quit Apps/Toggle.dylib\"\nfind -d \"Root\" -name \".DS_Store\" -exec rm -r '{}' \\; -print\ncp ${DEB_CONTROL_FILE} ./controltmp1\nexport COPYFILE_DISABLE=true\nexport COPY_EXTENDED_ATTRIBUTES_DISABLE=true\nTMP=`du -d0 -k Root`\nFILESIZE=`expr \"$TMP\" : '\\([0-9]*\\).*'`\necho Installed-Size: $FILESIZE >> controltmp2\necho Installed-Size: $FILESIZE\nmkdir \"Root/DEBIAN\"\ncat controltmp1 controltmp2 | tr -s '\\012' > Root/DEBIAN/control\nrm controltmp*\n/usr/local/bin/dpkg-deb -D -b Root #change if you installed dpkg somewhere else\nmv Root.deb MultiCleaner.deb\nrm -R \"Root/DEBIAN\"\nexit 0;";
 		};
 		C19129DB123672B70047DA69 /* Install */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -326,7 +331,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "SOURCE=${CONFIGURATION_BUILD_DIR}/${PROJECT_NAME}.app/${PROJECT_NAME}\nDEST=Root/Library/MobileSubstrate/DynamicLibraries/${PROJECT_NAME}.dylib\nif [ -f \"$DEST\" ] \nthen\n rm -r \"$DEST\"\nfi\ncp \"$SOURCE\" \"$DEST\"\n/usr/local/bin/ldid -S \"$DEST\"";
+			shellScript = "SOURCE=${CONFIGURATION_BUILD_DIR}/${PROJECT_NAME}.app/${PROJECT_NAME}\nDEST=Root/Library/MobileSubstrate/DynamicLibraries/${PROJECT_NAME}.dylib\nrm -rf \"$DEST\"\n/usr/local/bin/ldid -S \"$SOURCE\"\ncp \"$SOURCE\" \"$DEST\"";
 		};
 		C1C71E7E12355C3D00B473E8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -358,6 +363,7 @@
 				C1EA959512AE96D70060BA70 /* MCListenerOpenBar.m in Sources */,
 				C1EA95A912AE9FEF0060BA70 /* MCListenerLastClosed.m in Sources */,
 				C1EA971B12B0324B0060BA70 /* MCListenerJustMin.m in Sources */,
+				C1EFE96212DDCBF100AB24A4 /* MCListenerOpenEdit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,6 +435,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LD_OPENMP_FLAGS = "-fopenmp";
+				LIBRARY_SEARCH_PATHS = /Developer/JBToolkit;
 				MACH_O_TYPE = mh_dylib;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -438,7 +445,7 @@
 					"-dynamiclib",
 				);
 				PREBINDING = NO;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -452,6 +459,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				LIBRARY_SEARCH_PATHS = /Developer/JBToolkit;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_LDFLAGS = (
 					"-init",
@@ -460,7 +468,7 @@
 					"-dynamiclib",
 				);
 				PREBINDING = NO;
-				SDKROOT = iphoneos4.1;
+				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};

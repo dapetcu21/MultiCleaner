@@ -1,7 +1,27 @@
 MultiCleaner
-version 2.6
+version 2.9
 
 CHANGELOG:
+v2.9
+ - iPad support
+ - 4.3.1 multitasking gestures support
+ - added notice under "Swipe to quit"
+ - you can now open the bar using an Activator shortcut from the lockscreen
+ - german translation
+ - bugfixes
+v2.8
+ - bugfixes
+ - fixed a serious bug preventing "Quit All Apps" from working
+ - new Activator trigger that opens the bar directly in edit mode
+ - new option of removing the icon from the bar when using the "Quit App" Activator shortcut
+v2.7
+ - you can now stop Phone.app from showing up in the bar after recieving a call
+ - don't start in iPod controls when the music app (iPod/Pandora/etc...) is in foreground
+ - japanese translation
+ - bugfixes
+ - changed the default settings
+v2.6.1
+ - fixes the SBSettings toggle
 v2.6
  - bugfixes to the pinning system
  - "Start in pinned area only when the bar is empty"
@@ -82,10 +102,16 @@ GRAPHICS:
 Sorin Nița
 
 TRANSLATORS:
-Spanish: ErMasLoko
-Italian: Jordiz
-Russian: tickelo
+Spanish:  ErMasLoko
+Italian:  Jordiz
+Russian:  tickelo
+Japanese: PickApp
+German:   srt Design Labs (André Paetzold)
 Romanian: Marius Petcu (da_petcu21)
+
+CONTACT:
+Email:    dapetcu21@gmail.com
+Twitter:  http://twitter.com/dapetcu21
 
 COPYRIGHT:
 

@@ -40,15 +40,16 @@ enum kToggleTypes
 	BOOL confirmQuitSingle;
 	BOOL hidePrompt;
 	BOOL hidePromptSingle;
-	BOOL quitAllEnabled;
+//	BOOL quitAllEnabled;
 	BOOL sbIcon;
 	BOOL legacyMode;
 	BOOL onlyWhenEmpty;
 	int toggleType;
 	BOOL startupPinned;
 	BOOL pinnedOnlyWhenEmpty;
-	BOOL toggleInLockscreen;
 	BOOL hidePromptMin;
+	BOOL bypassPhone;
+	BOOL unlessMusic;
 	MCIndividualSettings * sbIconSettings;
 }
 @property(nonatomic,assign) BOOL startupiPod;
@@ -68,15 +69,16 @@ enum kToggleTypes
 @property(nonatomic,assign) BOOL confirmQuitSingle;
 @property(nonatomic,assign) BOOL hidePrompt;
 @property(nonatomic,assign) BOOL hidePromptSingle;
-@property(nonatomic,assign) BOOL quitAllEnabled;
+//@property(nonatomic,assign) BOOL quitAllEnabled;
 @property(nonatomic,assign) BOOL sbIcon;
 @property(nonatomic,assign) BOOL legacyMode;
 @property(nonatomic,assign) BOOL onlyWhenEmpty;
 @property(nonatomic,assign) int toggleType;
 @property(nonatomic,assign) BOOL startupPinned;
 @property(nonatomic,assign) BOOL pinnedOnlyWhenEmpty;
-@property(nonatomic,assign) BOOL toggleInLockscreen;
 @property(nonatomic,assign) BOOL hidePromptMin;
+@property(nonatomic,assign) BOOL bypassPhone;
+@property(nonatomic,assign) BOOL unlessMusic;
 @property(nonatomic,readonly) MCIndividualSettings * sbIconSettings;
 
 -(void)loadFromDict:(NSDictionary*)def;

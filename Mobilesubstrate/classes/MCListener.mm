@@ -33,7 +33,8 @@
 		[alert dismissAnimated:YES];
 		alert=nil;
 	}
-	quitForegroundApp();
+	quitForegroundApp(YES);
+	MCLog(@"quitApp");
 }
 
 - (void)willPresentAlertView:(UIAlertView *)alertView {
@@ -47,7 +48,7 @@
 
 - (void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event
 {	
-	
+	MCLog(@"activate");
 	if ([[MCSettingsController sharedInstance] settingsForBundleID:foregroundAppDisplayIdentifier()].quitSingleException)
 		return;
 	MCSettings * sett = [MCSettings sharedInstance];

@@ -37,7 +37,7 @@
 	TableCellSwitch * kQAConfirm = [[[TableCellSwitch alloc] init] autorelease];
 	
 	TableCellActivator * kSwitcherActivator = [[[TableCellActivator alloc] init] autorelease];
-	TableCellSwitch * kSwitcherLock = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellActivator * kSwitcherEditActivator = [[[TableCellActivator alloc] init] autorelease];
 	
 	TableCellActivator * kLastActivator = [[[TableCellActivator alloc] init] autorelease];
 	
@@ -106,19 +106,18 @@
 	kSwitcherActivator.text = loc(@"SwitcherActivator");
 	kSwitcherActivator.listenerName = @"com.dapetcu21.MultiCleaner_openBar";
 	
-	kSwitcherLock.text = loc(@"SwitcherLock");
-	kSwitcherLock.on = settings.toggleInLockscreen;
-	[kSwitcherLock addTarget:settings andBOOLPropertySetter:@selector(setToggleInLockscreen:)];
+	kSwitcherEditActivator.text = loc(@"SwitcherEditActivator");
+	kSwitcherEditActivator.listenerName = @"com.dapetcu21.MultiCleaner_openEdit";
 	
 	[kSwitcherSec addCell:kSwitcherActivator];
-	//[kSwitcherSec addCell:kSwitcherLock];
+	[kSwitcherSec addCell:kSwitcherEditActivator];
+	[kSwitcherSec setFooter:loc(@"SwitcherLockFooter")];
 	
 	//kLastSec
 	kLastActivator.text = loc(@"LastApp");
 	kLastActivator.listenerName = @"com.dapetcu21.MultiCleaner_lastClosed";
 	
 	[kLastSec addCell:kLastActivator];
-	
 	
 	[_model addGroup:kQuitAllSec];
 	[_model addGroup:CloseAppSection];

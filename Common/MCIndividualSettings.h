@@ -48,6 +48,8 @@ enum kSwipeTypes {
 	BOOL quitSingleException;
 	BOOL autolaunch;
 	BOOL badgePinned;
+	BOOL removeOnQuitApp;
+//	BOOL hideMusic;
 }
 
 -(void)saveToDict:(NSMutableDictionary*)dict;
@@ -70,5 +72,7 @@ enum kSwipeTypes {
 @property(nonatomic,assign) int swipeType;
 @property(nonatomic,assign) BOOL autolaunch;
 @property(nonatomic,assign) BOOL badgePinned;
+@property(nonatomic,assign) BOOL removeOnQuitApp;
+//@property(nonatomic,assign) BOOL hideMusic;
 
 @end

@@ -4,5 +4,6 @@
 	"compatible-modes" = (
 		springboard,
 		application,
+		lockscreen,
 	);
 }

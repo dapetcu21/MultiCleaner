@@ -26,6 +26,8 @@
 @synthesize autolaunch;
 @synthesize pinned;
 @synthesize badgePinned;
+@synthesize removeOnQuitApp;
+//@synthesize hideMusic
 
 -(id)init
 {
@@ -53,6 +55,8 @@
 	launchType = kLTFront;
 	quitType = kQTAppAndIcon;
 	badgePinned = YES;
+	removeOnQuitApp = YES;
+//	hideMusic = NO;
 }
 
 -(void)loadFromDict:(NSDictionary*)dict
@@ -113,6 +117,14 @@
 	if ([num isKindOfClass:[NSNumber class]])
 		badgePinned = [num boolValue];
 	
+/*	num = [dict objectForKey:@"HideMusic"];
+	if ([num isKindOfClass:[NSNumber class]])
+		hideMusic = [num boolValue];*/
+	
+	num = [dict objectForKey:@"RemoveIconOnQuitApp"];
+	if ([num isKindOfClass:[NSNumber class]])
+		removeOnQuitApp = [num boolValue];
+	
 	num = [dict objectForKey:@"SwipeType"];
 	if ([num isKindOfClass:[NSNumber class]])
 		swipeType = [num intValue];
@@ -154,6 +166,8 @@
 	[dict setObject:[NSNumber numberWithBool:moveBack] forKey:@"MoveBack"];
 	[dict setObject:[NSNumber numberWithBool:dontMoveToFront] forKey:@"DontMoveToFront"];
 	[dict setObject:[NSNumber numberWithBool:autolaunch] forKey:@"AutoLaunch"];
+//	[dict setObject:[NSNumber numberWithBool:hideMusic] forKey:@"HideMusic"];
+	[dict setObject:[NSNumber numberWithBool:removeOnQuitApp] forKey:@"RemoveIconOnQuitApp"];
 	[dict setObject:[NSNumber numberWithInt:launchType] forKey:@"LaunchType"];
 	[dict setObject:[NSNumber numberWithInt:quitType] forKey:@"QuitType"];
 	[dict setObject:[NSNumber numberWithInt:swipeType] forKey:@"SwipeType"];	
@@ -180,6 +194,8 @@
 	cp.autolaunch = autolaunch;
 	cp.pinned = pinned;
 	cp.badgePinned=badgePinned;
+//	cp.hideMusic = hideMusic;
+	cp.removeOnQuitApp = removeOnQuitApp;
 	return cp;
 }
 
@@ -203,6 +219,8 @@
 	if (ot.autolaunch!=autolaunch) return NO;
 	if (ot.pinned!=pinned) return NO;
 	if (ot.badgePinned!=badgePinned) return NO;
+//	if (ot.hideMusic!=hideMusic) return NO;
+	if (ot.removeOnQuitApp!=removeOnQuitApp) return NO;
 	return YES;
 }
 

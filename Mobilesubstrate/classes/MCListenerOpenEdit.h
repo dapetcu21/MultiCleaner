@@ -1,5 +1,5 @@
 //
-//  MCListenerOpenBar.h
+//  MCListenerOpenEdit.h
 //  MultiCleaner
 //
 //  Created by Marius Petcu on 9/26/10.
@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <libactivator/libactivator.h>
 
-@interface MCListenerOpenBar : NSObject<LAListener> {
+@interface MCListenerOpenEdit : NSObject<LAListener> {
 	BOOL inUse;
 }
-+(MCListenerOpenBar*) sharedInstance;
++(MCListenerOpenEdit*) sharedInstance;
 @end

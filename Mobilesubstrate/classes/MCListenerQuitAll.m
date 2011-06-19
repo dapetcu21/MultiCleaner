@@ -32,8 +32,8 @@
 -(void)activator:(LAActivator *)activator receiveEvent:(LAEvent *)event
 {
 	MCSettings * sett = [MCSettings sharedInstance];
-	if (!(sett.quitAllEnabled))
-		return;
+//	if (!(sett.quitAllEnabled))
+//		return;
 	if (isMultitaskingOff())
 		return;
 	if (!sett.hidePrompt)

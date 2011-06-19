@@ -34,12 +34,14 @@
 	TableCellSwitch * kSUiPod = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kSUiPodOnlyPlaying = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kSUiPodOnlyEmpty = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kSUiPodUnlessMusic = [[[TableCellSwitch alloc] init] autorelease];
 	
 	TableCellChoice * kMSCBadgePos = [[[TableCellChoice alloc] init] autorelease];
 	TableCellSwitch * kMSCDontWriggle = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kMSCAllowTap = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kMSCNoEdit = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kMSCFastQuit = [[[TableCellSwitch alloc] init] autorelease];
+	TableCellSwitch * kMSCBypassPhone = [[[TableCellSwitch alloc] init] autorelease];
 	
 	TableCellSwitch * kROInEditMode = [[[TableCellSwitch alloc] init] autorelease];
 	TableCellSwitch * kROOutsideEditMode = [[[TableCellSwitch alloc] init] autorelease];
@@ -75,6 +77,7 @@
 	[kSUiPod addTarget:settings andBOOLPropertySetter:@selector(setStartupiPod:)];
 	[kSUiPod addTarget:kSUiPodOnlyPlaying andReverseBOOLPropertySetter:@selector(setHidden:)];
 	[kSUiPod addTarget:kSUiPodOnlyEmpty andReverseBOOLPropertySetter:@selector(setHidden:)];
+	[kSUiPod addTarget:kSUiPodUnlessMusic andReverseBOOLPropertySetter:@selector(setHidden:)];
 	
 	kSUiPodOnlyPlaying.text = loc(@"StartiPodOnlyPlaying");
 	kSUiPodOnlyPlaying.on = settings.onlyWhenPlaying;
@@ -86,12 +89,18 @@
 	[kSUiPodOnlyEmpty addTarget:settings andBOOLPropertySetter:@selector(setOnlyWhenEmpty:)];
 	kSUiPodOnlyEmpty.hidden = !settings.startupiPod;
 	
+	kSUiPodUnlessMusic.text = loc(@"UnlessMusic");
+	kSUiPodUnlessMusic.on = settings.unlessMusic;
+	[kSUiPodUnlessMusic addTarget:settings andBOOLPropertySetter:@selector(setUnlessMusic:)];
+	kSUiPodUnlessMusic.hidden = !settings.startupiPod;
+	
 	[kStartupSec addCell:kSUEditMode];
 	[kStartupSec addCell:kSUPinned];
 	[kStartupSec addCell:kSUPinnedOnlyEmpty];
 	[kStartupSec addCell:kSUiPod];
 	[kStartupSec addCell:kSUiPodOnlyPlaying];
 	[kStartupSec addCell:kSUiPodOnlyEmpty];
+	[kStartupSec addCell:kSUiPodUnlessMusic];
 	
 	
 	//kMiscSec
@@ -118,11 +127,17 @@
 	kMSCFastQuit.on = settings.fastExit;
 	[kMSCFastQuit addTarget:settings andBOOLPropertySetter:@selector(setFastExit:)];
 	
+	kMSCBypassPhone.text = loc(@"BypassPhone");
+	kMSCBypassPhone.on = settings.bypassPhone;
+	[kMSCBypassPhone addTarget:settings andBOOLPropertySetter:@selector(setBypassPhone:)];
+	
 	[kMiscSec addCell:kMSCBadgePos];
 	[kMiscSec addCell:kMSCDontWriggle];
 	[kMiscSec addCell:kMSCAllowTap];
 	[kMiscSec addCell:kMSCNoEdit];
 	[kMiscSec addCell:kMSCFastQuit];
+	if ([[UIDevice currentDevice].model isEqual:@"iPhone"])
+		[kMiscSec addCell:kMSCBypassPhone];
 	
 	//kReorderSec
 	kROInEditMode.text = loc(@"ReorderEdit");
@@ -140,6 +155,7 @@
 	[kReorderSec addCell:kROInEditMode];
 	[kReorderSec addCell:kROOutsideEditMode];
 	[kReorderSec addCell:kROSwipeQuit];
+	kReorderSec.footer = loc(@"SwipeToQuitFooter");
 	
 	
 	//kIconSec

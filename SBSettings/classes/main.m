@@ -54,7 +54,6 @@ BOOL isCapable()
 visible
 BOOL getStateFast()
 {
-	NSLog(@"MultiCleaner Toggle: state fast:%d type:%d",MCToggleState,MCToggleType);
 	return MCToggleState;
 }
 
@@ -74,7 +73,6 @@ void MCToggleReloadSettings()
 	if (MCToggleType)
 		MCToggleState = YES;
 	[dict release];
-	NSLog(@"MultiCleaner Toggle: state:%d type:%d",MCToggleState,MCToggleType);
 }
 
 visible
@@ -91,7 +89,6 @@ void setState(BOOL state)
 	if (MCToggleType)
 	{
 		[center sendMessageName:@"quitAllApps" userInfo:nil];
-		//usleep(999999);
 		[getAppWindow() closeButtonPressed];
 	}
 	else

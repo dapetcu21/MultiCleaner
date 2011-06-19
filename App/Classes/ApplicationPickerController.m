@@ -98,6 +98,7 @@ static NSArray *applicationDisplayIdentifiers()
             if (identifier
 				&& ![identifier hasPrefix:@"jp.ashikase.springjumps."]
 				&& ![identifier isEqualToString:@"com.dapetcu21.SwitcherBar"]
+				&& ![identifier isEqualToString:@"com.dapetcu21.SpringBoard"]
 				//&& ![identifier isEqualToString:@"com.iptm.bigboss.sbsettings"]
 				&& ![identifier isEqualToString:@"com.apple.webapp"])
             [identifiers addObject:identifier];
@@ -106,7 +107,12 @@ static NSArray *applicationDisplayIdentifiers()
 
     // Clean-up
     [nonhidden release];
-
+	
+	// Add SBSettings
+	if (![identifiers containsObject:@"com.iptm.bigboss.sbsettings"] &&
+		[[NSFileManager defaultManager] fileExistsAtPath:@"/Applications/SBSettings.app/Info.plist"])
+		[identifiers addObject:@"com.iptm.bigboss.sbsettings"];
+	
     return identifiers;
 }
 

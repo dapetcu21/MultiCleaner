@@ -24,7 +24,6 @@
 	if (self=[super init])
 	{
 		[[LAActivator sharedInstance] registerListener:self forName:@"com.dapetcu21.MultiCleaner_justMin"];
-		[[MCSettingsController sharedInstance] registerForMessage:@"quitAllApps" target:self selector:@selector(performAction:)];
 	}
 	return self;
 }
@@ -67,6 +66,8 @@
 		[alert dismissAnimated:YES];
 		alert=nil;
 	}	
+	if (isMultitaskingOff())
+		return;
 	minimizeForegroundApp();
 }
 

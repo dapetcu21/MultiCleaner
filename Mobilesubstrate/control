@@ -1,6 +1,6 @@
 Package: com.dapetcu21.multicleaner
 Name: MultiCleaner
-Version: 2.6
+Version: 2.9
 Architecture: iphoneos-arm
 Description: Because iOS4 multitasking sucks... Tired of having to return to SpringBoard, double-tap the home button, tap&hold, then press the small quit button to quit an app? Tired of removing closed apps manually from the multitask bar? With MultiCleaner you can quit apps with just an Activator shortcut and customize the multitask bar however you like. You can even reorder apps in the bar or pin certain apps for quick access to the left side of the bar.
 Maintainer: Petcu Marius (da_petcu21) <dapetcu21@gmail.com>

@@ -62,7 +62,6 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 	{
 		order = nil;
 		prefsPath = @"/var/mobile/Library/Preferences/com.dapetcu21.MultiCleaner.plist";
-		defaultsPath = @"/Applications/MultiCleaner.app/defaults.plist";
 		if (![self loadSettings])
 		{
 			[self release];
@@ -100,26 +99,16 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 	if (!dict)
 	{
 		NSLog(@"MultiCleaner: Can't load settings, loading defaults");
-		dict = [[NSDictionary alloc] initWithContentsOfFile:defaultsPath];
-		if (!dict)
-		{
-			NSLog(@"MultiCleaner: Can't load default settings");
-			return NO;
-		} else {
-			[dict writeToFile:prefsPath atomically:NO];
-			if (!already_hooked)
-			{
-				MCfirstRun = YES;
-				Class _SBAwayController=objc_getClass("SBAwayController");
-				InstallObjCInstanceHook(_SBAwayController,@selector(unlockWithSound:alertDisplay:isAutoUnlock:),SBAC_unlock___);
-				//[self showWelcomeScreen];
-				already_hooked = YES;
-			}
-		}
-	}
-#ifdef BETA_VERSION
-	else
-	{
+		[[MCSettings sharedInstance] reloadDefaults];
+		MCIndividualSettings * gsett = [[MCIndividualSettings alloc] init];
+		[settings release];
+		settings = [[NSMutableDictionary alloc] initWithCapacity:1];
+		[settings setObject:gsett forKey:@"_global"];
+		[gsett release];
+		[order release];
+		order = [[NSMutableArray alloc] initWithObjects:@"_global",nil];
+		[self saveSettings];
+		
 		if (!already_hooked)
 		{
 			MCfirstRun = YES;
@@ -128,31 +117,41 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 			already_hooked = YES;
 		}
 	}
-#endif
-	
-	[[MCSettings sharedInstance] loadFromDict:dict];	
-	[settings release];
-	settings = [dict objectForKey:@"Apps"];
-	NSArray * norder = [dict objectForKey:@"Order"];
-	[norder retain];
-	[order release];
-	order = norder;
-	if (![settings isKindOfClass:[NSDictionary class]])
-		settings=nil;
-	NSMutableDictionary * newSettings = [[NSMutableDictionary alloc] initWithCapacity:[settings count]];
-	NSArray * keys = [settings allKeys];
-	for (NSString * key in keys)
+	else
 	{
-		NSDictionary * sett = [settings objectForKey:key];
-		if (![sett isKindOfClass:[NSDictionary class]])
-			sett= nil;
-		MCIndividualSettings * pasett = [[MCIndividualSettings alloc] init];
-		[pasett loadFromDict:sett];
-		[newSettings setObject:pasett forKey:key];
-		[pasett release];
+#ifdef BETA_VERSION
+		if (!already_hooked)
+		{
+			MCfirstRun = YES;
+			Class _SBAwayController=objc_getClass("SBAwayController");
+			InstallObjCInstanceHook(_SBAwayController,@selector(unlockWithSound:alertDisplay:isAutoUnlock:),SBAC_unlock___);
+			already_hooked = YES;
+		}
+#endif
+		[[MCSettings sharedInstance] loadFromDict:dict];	
+		[settings release];
+		settings = [dict objectForKey:@"Apps"];
+		NSArray * norder = [dict objectForKey:@"Order"];
+		[norder retain];
+		[order release];
+		order = norder;
+		if (![settings isKindOfClass:[NSDictionary class]])
+			settings=nil;
+		NSMutableDictionary * newSettings = [[NSMutableDictionary alloc] initWithCapacity:[settings count]];
+		NSArray * keys = [settings allKeys];
+		for (NSString * key in keys)
+		{
+			NSDictionary * sett = [settings objectForKey:key];
+			if (![sett isKindOfClass:[NSDictionary class]])
+				sett= nil;
+			MCIndividualSettings * pasett = [[MCIndividualSettings alloc] init];
+			[pasett loadFromDict:sett];
+			[newSettings setObject:pasett forKey:key];
+			[pasett release];
+		}
+		settings = newSettings;
+		[dict release];
 	}
-	settings = newSettings;
-	[dict release];
 	return YES;
 }
 
@@ -182,7 +181,7 @@ DefineObjCHook(void,SBAC_unlock___,SBAwayController * self, SEL _cmd, BOOL sound
 {
 	UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"MultiCleaner"
 #ifdef BETA_VERSION
-													 message:[NSString stringWithFormat:@"This is a beta version of MultiCleaner that expires on %@. Please don't redistribute",BETA_VERSION]
+													 message:[NSString stringWithFormat:@"This is a demo version of MultiCleaner that expires on %@. Please don't redistribute",BETA_VERSION]
 #else
 													 message:loc(@"WelcomeDialog",@"Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar while in edit (wriggle) mode. You can customize these settings and much more in the MultiCleaner settings app")
 #endif

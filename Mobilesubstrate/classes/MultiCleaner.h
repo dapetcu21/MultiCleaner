@@ -10,16 +10,17 @@
 #ifndef MULTICLEANER_H
 #define MULTICLEANER_H
 
-//#define BETA_VERSION @"2010-12-17 00:00:00 +0200"
+//#define BETA_VERSION @"2011-04-30 00:00:00 +0200"
 
 #ifdef __cplusplus
 extern "C" 
 {
 #endif
 void settingsReloaded();
-void quitForegroundApp();
+void quitForegroundApp(BOOL removeIcon);
 void quitAllApps();
-void toggleBar();
+void toggleBar(BOOL dontIgnore);
+void toggleBarEdit(BOOL dontIgnore);
 void openLastApp();
 void minimizeForegroundApp();
 NSString * foregroundAppDisplayIdentifier();
@@ -31,6 +32,6 @@ BOOL isMultitaskingOff();
 #define SBBUNDLEID @"com.dapetcu21.SpringBoard"
 #define SWITCHERBUNDLEID @"com.dapetcu21.SwitcherBar"
 
-#define MCLog(args...) NSLog(@"MultiCleaner: %@",[NSString stringWithFormat:args]);
+#define MCLog(args...) NSLog(@"MultiCleaner: %@",[NSString stringWithFormat:args])
 #define loc(x,y) [[NSBundle bundleWithPath:@"/Applications/MultiCleaner.app"] localizedStringForKey:(x) value:(y) table:nil]
 #endif

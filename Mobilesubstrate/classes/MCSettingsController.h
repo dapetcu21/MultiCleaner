@@ -16,7 +16,6 @@
 	NSMutableDictionary * settings;
 	NSArray * order;
 	NSString * prefsPath;
-	NSString * defaultsPath;
 	struct timespec lasttime;
 	CPDistributedMessagingCenter * center;
 }

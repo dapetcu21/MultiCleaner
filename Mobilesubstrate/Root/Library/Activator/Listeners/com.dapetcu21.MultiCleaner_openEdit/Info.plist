@@ -1,0 +1,9 @@
+{
+	title = "MultiCleaner Edit Mode";
+	description = "Open the bar in wriggle edit mode";
+	"compatible-modes" = (
+		springboard,
+		application,
+		lockscreen,
+	);
+}

@@ -28,15 +28,16 @@
 @synthesize confirmQuitSingle;
 @synthesize hidePrompt;
 @synthesize hidePromptSingle;
-@synthesize quitAllEnabled;
+//@synthesize quitAllEnabled;
 @synthesize sbIcon;
 @synthesize legacyMode;
 @synthesize toggleType;
 @synthesize sbIconSettings;
 @synthesize onlyWhenEmpty;
 @synthesize pinnedOnlyWhenEmpty;
-@synthesize toggleInLockscreen;
 @synthesize hidePromptMin;
+@synthesize bypassPhone;
+@synthesize unlessMusic;
 
 +(MCSettings*)sharedInstance
 {
@@ -81,14 +82,16 @@
 	hidePromptSingle = NO;
 	quitMode = kQuitModeRemoveIcons;
 	badgeCorner = 0;
-	quitAllEnabled = YES;
+//	quitAllEnabled = YES;
 	sbIcon = NO;
 	legacyMode = NO;
 	onlyWhenEmpty = NO;
 	startupPinned = NO;
 	pinnedOnlyWhenEmpty = NO;
-	toggleInLockscreen = NO;
+
 	hidePromptMin = YES;
+	bypassPhone = YES;
+	unlessMusic = NO;
 	toggleType = kToggleTypeToggle;
 	
 	[sbIconSettings reloadDefaults];
@@ -121,6 +124,7 @@ if ([num isKindOfClass:[NSNumber class]])\
 	loadBOOL(reorderEdit,@"ReorderEdit");
 	loadBOOL(reorderNonEdit,@"ReorderNonEdit");
 	loadBOOL(onlyWhenPlaying,@"iPodOnlyWhenPlaying");
+	loadBOOL(unlessMusic,@"UnlessMusic");
 	loadBOOL(noEditMode,@"NoEditMode");
 	loadBOOL(fastExit,@"FastExit");
 	loadBOOL(swipeQuit,@"SwipeToQuit");
@@ -128,19 +132,17 @@ if ([num isKindOfClass:[NSNumber class]])\
 	loadBOOL(confirmQuitSingle,@"ConfirmQuitSingle");
 	loadBOOL(hidePrompt,@"HidePrompt");
 	loadBOOL(hidePromptSingle,@"HidePromptSingle");
-	loadBOOL(quitAllEnabled,@"QuitAllEnabled");
+//	loadBOOL(quitAllEnabled,@"QuitAllEnabled");
 	loadBOOL(legacyMode,@"LegacyMode");
 	loadBOOL(sbIcon,@"SBIcon");
 	loadBOOL(onlyWhenEmpty,@"iPodOnlyWhenEmpty");
 	loadBOOL(startupPinned,@"StartupPinned");
 	loadBOOL(pinnedOnlyWhenEmpty,@"PinnedOnlyWhenEmpty");
-	loadBOOL(toggleInLockscreen,@"ToggleInLockscreen");
-	loadBOOL(quitAllEnabled,@"QuitAllEnabled");
-	loadBOOL(quitAllEnabled,@"QuitAllEnabled");
 	loadInt(quitMode,@"QuitMode");
 	loadInt(badgeCorner,@"BadgeCorner");
 	loadInt(toggleType,@"ToggleType");
 	loadBOOL(hidePromptMin,@"HidePromptMinimize");
+	loadBOOL(bypassPhone,@"BypassPhone");
 	
 	if ((toggleType>=NUMTOGGLETYPES)||(toggleType<0))
 		toggleType = kToggleTypeToggle;
@@ -162,29 +164,30 @@ if ([num isKindOfClass:[NSNumber class]])\
 	saveBOOL(startupiPod,@"StartupiPod");
 	saveBOOL(startupEdit,@"StartupEdit");
 	saveBOOL(quitCurrentApp,@"QuitCurrentApp");
-	saveBOOL(dontWriggle,@"DontWriggle");
-	saveInt(quitMode,@"QuitMode");
-	saveInt(badgeCorner,@"BadgeCorner");
 	saveBOOL(allowTap,@"AllowTapEditing");
+	saveBOOL(dontWriggle,@"DontWriggle");
 	saveBOOL(reorderEdit,@"ReorderEdit");
 	saveBOOL(reorderNonEdit,@"ReorderNonEdit");
 	saveBOOL(swipeQuit,@"SwipeToQuit");
 	saveBOOL(onlyWhenPlaying,@"iPodOnlyWhenPlaying");
 	saveBOOL(onlyWhenEmpty,@"iPodOnlyWhenEmpty");
+	saveBOOL(unlessMusic,@"UnlessMusic");
 	saveBOOL(noEditMode,@"NoEditMode");
 	saveBOOL(fastExit,@"FastExit");
 	saveBOOL(confirmQuit,@"ConfirmQuit");
 	saveBOOL(confirmQuitSingle,@"ConfirmQuitSingle");
 	saveBOOL(hidePrompt,@"HidePrompt");
 	saveBOOL(hidePromptSingle,@"HidePromptSingle");
-	saveBOOL(quitAllEnabled,@"QuitAllEnabled");
+//	saveBOOL(quitAllEnabled,@"QuitAllEnabled");
 	saveBOOL(sbIcon,@"SBIcon");
 	saveBOOL(legacyMode,@"LegacyMode");
 	saveBOOL(startupPinned,@"StartupPinned");
-	saveBOOL(toggleInLockscreen,@"ToggleInLockscreen");
-	saveInt(toggleType,@"ToggleType");
 	saveBOOL(pinnedOnlyWhenEmpty,@"PinnedOnlyWhenEmpty");
+	saveInt(quitMode,@"QuitMode");
+	saveInt(badgeCorner,@"BadgeCorner");
+	saveInt(toggleType,@"ToggleType");
 	saveBOOL(hidePromptMin,@"HidePromptMinimize");
+	saveBOOL(bypassPhone,@"BypassPhone");
 	
 	NSMutableDictionary * dict = [[NSMutableDictionary alloc] init];
 	[sbIconSettings saveToDict:dict];

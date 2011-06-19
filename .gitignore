@@ -1,0 +1,9 @@
+/iOS/build
+*.pbxuser
+*.mode1v3
+xcuserdata
+*.xcworkspace
+*.o
+*.lo
+
+.DS_Store
