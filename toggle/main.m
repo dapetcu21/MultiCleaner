@@ -22,16 +22,20 @@
 BOOL MCToggleState = YES;
 BOOL MCToggleType = 0;
 
-UIWindow* getAppWindow()
+@protocol SBSettingsWindowProtocol
+-(void)closeButtonPressed;
+@end
+
+UIWindow<SBSettingsWindowProtocol> * getAppWindow()
 {
-	UIWindow* TheWindow = nil;
-	UIApplication* App = [UIApplication sharedApplication];
-	NSArray* windows = [App windows];
+	UIWindow* theWindow = nil;
+	UIApplication* app = [UIApplication sharedApplication];
+	NSArray* windows = [app windows];
 	int i;
 	for(i = 0; i < [windows count]; i++)
 	{
-		TheWindow = [windows objectAtIndex:i];
-		if([TheWindow respondsToSelector:@selector(getCurrentTheme)])
+		theWindow = [windows objectAtIndex:i];
+		if([theWindow respondsToSelector:@selector(getCurrentTheme)])
 		{
 			break;
 		}
@@ -39,10 +43,10 @@ UIWindow* getAppWindow()
 	
 	if(i == [windows count])
 	{
-		TheWindow = [App keyWindow];
+		theWindow = [app keyWindow];
 	}
 	
-	return TheWindow;
+	return theWindow;
 }
 
 visible

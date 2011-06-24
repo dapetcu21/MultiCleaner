@@ -8,5 +8,6 @@ xcuserdata
 *.o
 *.lo
 .theos
+*.deb
 
 .DS_Store

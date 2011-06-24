@@ -1,7 +1,5 @@
 include ../theos/makefiles/common.mk
 
-export GO_EASY_ON_ME=1
-
 ADDITIONAL_CFLAGS = -I../common
 
 TWEAK_NAME = MCTweak
