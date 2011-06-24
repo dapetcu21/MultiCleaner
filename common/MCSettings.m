@@ -66,7 +66,7 @@
 -(void)reloadDefaults
 {
 	reorderEdit = YES;
-	reorderNonEdit = NO;
+	reorderNonEdit = YES;
 	swipeQuit = YES;
 	startupEdit = NO;
 	startupiPod = NO;

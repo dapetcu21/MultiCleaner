@@ -59,6 +59,8 @@ static BOOL MCfirstRun = NO;
 	
 }
 
+#define defaultsPath @"/Applications/MultiCleaner.app/defaults.plist"
+
 -(id)init
 {
 	if ((self=[super init]))
@@ -98,11 +100,18 @@ static BOOL MCfirstRun = NO;
 -(BOOL)loadSettings
 {
 	static BOOL already_hooked = NO;
-	BOOL shouldHook = NO;
+	BOOL shouldHook = NO, shouldSave = NO;
 	NSDictionary * dict = [[NSDictionary alloc] initWithContentsOfFile:prefsPath];
 	if (!dict)
 	{
 		NSLog(@"MultiCleaner: Can't load settings, loading defaults");
+		shouldHook = YES;
+		shouldSave = YES;
+		dict = [[NSDictionary alloc] initWithContentsOfFile:defaultsPath];
+	}
+	if (!dict)
+	{
+		NSLog(@"MultiCleaner: Can't load defaults, loading scarce defaults");
 		[[MCSettings sharedInstance] reloadDefaults];
 		MCIndividualSettings * gsett = [[MCIndividualSettings alloc] init];
 		[settings release];
@@ -111,9 +120,7 @@ static BOOL MCfirstRun = NO;
 		[gsett release];
 		[order release];
 		order = [[NSMutableArray alloc] initWithObjects:@"_global",nil];
-		[self saveSettings];
-		
-		shouldHook = YES;
+		shouldSave = YES;
 	}
 	else
 	{
@@ -150,6 +157,8 @@ static BOOL MCfirstRun = NO;
 		%init;
 		already_hooked = YES;
 	}
+	if (shouldSave)
+		[self saveSettings];
 	return YES;
 }
 

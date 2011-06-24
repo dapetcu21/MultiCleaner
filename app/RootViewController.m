@@ -84,7 +84,9 @@
 {
 	[order release];
 	order = [[NSMutableArray alloc] initWithObjects:@"_global",nil];
-	NSDictionary * def = [[NSDictionary alloc]initWithContentsOfFile:prefsPath];
+	NSDictionary * def = [[NSDictionary alloc] initWithContentsOfFile:prefsPath];
+	if (!def)
+		def = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"defaults" ofType:@"plist"]];
 	NSArray * ord = [def objectForKey:@"Order"];
 	if ([ord isKindOfClass:[NSArray class]])
 	{
