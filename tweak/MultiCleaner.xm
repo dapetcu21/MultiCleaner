@@ -387,7 +387,6 @@ void removeApplicationFromBar(SBAppSwitcherController * self, SBApplication * ap
 		}
 
 	}
-	//NSMutableArray * apps = MSHookIvar<NSMutableArray*>(model, "_recentDisplayIdentifiers");
 }
 
 -(void) applicationDied:(SBApplication *)app
@@ -520,7 +519,10 @@ void badgeApp(SBApplication * app)
 	MCIndividualSettings * sett = [MC.settingsController settingsForBundleID:bundleID];
 	if (sett.showCurrent||sett.pinned)
 		app = nil;
-	return %orig;
+	NSArray * icons = %orig;
+	for (SBApplicationIcon * icon in icons)
+		badgeAppIcon(icon);
+	return icons;
 }
 %end
 
@@ -1690,31 +1692,28 @@ void refreshAppStatus(BOOL state)
 
 void addSBIcon()
 {
+	MCLog(@"addSBIcon");
 	[[$SBAppSwitcherController sharedInstance] applicationLaunched:[[$SBApplicationController sharedInstance] applicationWithDisplayIdentifier:SBBUNDLEID]];
 }
 
 void remSBIcon()
 {
+	MCLog(@"remSBIcon");
 	[[$SBAppSwitcherController sharedInstance] applicationDied:[[$SBApplicationController sharedInstance] applicationWithDisplayIdentifier:SBBUNDLEID]];
 }
 
 %hook SBApplication
--(void)activateApplicationAnimated:(SBApplication*)app
+-(void)activate
 {
 	%orig;
 	addSBIcon();
 }
 
--(void)activateApplicationFromSwitcher:(SBApplication*)app
+-(void)deactivated
 {
 	%orig;
-	addSBIcon();
-}
-
--(void)animateApplicationSuspend:(SBApplication*)app
-{
-	%orig;
-	remSBIcon();
+	if (![SBWActiveDisplayStack topApplication])
+		remSBIcon();
 }
 %end
 

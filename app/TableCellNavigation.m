@@ -11,6 +11,16 @@
 #import "MultiLineCell.h"
 
 @implementation TableCellNavigation
+@synthesize showDisclosure;
+  
+-(id)init
+{
+	if ((self=[super init]))
+	{
+		showDisclosure = YES;
+	}
+	return self;
+}
 
 -(UITableViewCell*)buildCell
 {
@@ -20,7 +30,7 @@
 		cell = [[[MultiLineCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID] autorelease];
 	cell.textLabel.text = text;
 	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	cell.accessoryType = showDisclosure?UITableViewCellAccessoryDisclosureIndicator:UITableViewCellAccessoryNone;
 	return cell;
 }
 

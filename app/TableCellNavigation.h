@@ -12,8 +12,11 @@
 @interface TableCellNavigation : TableCell {
 	id target;
 	SEL selector;
+	BOOL showDisclosure;
 }
 
 -(void)setTarget:(id)target andSelector:(SEL)selector;
+
+@property(nonatomic,assign) BOOL showDisclosure;
 
 @end

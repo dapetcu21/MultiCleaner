@@ -25,6 +25,7 @@
 	[model release];
 	model = tablemodel;
 	model.viewController = self;
+	[self.tableView reloadData];
 }
 
 #pragma mark -

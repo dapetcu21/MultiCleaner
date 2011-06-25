@@ -9,7 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "SettingsViewController.h"
 
-@interface AdvancedView : SettingsViewController{
+@class RootViewController;
+
+@interface AdvancedView : SettingsViewController<UIAlertViewDelegate>{
+	RootViewController * delegate;
 }
+
+@property(nonatomic,assign) RootViewController * delegate;
 
 @end

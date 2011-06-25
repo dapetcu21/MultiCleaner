@@ -32,49 +32,54 @@
 	return order;
 }
 
+-(void)reloadModel
+{
+	TableModel * _model = [[[TableModel alloc] init] autorelease];
+	
+	TableGroup * AboutSection = [[[TableGroup alloc] init] autorelease];
+	TableGroup * GeneralSettings = [[[TableGroup alloc] init] autorelease];
+	
+	
+	TableCellNavigation * AboutCell = [[[TableCellNavigation alloc] init] autorelease];
+	
+	TableCellNavigation * ActivatorCell = [[[TableCellNavigation alloc] init] autorelease];
+	TableCellNavigation * GlobalSettingsCell = [[[TableCellNavigation alloc] init] autorelease];
+	TableCellNavigation * AdvancedSettingsCell = [[[TableCellNavigation alloc] init] autorelease];
+	
+	
+	//AboutSection
+	AboutCell.text = loc(@"About");
+	[AboutCell setTarget:self andSelector:@selector(about:)];
+	
+	[AboutSection addCell:AboutCell];
+	
+	//GeneralSettings
+	ActivatorCell.text = loc(@"ActivatorToggles");
+	[ActivatorCell setTarget:self andSelector:@selector(activatorToggles:)];
+	
+	GlobalSettingsCell.text = loc(@"GlobalSettings");
+	[GlobalSettingsCell setTarget:self andSelector:@selector(globalSettings:)];
+	
+	AdvancedSettingsCell.text = loc(@"AdvancedSettings");
+	[AdvancedSettingsCell setTarget:self andSelector:@selector(advancedSettings:)];
+
+	[GeneralSettings addCell:ActivatorCell];
+	[GeneralSettings addCell:GlobalSettingsCell];
+	[GeneralSettings addCell:AdvancedSettingsCell];
+
+	
+	[_model addGroup:AboutSection];
+	[_model addGroup:GeneralSettings];
+	
+	self.model = _model;
+}
+
 -(id)initWithStyle:(UITableViewStyle)style
 {
 	if ((self=[super initWithStyle:style]))
 	{
 		[self loadSettings];
-		TableModel * _model = [[[TableModel alloc] init] autorelease];
-		
-		TableGroup * AboutSection = [[[TableGroup alloc] init] autorelease];
-		TableGroup * GeneralSettings = [[[TableGroup alloc] init] autorelease];
-		
-		
-		TableCellNavigation * AboutCell = [[[TableCellNavigation alloc] init] autorelease];
-		
-		TableCellNavigation * ActivatorCell = [[[TableCellNavigation alloc] init] autorelease];
-		TableCellNavigation * GlobalSettingsCell = [[[TableCellNavigation alloc] init] autorelease];
-		TableCellNavigation * AdvancedSettingsCell = [[[TableCellNavigation alloc] init] autorelease];
-		
-		
-		//AboutSection
-		AboutCell.text = loc(@"About");
-		[AboutCell setTarget:self andSelector:@selector(about:)];
-		
-		[AboutSection addCell:AboutCell];
-		
-		//GeneralSettings
-		ActivatorCell.text = loc(@"ActivatorToggles");
-		[ActivatorCell setTarget:self andSelector:@selector(activatorToggles:)];
-		
-		GlobalSettingsCell.text = loc(@"GlobalSettings");
-		[GlobalSettingsCell setTarget:self andSelector:@selector(globalSettings:)];
-		
-		AdvancedSettingsCell.text = loc(@"AdvancedSettings");
-		[AdvancedSettingsCell setTarget:self andSelector:@selector(advancedSettings:)];
-
-		[GeneralSettings addCell:ActivatorCell];
-		[GeneralSettings addCell:GlobalSettingsCell];
-		[GeneralSettings addCell:AdvancedSettingsCell];
-	
-		
-		[_model addGroup:AboutSection];
-		[_model addGroup:GeneralSettings];
-		
-		self.model = _model;
+		[self reloadModel];
 		self.title = @"MultiCleaner";
 	}
 	return self;
@@ -139,6 +144,16 @@
 	[def release];
 	CPDistributedMessagingCenter * center = [CPDistributedMessagingCenter centerNamed:@"com.dapetcu21.MultiCleaner.center"];
 	[center sendMessageName:@"reloadSettings" userInfo:nil];
+}
+
+-(void)resetSettings
+{
+	NSFileManager * man = [[NSFileManager alloc] init];
+	[man removeItemAtPath:prefsPath error:NULL];
+	[man release];
+	[self loadSettings];
+	[self saveSettings];
+	[self reloadModel];
 }
 
 #pragma mark -
@@ -323,6 +338,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 -(void)advancedSettings:(id)sender
 {
 	AdvancedView * vc = [[AdvancedView alloc] initWithStyle:UITableViewStyleGrouped];
+	vc.delegate = self;
 	[self.navigationController pushViewController:vc animated:YES];
 	[vc release];
 }
@@ -339,9 +355,7 @@ extern NSString * SBSCopyLocalizedApplicationNameForDisplayIdentifier(NSString *
 	{
 		ApplicationCell * cell = (ApplicationCell*) [tableView cellForRowAtIndexPath:indexPath];
 		NSString * bundleID = [order objectAtIndex:indexPath.row+1];
-		NSLog(@"selected bundleID: 0x%x",bundleID);
 		MCIndividualSettings * sett = [settings objectForKey:bundleID];
-		NSLog(@"selected count:%d",[bundleID retainCount]);
 		SettingsView * vc = [[SettingsView alloc] initWithSettings:sett
 														  bundleID:bundleID
 														   andName:cell.textLabel.text];

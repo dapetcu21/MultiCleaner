@@ -17,5 +17,6 @@
 @property(readonly,nonatomic) NSArray * applications;
 -(void)loadSettings;
 -(void)saveSettings;
+-(void)resetSettings;
 
 @end

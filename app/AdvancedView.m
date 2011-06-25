@@ -7,6 +7,7 @@
 //
 
 #import "AdvancedView.h"
+#import "RootViewController.h"
 #import "MCSettings.h"
 #import "MCIndividualSettings.h"
 #import "SwitchCell.h"
@@ -15,6 +16,20 @@
 #import <libactivator/libactivator.h>
 
 @implementation AdvancedView
+@synthesize delegate;
+
+-(void)resetSettings:(id)sender
+{
+	UIAlertView * alert = [[UIAlertView alloc] init];
+	alert.title = @"MultiCleaner";
+	alert.delegate = self;
+	alert.message = loc(@"ResetConfirm");
+	[alert addButtonWithTitle:loc(@"Yes")];
+	[alert addButtonWithTitle:loc(@"No")];
+	alert.cancelButtonIndex = 1;
+	[alert show];
+	[alert release];
+}
 
 -(TableModel*)generateModel
 {
@@ -27,6 +42,7 @@
 	TableGroup * kIconSec = [[[TableGroup alloc] init] autorelease];
 	TableGroup * kSBIconSec = [[[TableGroup alloc] init] autorelease];
 	TableGroup * kLegacySec = [[[TableGroup alloc] init] autorelease];
+	TableGroup * kResetSec = [[[TableGroup alloc] init] autorelease];
 
 	
 	TableCellSwitch * kSUEditMode = [[[TableCellSwitch alloc] init] autorelease];
@@ -56,6 +72,8 @@
 	TableCellChoice * kSBIPosition = [[[TableCellChoice alloc] init] autorelease];
 	
 	TableCellSwitch * kLegacyCell = [[[TableCellSwitch alloc] init] autorelease];
+	
+	TableCellNavigation * kResetCell = [[[TableCellNavigation alloc] init] autorelease];
 	
 	
 	//kStartupSec
@@ -206,14 +224,32 @@
 	[kLegacySec addCell:kLegacyCell];
 	
 	
+	//kResetSec
+	kResetCell.text = loc(@"ResetSettings");
+	kResetCell.showDisclosure = NO;
+	[kResetCell setTarget:self andSelector:@selector(resetSettings:)];
+	
+	kResetSec.footer = loc(@"ResetFooter");
+	[kResetSec addCell:kResetCell];
+	
 	[_model addGroup:kStartupSec];
 	[_model addGroup:kMiscSec];
 	[_model addGroup:kReorderSec];
 	[_model addGroup:kIconSec];
 	[_model addGroup:kSBIconSec];
 	[_model addGroup:kLegacySec];
+	[_model addGroup:kResetSec];
 	
 	return _model;
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+	if (buttonIndex!=alertView.cancelButtonIndex)
+	{
+		[delegate resetSettings];
+	}
+	self.model = [self generateModel];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style {
