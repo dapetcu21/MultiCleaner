@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//FR" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>About</key>
@@ -7,11 +7,11 @@
 	<key>AboutTitle</key>
 	<string>À propos</string>
 	<key>Activator</key>
-	<string>Type d'action Activator</string>
+	<string>Type d&apos;action Activator</string>
 	<key>ActivatorToggles</key>
-	<string>Raccourcis d'Activator</string>
+	<string>Raccourcis d&apos;Activator</string>
 	<key>ActivatorTogglesTitle</key>
-	<string>Raccourcis d'Activator</string>
+	<string>Raccourcis d&apos;Activator</string>
 	<key>Add</key>
 	<string>Ajouter</string>
 	<key>AdvancedSettings</key>
@@ -19,7 +19,7 @@
 	<key>AdvancedSettingsTitle</key>
 	<string>Réglages avancés</string>
 	<key>AllException</key>
-	<string>Exclusion pour "Quitter tout"</string>
+	<string>Exclusion pour &quot;Quitter tout&quot;</string>
 	<key>AlwaysDim</key>
 	<string>Icône de toutes les applis assombrie</string>
 	<key>AlwaysDimIndiv</key>
@@ -31,11 +31,11 @@
 	<key>AutostartIndiv</key>
 	<string>Ajouter à la barre si lancée au démarrage</string>
 	<key>Badge</key>
-	<string>Badge applis en cours d'exécution</string>
+	<string>Badge applis en cours d&apos;exécution</string>
 	<key>BadgeCorner</key>
 	<string>Position du badge</string>
 	<key>BadgeIndiv</key>
-	<string>Badge si en cours d'exécution</string>
+	<string>Badge si en cours d&apos;exécution</string>
 	<key>BadgePinned</key>
 	<string>Badge pour les applis épinglées</string>
 	<key>BadgePinnedIndiv</key>
@@ -59,7 +59,7 @@
 	<key>BCtoprightDetail</key>
 	<string>En haut, à droite</string>
 	<key>BypassPhone</key>
-	<string>Ne pas ajouter "Téléphone" à la barre lors de la réception d'appels</string>
+	<string>Ne pas ajouter &quot;Téléphone&quot; à la barre lors de la réception d&apos;appels</string>
 	<key>ConfirmQuit</key>
 	<string>Confirmer pour quitter</string>
 	<key>Dim</key>
@@ -69,9 +69,9 @@
 	<key>Done</key>
 	<string>Fait</string>
 	<key>DontWriggle</key>
-	<string>Pas d'icônes "dansantes"</string>
+	<string>Pas d&apos;icônes &quot;dansantes&quot;</string>
 	<key>FastExit</key>
-	<string>Le bouton d'accueil (Home) permet la sortie du mode édition, et referme la barre</string>
+	<string>Le bouton d&apos;accueil (Home) permet la sortie du mode édition, et referme la barre</string>
 	<key>GlobalSettings</key>
 	<string>Réglages globaux</string>
 	<key>GlobalSettingsTitle</key>
@@ -79,23 +79,23 @@
 	<key>Hide</key>
 	<string>Masquer les applis de la barre</string>
 	<key>HidePrompt</key>
-	<string>Masquer 'message de fermeture'</string>
+	<string>Masquer &apos;message de fermeture&apos;</string>
 	<key>JustMinActivator</key>
-	<string>Minimiser juste l'appli</string>
+	<string>Minimiser juste l&apos;appli</string>
 	<key>JustMinHidePrompt</key>
-	<string>Masquer 'message de minimisation'</string>
+	<string>Masquer &apos;message de minimisation&apos;</string>
 	<key>LastApp</key>
 	<string>Ouvrir la précédente appli</string>
 	<key>LaunchFromEdit</key>
-	<string>Permettre le lancement d'applis en mode édition</string>
+	<string>Permettre le lancement d&apos;applis en mode édition</string>
 	<key>LaunchPos</key>
 	<string>Au lancement</string>
 	<key>LaunchPosIndiv</key>
-	<string>Quand l'appli est lancée</string>
+	<string>Quand l&apos;appli est lancée</string>
 	<key>LegacyQuitAll</key>
-	<string>Legacy "Quitter toutes les applis"</string>
+	<string>Legacy &quot;Quitter toutes les applis&quot;</string>
 	<key>LegacyQuitAllFooter</key>
-	<string>Plus fiable, mais plus lent. Utiliser seulement si vous avez des problèmes avec "Quitter toutes les applis"</string>
+	<string>Plus fiable, mais plus lent. Utiliser seulement si vous avez des problèmes avec &quot;Quitter toutes les applis&quot;</string>
 	<key>LoadingApps</key>
 	<string>Applications en cours de chargement...</string>
 	<key>LPback</key>
@@ -113,7 +113,7 @@
 	<key>LPtitle</key>
 	<string>Position au lancement</string>
 	<key>Minimize App</key>
-	<string>Minimiser l'appli</string>
+	<string>Minimiser l&apos;appli</string>
 	<key>MoveBack</key>
 	<string>Déplacer les applis fermées à la fin de la barre</string>
 	<key>MoveBackIndiv</key>
@@ -123,7 +123,7 @@
 	<key>NoEditMode</key>
 	<string>Désactiver le mode édition</string>
 	<key>NoMoveFront</key>
-	<string>Ne pas déplacer en début de barre lors d'un va-et-vient d'appli</string>
+	<string>Ne pas déplacer en début de barre lors d&apos;un va-et-vient d&apos;appli</string>
 	<key>OK</key>
 	<string>OK</string>
 	<key>PerAppSettings</key>
@@ -131,7 +131,7 @@
 	<key>Pinned</key>
 	<string>Épinglé</string>
 	<key>PinnedFooter</key>
-	<string>Vous pouvez aussi épingler les applis en les glissant vers le bord inférieur de l'écran ou en les glissant dans la zone "épinglée" vers la gauche de la barre</string>
+	<string>Vous pouvez aussi épingler les applis en les glissant vers le bord inférieur de l&apos;écran ou en les glissant dans la zone &quot;épinglée&quot; vers la gauche de la barre</string>
 	<key>QMRemove</key>
 	<string>Retirer</string>
 	<key>QMRemoveDetail</key>
@@ -141,23 +141,23 @@
 	<key>QMUseRules</key>
 	<string>selon les règles</string>
 	<key>QMUseRulesDetail</key>
-	<string>Retirer conformèment aux règles d'utilisation</string>
+	<string>Retirer conformèment aux règles d&apos;utilisation</string>
 	<key>QT2tap</key>
 	<string>deuxième tape</string>
 	<key>QT2tapDetail</key>
-	<string>Quitter l'appli, taper encore pour retirer l'icône</string>
+	<string>Quitter l&apos;appli, taper encore pour retirer l&apos;icône</string>
 	<key>QTapp</key>
-	<string>quitter l'appli</string>
+	<string>quitter l&apos;appli</string>
 	<key>QTappDetail</key>
-	<string>Quitter l'appli et laisser l'icône</string>
+	<string>Quitter l&apos;appli et laisser l&apos;icône</string>
 	<key>QTappicon</key>
 	<string>appli et icône</string>
 	<key>QTappiconDetail</key>
-	<string>Quitter l'appli et retirer l'icône</string>
+	<string>Quitter l&apos;appli et retirer l&apos;icône</string>
 	<key>QTicon</key>
-	<string>retirer l'icône</string>
+	<string>retirer l&apos;icône</string>
 	<key>QTiconDetail</key>
-	<string>Retirer seulement l'icône</string>
+	<string>Retirer seulement l&apos;icône</string>
 	<key>QTtitle</key>
 	<string>Comportement du bouton Quitter</string>
 	<key>Quit all apps</key>
@@ -165,21 +165,21 @@
 	<key>Quit all apps?</key>
 	<string>Quitter toutes les applis?</string>
 	<key>Quit app</key>
-	<string>Quitter l'appli</string>
+	<string>Quitter l&apos;appli</string>
 	<key>Quit app?</key>
-	<string>Quitter l'appli?</string>
+	<string>Quitter l&apos;appli?</string>
 	<key>QuitAll</key>
 	<string>Quitter toutes les applis</string>
 	<key>QuitAppRemovesIcon</key>
-	<string>Quitter l'appli, retirer l'icône</string>
+	<string>Quitter l&apos;appli, retirer l&apos;icône</string>
 	<key>QuitAppRemovesIconIndiv</key>
-	<string>Quitter l'appli, retirer l'icône</string>
+	<string>Quitter l&apos;appli, retirer l&apos;icône</string>
 	<key>QuitCurrent</key>
-	<string>Quitter aussi l'appli en cours</string>
+	<string>Quitter aussi l&apos;appli en cours</string>
 	<key>QuitMode</key>
 	<string>Comportement des icônes</string>
 	<key>QuitSingle</key>
-	<string>Quitter l'appli en cours</string>
+	<string>Quitter l&apos;appli en cours</string>
 	<key>QuitType</key>
 	<string>Action sur pastille rouge</string>
 	<key>RemoveClosed</key>
@@ -187,7 +187,7 @@
 	<key>RemoveClosedFooter</key>
 	<string>Retire automatiquement de la barre multitâche les applis fermées </string>
 	<key>RemoveClosedFooterIndiv</key>
-	<string>Retire automatiquement de la barre multitâche l'appli lorsqu'on la quitte</string>
+	<string>Retire automatiquement de la barre multitâche l&apos;appli lorsqu&apos;on la quitte</string>
 	<key>RemoveClosedIndiv</key>
 	<string>Retirer lors de la fermeture</string>
 	<key>ReorderEdit</key>
@@ -195,17 +195,17 @@
 	<key>ReorderNonEdit</key>
 	<string>Réorganiser hors mode édition</string>
 	<key>SBIcon</key>
-	<string>Icône sur l'écran d'accueil (SpringBoard) pour activer la barre multitâche</string>
+	<string>Icône sur l&apos;écran d&apos;accueil (SpringBoard) pour activer la barre multitâche</string>
 	<key>SBIEnable</key>
 	<string>Présente</string>
 	<key>SBIHeader</key>
-	<string>Icône pour retourner vers le l'écran d'accueil (SpringBoard)</string>
+	<string>Icône pour retourner vers le l&apos;écran d&apos;accueil (SpringBoard)</string>
 	<key>SBIPosition</key>
 	<string>Position</string>
 	<key>SBIPositionTitle</key>
 	<string>Position</string>
 	<key>SBIShow</key>
-	<string>Montrer même à l'écran d'accueil (SpringBoard)</string>
+	<string>Montrer même à l&apos;écran d&apos;accueil (SpringBoard)</string>
 	<key>SBSettingsType</key>
 	<string>Raccourci SBSettings</string>
 	<key>SBSTQuit</key>
@@ -219,58 +219,64 @@
 	<key>SBSTToggleDetail</key>
 	<string>Active le raccourci Activator</string>
 	<key>ShowCurrent</key>
-	<string>Montrer l'appli en cours</string>
+	<string>Montrer l&apos;appli en cours</string>
 	<key>ShowCurrentIndiv</key>
 	<string>Montrer si au premier plan</string>
 	<key>SingleException</key>
-	<string>Exclusion pour "Quitter l'appli"</string>
+	<string>Exclusion pour &quot;Quitter l&apos;appli&quot;</string>
 	<key>STapp</key>
-	<string>quitter l'appli</string>
+	<string>quitter l&apos;appli</string>
 	<key>STappDetail</key>
-	<string>Quitter l'appli et retirer l'icône</string>
+	<string>Quitter l&apos;appli et retirer l&apos;icône</string>
 	<key>StartEdit</key>
 	<string>Démarrer en mode édition</string>
 	<key>StartiPod</key>
-	<string>Démarrer en zone "contrôle iPod"</string>
+	<string>Démarrer en zone &quot;contrôle iPod&quot;</string>
 	<key>StartiPodOnlyEmpty</key>
 	<string>  seulement lorsque le barre est vide</string>
 	<key>StartiPodOnlyPlaying</key>
-	<string>  seulement lors de l'écoute</string>
+	<string>  seulement lors de l&apos;écoute</string>
 	<key>StartPinned</key>
-	<string>Démarrer en zone "applis épinglées"</string>
+	<string>Démarrer en zone &quot;applis épinglées&quot;</string>
 	<key>StartPinnedOnlyEmpty</key>
 	<string>  seulement lorsque le barre est vide</string>
 	<key>STicon</key>
-	<string>retirer l'icône</string>
+	<string>retirer l&apos;icône</string>
 	<key>STiconDetail</key>
-	<string>Retirer seulement l'icône</string>
+	<string>Retirer seulement l&apos;icône</string>
 	<key>STnothing</key>
 	<string>rien</string>
 	<key>STnothingDetail</key>
 	<string>Ne rien faire</string>
 	<key>STonlyapp</key>
-	<string>juste l'appli</string>
+	<string>juste l&apos;appli</string>
 	<key>STonlyappDetail</key>
-	<string>Quitter juste l'appli</string>
+	<string>Quitter juste l&apos;appli</string>
 	<key>STtitle</key>
 	<string>Comportement glisser pour quitter</string>
 	<key>SwipeToQuit</key>
-	<string>Glisser l'appli en dehors de la barre pour la quitter</string>
+	<string>Glisser l&apos;appli en dehors de la barre pour la quitter</string>
 	<key>SwipeToQuitFooter</key>
 	<string>Glisser pour quitter ne fonctionne que si le mode réorganisation est actif</string>
 	<key>SwipeType</key>
-	<string>Glisser pour quitter l'action</string>
+	<string>Glisser pour quitter l&apos;action</string>
 	<key>SwitcherActivator</key>
 	<string>Activer la barre multitâche</string>
 	<key>SwitcherEditActivator</key>
 	<string>Ouvrir la barre en mode édition</string>
 	<key>SwitcherLockFooter</key>
-	<string>Cela fonctionne aussi sur l'écran verrouillé (LockScreen)</string>
+	<string>Cela fonctionne aussi sur l&apos;écran verrouillé (LockScreen)</string>
 	<key>UnlessMusic</key>
-	<string>  seulement en dehors d'une appli musicale</string>
+	<string>  seulement en dehors d&apos;une appli musicale</string>
 	<key>WelcomeDialog</key>
-	<string>Bienvenue dans MultiCleaner! Vous allez pouvoir quitter les applications en maintenant appuyé le bouton d'accueil (Home) au lieu de seulement les minimiser , ainsi la barre multitâche montrera seulement les applications actives. Aussi, essayez de réorganiser les icônes dans la barre en mode édition (icônes qui "dansent"). Vous pouvez personnaliser ces paramètres et bien plus encore dans les réglages de l'application MultiCleaner.</string>
+	<string>Bienvenue dans MultiCleaner! Vous allez pouvoir quitter les applications en maintenant appuyé le bouton d&apos;accueil (Home) au lieu de seulement les minimiser , ainsi la barre multitâche montrera seulement les applications actives. Aussi, essayez de réorganiser les icônes dans la barre en mode édition (icônes qui &quot;dansent&quot;). Vous pouvez personnaliser ces paramètres et bien plus encore dans les réglages de l&apos;application MultiCleaner.</string>
 	<key>Yes</key>
 	<string>Oui</string>
+	<key>ResetSettings</key>
+	<string>Réinitialiser les réglages</string>
+	<key>ResetFooter</key>
+	<string>Cela réinitialisera TOUS les réglages à ceux par défaut. Utiliser avec précaution !</string>
+	<key>ResetConfirm</key>
+	<string>Êtes-vous sûr de vouloir réinitialiser MultiCleaner aux réglages par défaut ?</string>
 </dict>
 </plist>
