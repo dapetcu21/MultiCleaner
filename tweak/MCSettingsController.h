@@ -21,6 +21,7 @@
 }
 
 +(MCSettingsController*)sharedInstance;
++(void)initHooks;
 -(BOOL)loadSettings;
 -(void)saveSettings;
 -(MCIndividualSettings*)settingsForBundleID:(NSString*)bundleID;

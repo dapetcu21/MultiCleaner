@@ -16,21 +16,36 @@
 #include <substrate2.h>
 #include <SpringBoard/SBAwayController.h>
 
-static BOOL MCfirstRun = NO;
+static BOOL MCshouldHook = NO;
 
+%group unlockType
 %hook SBAwayController
+-(void)unlockWithSound:(BOOL)sound alertDisplay:(id)display isAutoUnlock:(BOOL)unlock unlockType:(int)type
+{
+	%orig;
+	if (MCshouldHook)
+	{
+		[[MCSettingsController sharedInstance] showWelcomeScreen];
+		MCshouldHook = NO;
+	}
+}
+%end
+%end
 
+%group notUnlockType
+%hook SBAwayController
 -(void)unlockWithSound:(BOOL)sound alertDisplay:(id)display isAutoUnlock:(BOOL)unlock
 {
 	%orig;
-	if (MCfirstRun)
+	if (MCshouldHook)
 	{
 		[[MCSettingsController sharedInstance] showWelcomeScreen];
-		MCfirstRun = NO;
+		MCshouldHook = NO;
 	}
 }
-
 %end
+%end
+
 @implementation MCSettingsController
 
 +(MCSettingsController*)sharedInstance
@@ -99,13 +114,12 @@ static BOOL MCfirstRun = NO;
 			   
 -(BOOL)loadSettings
 {
-	static BOOL already_hooked = NO;
-	BOOL shouldHook = NO, shouldSave = NO;
+	BOOL shouldSave = NO;
 	NSDictionary * dict = [[NSDictionary alloc] initWithContentsOfFile:prefsPath];
 	if (!dict)
 	{
 		NSLog(@"MultiCleaner: Can't load settings, loading defaults");
-		shouldHook = YES;
+		MCshouldHook = YES;
 		shouldSave = YES;
 		dict = [[NSDictionary alloc] initWithContentsOfFile:defaultsPath];
 	}
@@ -125,7 +139,7 @@ static BOOL MCfirstRun = NO;
 	else
 	{
 #ifdef BETA_VERSION
-		shouldHook = YES;
+		MCshouldHook = YES;
 #endif
 		[[MCSettings sharedInstance] loadFromDict:dict];	
 		[settings release];
@@ -150,12 +164,6 @@ static BOOL MCfirstRun = NO;
 		}
 		settings = newSettings;
 		[dict release];
-	}
-	if (!already_hooked)
-	{
-		MCfirstRun = YES;
-		%init;
-		already_hooked = YES;
 	}
 	if (shouldSave)
 		[self saveSettings];
@@ -186,6 +194,7 @@ static BOOL MCfirstRun = NO;
 
 -(void)showWelcomeScreen
 {
+	MCLog(@"Welcome to MultiCleaner");
 	UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"MultiCleaner"
 #ifdef BETA_VERSION
 													 message:[NSString stringWithFormat:@"This is a demo version of MultiCleaner that expires on %@. Please don't redistribute",BETA_VERSION]
@@ -241,6 +250,14 @@ static BOOL MCfirstRun = NO;
 		order = arry;
 	}
 	[(NSMutableArray*)order removeObject:bundleID];
+}
+
++(void)initHooks
+{
+	if ([objc_getClass("SBAwayController") instancesRespondToSelector:@selector(unlockWithSound:alertDisplay:isAutoUnlock:unlockType:)])
+		%init(unlockType);
+	else
+		%init(notUnlockType);
 }
 
 @end

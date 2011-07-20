@@ -1692,13 +1692,11 @@ void refreshAppStatus(BOOL state)
 
 void addSBIcon()
 {
-	MCLog(@"addSBIcon");
 	[[$SBAppSwitcherController sharedInstance] applicationLaunched:[[$SBApplicationController sharedInstance] applicationWithDisplayIdentifier:SBBUNDLEID]];
 }
 
 void remSBIcon()
 {
-	MCLog(@"remSBIcon");
 	[[$SBAppSwitcherController sharedInstance] applicationDied:[[$SBApplicationController sharedInstance] applicationWithDisplayIdentifier:SBBUNDLEID]];
 }
 
@@ -1881,7 +1879,8 @@ static __attribute__((constructor)) void init() {
 			MSHookMessageEx($SBAppSwitcherController,@selector(viewDidDisappear),(IMP)SBAS_viewDidDisappear,(IMP*)&SBAS_viewDidDisappear_orig);
 		else
 			class_addMethod($SBAppSwitcherController,@selector(viewDidDisappear),(IMP)SBAS_viewDidDisappear,"v@:");
-		
+			
+		[MCSettingsController initHooks];
 		[MCListener sharedInstance];
 		[MCListenerQuitAll sharedInstance];
 		[MCListenerOpenBar sharedInstance];
