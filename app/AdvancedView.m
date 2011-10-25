@@ -237,7 +237,7 @@
 	[_model addGroup:kReorderSec];
 	[_model addGroup:kIconSec];
 	[_model addGroup:kSBIconSec];
-	[_model addGroup:kLegacySec];
+//	[_model addGroup:kLegacySec];
 	[_model addGroup:kResetSec];
 	
 	return _model;

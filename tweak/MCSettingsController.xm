@@ -18,8 +18,9 @@
 
 static BOOL MCshouldHook = NO;
 
-%group unlockType
 %hook SBAwayController
+
+%group unlockType
 -(void)unlockWithSound:(BOOL)sound alertDisplay:(id)display isAutoUnlock:(BOOL)unlock unlockType:(int)type
 {
 	%orig;
@@ -28,12 +29,10 @@ static BOOL MCshouldHook = NO;
 		[[MCSettingsController sharedInstance] showWelcomeScreen];
 		MCshouldHook = NO;
 	}
-}
-%end
+} 
 %end
 
 %group notUnlockType
-%hook SBAwayController
 -(void)unlockWithSound:(BOOL)sound alertDisplay:(id)display isAutoUnlock:(BOOL)unlock
 {
 	%orig;
@@ -44,6 +43,19 @@ static BOOL MCshouldHook = NO;
 	}
 }
 %end
+
+%group ios5
+- (void)unlockWithSound:(BOOL)arg1 lockOwner:(id)arg2 isAutoUnlock:(BOOL)arg3 unlockSource:(int)arg4
+{
+	%orig;
+	if (MCshouldHook)
+	{
+		[[MCSettingsController sharedInstance] showWelcomeScreen];
+		MCshouldHook = NO;
+	}
+}
+%end
+
 %end
 
 @implementation MCSettingsController
@@ -199,7 +211,7 @@ static BOOL MCshouldHook = NO;
 #ifdef BETA_VERSION
 													 message:[NSString stringWithFormat:@"This is a demo version of MultiCleaner that expires on %@. Please don't redistribute",BETA_VERSION]
 #else
-													 message:loc(@"WelcomeDialog",@"Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar while in edit (wriggle) mode. You can customize these settings and much more in the MultiCleaner settings app")
+													 message:loc(@"WelcomeDialog",@"Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar. You can customize these settings and much more in the MultiCleaner settings app")
 #endif
 													delegate:nil 
 										   cancelButtonTitle:loc(@"OK",@"OK")
@@ -254,6 +266,9 @@ static BOOL MCshouldHook = NO;
 
 +(void)initHooks
 {
+	if ([objc_getClass("SBAwayController") instancesRespondToSelector:@selector(unlockWithSound:lockOwner:isAutoUnlock:unlockSource:)])
+		%init(ios5);
+	else
 	if ([objc_getClass("SBAwayController") instancesRespondToSelector:@selector(unlockWithSound:alertDisplay:isAutoUnlock:unlockType:)])
 		%init(unlockType);
 	else

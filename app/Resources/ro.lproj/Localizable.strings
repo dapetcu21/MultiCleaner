@@ -275,7 +275,7 @@
 	<key>UnlessMusic</key>
 	<string>  numai în afara aplicației de muzică</string>
 	<key>WelcomeDialog</key>
-	<string>Vă mulțumim că ați ales MultiCleaner! Puteți închide aplicații ținând apăsat pe butonul home (în loc să le minimizați doar), iar bara de multitasking nu va arata decat aplicațiile care rulează. De asemenea, încercati sa rearanjați aplicațiile in bară în modul de editare (modul in care pictogramele tremură). Puteți schimba aceste setări si multe altele în aplicația MultiCleaner de pe SpringBoard</string>
+	<string>Vă mulțumim că ați ales MultiCleaner! Puteți închide aplicații ținând apăsat pe butonul home (în loc să le minimizați doar), iar bara de multitasking nu va arata decat aplicațiile care rulează. De asemenea, încercați să rearanjați aplicațiile în bară. Puteți schimba aceste setări și multe altele în aplicația MultiCleaner de pe SpringBoard</string>
 	<key>Yes</key>
 	<string>Da</string>
 </dict>

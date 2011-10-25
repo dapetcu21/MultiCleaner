@@ -132,7 +132,7 @@
 	"SwitcherEditActivator" = "Open bar in edit mode";
 	SwitcherLockFooter = "These also work on the lockscreen";
 	UnlessMusic = "  only if not in music app";
-	WelcomeDialog = "Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar while in edit (wriggle) mode. You can customize these settings and much more in the MultiCleaner settings app";
+	WelcomeDialog = "Welcome to MultiCleaner! You can quit apps by holding the home button (as opposed to just minimizing them), and also the multitasking bar will show only the apps that are running. Also, try reordering the icons in the bar. You can customize these settings and much more in the MultiCleaner settings app";
 	Yes = Yes;
 	ResetSettings = "Reset Settings";
 	ResetFooter = "This will reset ALL your settings to their defaults. Use carefully!";
