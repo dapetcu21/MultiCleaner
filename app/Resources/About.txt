@@ -4,6 +4,7 @@ version 2.9.3
 CHANGELOG:
 v2.9.3
  - iOS5 support
+ - device dependent defaults
 v2.9.2
  - fixed the welcome alert view
 v2.9.1
