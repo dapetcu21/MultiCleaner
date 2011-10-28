@@ -144,7 +144,6 @@ bool iconIsApplicationIcon(SBIcon * self);
 
 -(void)flipPageTimer:(id)userinfo
 {
-	MCLog(@"flipPageTimer");
 	MC.flipTimer = nil;
 	SBAppSwitcherBarView * bottomBar = MSHookIvar<SBAppSwitcherBarView*>([$SBAppSwitcherController sharedInstance],"_bottomBar");
 	UIScrollView * scrollView = MSHookIvar<UIScrollView*>(bottomBar, "_scrollView");
@@ -188,14 +187,12 @@ bool iconIsApplicationIcon(SBIcon * self);
 
 -(void)closeApp:(SBApplication*)app
 {
-	MCLog(@"closeApp");
 	quitApp(app);
 }
 
 
 -(void)pinnedChanged:(NSString*)name userInfo:(NSDictionary*)ui
 {
-	MCLog(@"pinnedChanged");
 	if (isMultitaskingOff())
 		return;
 	NSDictionary * dict = [ui objectForKey:@"PinnedApps"];
@@ -285,8 +282,6 @@ void settingsReloaded()
 		return;
 	}
 	
-	MCLog(@"settingsReloaded");
-	
 	SBAppSwitcherController * appSwitcher = [$SBAppSwitcherController sharedInstance];
 	SBAppSwitcherModel * appSwitcherModel = [$SBAppSwitcherModel sharedInstance];
 	SBApplicationController * appController = [$SBApplicationController sharedInstance];
@@ -335,7 +330,6 @@ void settingsReloaded()
 	}
 
 	refreshAppStatus(MC.settings.sbIcon);
-	MCLog(@"settingsReloaded_f");
 }
 
 #pragma mark -
@@ -373,7 +367,6 @@ void removeApplicationFromBar(SBAppSwitcherController * self, SBApplication * ap
 
 -(void)applicationLaunched:(SBApplication *)app
 {
-	MCLog(@"applicationLaunched");
 	NSString * bundleID = [app displayIdentifier];
 	if (MC.bypassPhone && [bundleID isEqual:@"com.apple.mobilephone"])
 	{
@@ -413,7 +406,6 @@ void removeApplicationFromBar(SBAppSwitcherController * self, SBApplication * ap
 
 -(void) applicationDied:(SBApplication *)app
 {
-	MCLog(@"applicationDied");
 	NSString * bundleID = [app displayIdentifier];
 	[MC.runningApps removeObjectForKey:bundleID];
 	MCIndividualSettings * sett = [MC.settingsController settingsForBundleID:bundleID];
@@ -434,7 +426,6 @@ void removeApplicationFromBar(SBAppSwitcherController * self, SBApplication * ap
 
 -(id)_recentsFromPrefs
 {
-	MCLog(@"_recentsFromPrefs");
 	NSArray * ret = %orig;
 	NSMutableArray * arr = [[NSMutableArray alloc] initWithCapacity:[ret count]];
 	for (NSString * app in ret)
@@ -455,7 +446,6 @@ void badgeAppIcon(SBApplicationIcon * app)
 {
 	if (!iconIsApplicationIcon(app))
 		return;
-	MCLog(@"badgeApp");
 	NSString * bundleID = [[realIcon(app) application] displayIdentifier];
 	MCIndividualSettings * settings = [MC.settingsController settingsForBundleID:bundleID];
 	BOOL editing = [[$SBAppSwitcherController sharedInstance] _inEditMode];
@@ -527,7 +517,6 @@ void badgeApp(SBApplication * app)
 
 -(SBApplicationIcon*)_iconForApplication:(SBApplication*)app
 {
-	MCLog(@"_iconForApplication");
 	SBApplicationIcon * icon = %orig;
 	badgeAppIcon(icon);
 	return icon;
@@ -544,7 +533,6 @@ void badgeApp(SBApplication * app)
 {
 	NSString * & str = MSHookIvar<NSString*>(self,"_topAppDisplayID");
 	NSString * old = [str retain];
-	MCLog(@"except: %@",str);
 	NSString * bundleID = @"_global";
 	if (old)
 		bundleID = old;
@@ -555,7 +543,6 @@ void badgeApp(SBApplication * app)
 	[old release];
 	for (SBApplicationIcon * icon in a)
 		badgeAppIcon(icon);
-	MCLog(@"_applicationIconsExceptTopApp: %@",a);
 	return a;
 }
 %end
@@ -563,7 +550,6 @@ void badgeApp(SBApplication * app)
 %group pre5
 -(id)_applicationIconsExcept:(SBApplication*)app forOrientation:(int)orient
 {
-	MCLog(@"_applicationIconsExcept");
 	NSString * bundleID = @"_global";
 	if (app)
 		bundleID = [app displayIdentifier];
@@ -611,7 +597,6 @@ BOOL iconCloseTapped(SBAppSwitcherController * self,SBApplicationIcon * icon)
 {
 	if (!iconIsApplicationIcon(icon))
 		return YES;
-	MCLog(@"iconCloseTapped");
 	SBApplication * app = [realIcon(icon) application];
 	NSString * bundleID = [app displayIdentifier];
 	if ([bundleID isEqual:SBBUNDLEID])
@@ -628,7 +613,6 @@ BOOL iconCloseTapped(SBAppSwitcherController * self,SBApplicationIcon * icon)
 	if (quitType==kQTAppTap)
 	{
 		quitType = [MC.runningApps objectForKey:[app displayIdentifier]]?kQTApp:kQTIcon;
-		MCLog(@"%d %@",quitType==kQTIcon,app);
 	}
 	if (quitType==kQTIcon)
 	{
@@ -664,7 +648,6 @@ BOOL iconCloseTapped(SBAppSwitcherController * self,SBApplicationIcon * icon)
 %group post41
 -(void)iconCloseBoxTapped:(SBApplicationIcon*)icon
 {
-	MCLog(@"iconCloseBoxTapped");
 	if (iconCloseTapped(self,icon))
 		%orig;
 }
@@ -701,7 +684,6 @@ void quitForegroundApp(BOOL removeIcon)
 	if (versionBigger(5,0))
 		[app setDeactivationSetting:0x10 flag:YES]; //forceExit flag
 
-	MCLog(@"auitApp:%@",app);
 	[SBWActiveDisplayStack popDisplay:app];
 	[SBWSuspendingDisplayStack pushDisplay:app];
 	if (versionBigger(5,0))
@@ -717,7 +699,6 @@ void quitForegroundApp(BOOL removeIcon)
 %hook SBUIController
 -(void)applicationSuspendAnimationDidStop:(id)stop finished:(id) finished context:(void*) context
 {
-	MCLog(@"applicationSuspendAnimationDidStop");
 	if (MC.shouldReturnToSwitcher)
 	{
 		MC.shouldReturnToSwitcher = NO;
@@ -731,7 +712,6 @@ void quitForegroundApp(BOOL removeIcon)
 
 void quitForegroundAppAndReturn(BOOL keepIcon)
 {
-	MCLog(@"applicationSuspendAnimationDidStop");
 	if ([[$SBUIController sharedInstance] isSwitcherShowing])
 	{
 		SBApplication * app = [SBWActiveDisplayStack topApplication];
@@ -837,7 +817,6 @@ void quitAllApps()
 %hook SBAppSwitcherController
 -(void)viewWillAppear
 {
-	MCLog(@"viewWillAppear");
 	%orig;
 	if (MC.settings.startupEdit)
 		[self _beginEditing];
@@ -847,7 +826,6 @@ void quitAllApps()
 static void (*SBAS_viewDidDisappear_orig)(SBAppSwitcherController * self, SEL _cmd) = NULL;
 void SBAS_viewDidDisappear(SBAppSwitcherController * self, SEL _cmd)
 {
-	MCLog(@"SBAS_viewDidDisappear");
 	if ((MC.currentIcon)&&(MC.moved))
 		[self icon:MC.currentIcon touchEnded:YES];
 	if (SBAS_viewDidDisappear_orig)
@@ -863,7 +841,6 @@ static NSArray * SBASBV_appIcons(SBAppSwitcherBarView * self, SEL _cmd)
 %hook SpringBoard
 -(void)menuButtonUp:(GSEventRef)event
 {
-	MCLog(@"menuButtonUp");
 	if ([MCListener sharedInstance].menuDown)
 		[[MCListener sharedInstance] activationConfirmed];
 	if ([MCListenerQuitAll sharedInstance].menuDown)
@@ -919,15 +896,6 @@ void moveAppToBack(SBAppSwitcherController * self, SBApplication * app)
 %hook SBAppSwitcherController
 -(BOOL)iconShouldAllowTap:(id)arg
 {
-	MCLog(@"iconShouldAllowTap: %@",arg);
-		if ([realIcon(arg) application]==[SBWActiveDisplayStack topApplication])
-		{
-			if (versionBigger(5,0))
-				[[$SBUIController sharedInstance] dismissSwitcherAnimated:YES];
-			else
-				[[$SBUIController sharedInstance] dismissSwitcher];
-			return NO;
-		}
 	BOOL allowTap = MC.settings.allowTap;
 	BOOL save;
 	BOOL *inEditMode;
@@ -942,12 +910,19 @@ void moveAppToBack(SBAppSwitcherController * self, SBApplication * app)
 	BOOL ret = %orig;
 	if (allowTap)
 		(*inEditMode) = save;
+	SBApplication * app = [realIcon(arg) application];
+	if (ret && app && app==[SBWActiveDisplayStack topApplication])
+	{
+		if (versionBigger(5,0))
+			[[$SBUIController sharedInstance] dismissSwitcherAnimated:YES];
+		else
+			[[$SBUIController sharedInstance] dismissSwitcher];
+	}
 	return ret;
 }
 
 -(void)iconTouchBegan:(SBIcon *)icon
 {
-	MCLog(@"iconTouchBegan");
 	MC.touchingIcon = YES;
 	BOOL allowTap = MC.settings.allowTap;
 	BOOL save;
@@ -1009,7 +984,6 @@ SBIcon * placeholderIcon()
 %new(v@:@@)
 -(void)icon:(SBIcon*)icon touchMovedWithEvent:(UIEvent*)event
 {
-	MCLog(@"icontouchMovedWithEvent");
 	if (icon!=MC.currentIcon) return;
 	SBAppSwitcherBarView * bar = MSHookIvar<SBAppSwitcherBarView*>(self, "_bottomBar");
 	NSMutableArray * icons = (NSMutableArray*)[bar appIcons];
@@ -1120,7 +1094,6 @@ SBIcon * placeholderIcon()
 %new(v@:@c)
 -(void)icon:(SBIcon*)icon touchEnded:(BOOL)ended
 {
-	MCLog(@"icontouchEnded");
 	MC.touchingIcon = NO;
 	if ((icon!=MC.currentIcon)||(!MC.moved)) return;
 	SBAppSwitcherBarView * bar = MSHookIvar<SBAppSwitcherBarView*>(self, "_bottomBar");
@@ -1143,7 +1116,10 @@ SBIcon * placeholderIcon()
 	
 	MCIndividualSettings * sett = [MC.settingsController settingsForBundleID:[app displayIdentifier]];
 	BOOL isApp = iconIsApplicationIcon(icon);
+	BOOL isNewstand = versionBigger(5,0)&&[icon isKindOfClass:objc_getClass("SBNewsstandIconView")];
 	int swipeType = isApp?sett.swipeType:kSTNothing;
+	if (isNewstand)
+		swipeType = kSTAppAndIcon;
 	if (isApp&&sett.pinned)
 	{
 		if (swipeType==kSTAppAndIcon)
@@ -1190,15 +1166,23 @@ SBIcon * placeholderIcon()
 		[bar _reflowContent:YES];
 		if (versionBigger(4,2))
 			[bar _adjustContentOffsetForReflow:YES];
-		if (isApp&&(MC.index!=MC.oldindex))
+		if ((isApp || isNewstand)&&(MC.index!=MC.oldindex))
 		{
 			SBAppSwitcherModel * model = [$SBAppSwitcherModel sharedInstance];
-			NSString * bundleID = [app displayIdentifier];
+			NSString * bundleID = isNewstand?NEWSSTANDBUNDLEID:[app displayIdentifier];
 			
-			modelRemove(model, app);
+			if (isNewstand)
+				[model remove:NEWSSTANDBUNDLEID];
+			else
+				modelRemove(model, app);
 			NSMutableArray * apps = MSHookIvar<NSMutableArray*>(model, "_recentDisplayIdentifiers");
 			if (!MC.index)
-				modelAddToFront(model, app);
+			{
+				if (isNewstand)
+					[model addToFront:NEWSSTANDBUNDLEID];
+				else
+					modelAddToFront(model, app);
+			}
 			else
 			{
 				SBApplicationIcon * prevIcon = MC.index?((SBApplicationIcon*)[icons objectAtIndex:MC.index-1]):nil;
@@ -1207,6 +1191,8 @@ SBIcon * placeholderIcon()
 				else
 				{
 					NSString * prevBundleID = [[realIcon(prevIcon) application] displayIdentifier];
+					if (versionBigger(5,0)&&[prevIcon isKindOfClass:objc_getClass("SBNewsstandIconView")])
+						prevBundleID = NEWSSTANDBUNDLEID;
 					[apps insertObject:bundleID atIndex:[apps indexOfObject:prevBundleID]+1];
 				}
 				[model _saveRecents];
@@ -1302,7 +1288,6 @@ void renumberSubviews(SBAppSwitcherBarView * self)
 %hook SBAppSwitcherBarView
 -(void)layoutSubviews
 {
-	MCLog(@"layoutSubviews");
 	renumberSubviews(self);
 	%orig;
 }
@@ -1310,7 +1295,6 @@ void renumberSubviews(SBAppSwitcherBarView * self)
 
 -(void)_positionAtFirstPage:(BOOL)animated
 {
-	MCLog(@"_positionAtFirstPage");
 	CGRect bounds = self.bounds;
 	CGPoint pnt = firstPageOffset(self,bounds.size.width);
 	BOOL isPlaying = [[$SBMediaController sharedInstance] isPlaying];
@@ -1404,10 +1388,7 @@ void iconPinnedToTheBar(SBApplicationIcon * icon, int type)
 							continue;
 						if (icn.tag==4445)
 							continue;
-						icn = realIcon(icon);
-						if (![icn isApplicationIcon])
-							continue;
-						if ([MC.settingsController settingsForBundleID:[[icn application] displayIdentifier]].pinned)
+						if (iconIsApplicationIcon(icn)&&[MC.settingsController settingsForBundleID:[[realIcon(icn) application] displayIdentifier]].pinned)
 							continue;
 						break;
 					}
@@ -1477,7 +1458,6 @@ void iconPinnedToTheBar(SBApplicationIcon * icon, int type)
 
 -(void)setShowsCloseBox:(BOOL)close
 {
-	MCLog(@"setShowsCloseBox");
 	if (MC.noCloseAnim&&iconIsApplicationIcon(self))
 	{
 		NSString * bundleID = [[(SBApplicationIcon*)self application] displayIdentifier];
@@ -1492,7 +1472,6 @@ void iconPinnedToTheBar(SBApplicationIcon * icon, int type)
 %group pre41
 -(void)setCloseBox:(id)box
 {
-	MCLog(@"setCloseBox");
 	if (MC.noCloseAnim&&iconIsApplicationIcon(self))
 	{
 		NSString * bundleID = [[(SBApplicationIcon*)self application] displayIdentifier];
@@ -1511,7 +1490,6 @@ void iconPinnedToTheBar(SBApplicationIcon * icon, int type)
 
 -(void)_beginEditing
 {
-	MCLog(@"_beginEditing");
 	MC.touchingIcon = NO;
 	if (MC.settings.noEditMode)
 		return;
@@ -1543,7 +1521,6 @@ void iconPinnedToTheBar(SBApplicationIcon * icon, int type)
 
 -(void)_stopEditing
 {
-	MCLog(@"_stopEditing");
 	if (MC.currentIcon)
 	{
 		[[$SBAppSwitcherController sharedInstance] icon:MC.currentIcon touchEnded:YES];
@@ -1582,7 +1559,6 @@ void iconPinnedToTheBar(SBApplicationIcon * icon, int type)
 %hook SBAppSwitcherModel
 -(void)addToFront:(id)arg
 {
-	MCLog(@"addToFront");
 	SBApplication * app;
 	NSString * bundleID;
 	if (versionBigger(4,2))
@@ -1842,11 +1818,10 @@ void remSBIcon()
 #pragma mark Gestures
 
 %group post43
-%hook SBUIControlle
+%hook SBUIController
 
 -(void)_calculateSwitchAppList
 {
-	MCLog(@"_calculateSwitchAppList");
 	NSMutableArray * & applist = MSHookIvar<NSMutableArray*>(self,"_switchAppFullyOrderedList");
 	//Original(SBUIC_calculateAppList)(self,_cmd);
 	if (applist) return;
@@ -1859,7 +1834,7 @@ void remSBIcon()
 	BOOL shouldAdd = YES;
 	for (SBIcon * icon in appIcons)
 	{
-		if (![icon isKindOfClass:$SBApplicationIcon]) continue;
+		if (!iconIsApplicationIcon(icon)) continue;
 		SBApplication * app = [realIcon(icon) application];
 		if (!app) continue;
 		if ([[app displayIdentifier] isEqualToString:topAppBundleID])
@@ -1892,11 +1867,9 @@ void remSBIcon()
 -(void)applicationDidFinishLaunching:(id)app
 {
 	%orig;
-	MCLog(@"_appFinishLaunch");
 	MC.settingsController = [MCSettingsController sharedInstance];
 	MC.settings = [MCSettings sharedInstance];
 	[MC.settingsController registerForMessage:@"pinnedChanged" target:[MCListener sharedInstance] selector:@selector(pinnedChanged:userInfo:)];
-	MCLog(@"appFinishLaunch");
 }
 %end
 
@@ -1905,7 +1878,6 @@ void remSBIcon()
 
 -(BOOL)_shouldAutoLaunchOnBootOrInstall:(BOOL)ok
 {
-	MCLog(@"_shouldAutoLaunchOnBootOrInstall");
 	BOOL res = %orig;
 	if (res)
 	{
@@ -1998,10 +1970,8 @@ static __attribute__((constructor)) void init() {
 		$SBAwayController = objc_getClass("SBAwayController");
 		$SBIconView = objc_getClass("SBIconView");
 		
-		MCLog(@"init");
 		%init
 
-		MCLog(@"initspecific");
 		if (versionBigger(4,1))
 			%init(post41);
 		else
@@ -2023,7 +1993,6 @@ static __attribute__((constructor)) void init() {
 		if (![$SBAppSwitcherBarView instancesRespondToSelector:@selector(appIcons)])
 			class_addMethod($SBAppSwitcherBarView,@selector(appIcons),(IMP)SBASBV_appIcons,"@@:");
 		
-		MCLog(@"initmorestuff");
 		[MCSettingsController initHooks];
 		[MCListener sharedInstance];
 		[MCListenerQuitAll sharedInstance];
@@ -2032,7 +2001,6 @@ static __attribute__((constructor)) void init() {
 		[MCListenerJustMin sharedInstance];
 		[MCListenerOpenEdit sharedInstance];
 		
-		MCLog(@"Finished loading");
 	}
     [pool release];
 }

@@ -43,7 +43,81 @@
 			<key>SwipeType</key>
 			<integer>0</integer>
 		</dict>
+		<key>com.apple.mobileipod</key>
+		<dict>
+			<key>AlwaysDim</key>
+			<false/>
+			<key>Autoclose</key>
+			<true/>
+			<key>AutoLaunch</key>
+			<true/>
+			<key>DimClosed</key>
+			<false/>
+			<key>DontMoveToFront</key>
+			<false/>
+			<key>Hidden</key>
+			<false/>
+			<key>LaunchType</key>
+			<integer>0</integer>
+			<key>MoveBack</key>
+			<false/>
+			<key>Pinned</key>
+			<false/>
+			<key>PinnedBadge</key>
+			<true/>
+			<key>QuitException</key>
+			<true/>
+			<key>QuitSingleException</key>
+			<false/>
+			<key>QuitType</key>
+			<integer>0</integer>
+			<key>RemoveIconOnQuitApp</key>
+			<true/>
+			<key>RunningBadge</key>
+			<false/>
+			<key>ShowCurrentApp</key>
+			<false/>
+			<key>SwipeType</key>
+			<integer>0</integer>
+		</dict>
 		<key>com.apple.mobileipod-MediaPlayer</key>
+		<dict>
+			<key>AlwaysDim</key>
+			<false/>
+			<key>Autoclose</key>
+			<true/>
+			<key>AutoLaunch</key>
+			<true/>
+			<key>DimClosed</key>
+			<false/>
+			<key>DontMoveToFront</key>
+			<false/>
+			<key>Hidden</key>
+			<false/>
+			<key>LaunchType</key>
+			<integer>0</integer>
+			<key>MoveBack</key>
+			<false/>
+			<key>Pinned</key>
+			<false/>
+			<key>PinnedBadge</key>
+			<true/>
+			<key>QuitException</key>
+			<true/>
+			<key>QuitSingleException</key>
+			<false/>
+			<key>QuitType</key>
+			<integer>0</integer>
+			<key>RemoveIconOnQuitApp</key>
+			<true/>
+			<key>RunningBadge</key>
+			<false/>
+			<key>ShowCurrentApp</key>
+			<false/>
+			<key>SwipeType</key>
+			<integer>0</integer>
+		</dict>
+		<key>com.apple.mobileipod-AudioPlayer</key>
 		<dict>
 			<key>AlwaysDim</key>
 			<false/>
@@ -224,6 +298,8 @@
 		<string>com.apple.MobileSMS</string>
 		<string>com.apple.mobilemail</string>
 		<string>com.apple.mobileipod-MediaPlayer</string>
+		<string>com.apple.mobileipod-AudioPlayer</string>
+		<string>com.apple.mobileipod</string>
 		<string>com.apple.mobilephone</string>
 	</array>
 	<key>PinnedOnlyWhenEmpty</key>

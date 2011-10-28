@@ -23,6 +23,8 @@
 #import "SettingsViewController.h"
 #import "ActivatorToggles.h"
 #import "Common.h"
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 @implementation RootViewController
 
@@ -85,13 +87,81 @@
 	return self;
 }
 
+- (char *) platform
+{
+	static char * platform = NULL;
+	if (!platform)
+	{
+		size_t size;
+		sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+		char *machine = (char*)malloc(size);
+	    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+		platform = machine;
+	}
+	return platform;
+}
+
+-(BOOL)iOS5
+{
+	return [[UIDevice currentDevice].systemVersion floatValue]>=5.0f;
+}
+
+-(BOOL)springBoardHasApp:(NSString*)bundleID
+{
+	char * pl = [self platform];
+	if ([bundleID isEqual:@"com.apple.mobilephone"])
+		return (strncmp(pl,"iPhone",6)==0);
+	if ([bundleID isEqual:@"com.apple.MobileSMS"])
+	{
+		if ([self iOS5])
+			return YES;
+		return (strncmp(pl,"iPhone",6)==0);
+	}
+	if ([bundleID isEqual:@"com.apple.mobileipod-MediaPlayer"])
+		return (![self iOS5])&&(strncmp(pl,"iPod",4)!=0);
+	if ([bundleID isEqual:@"com.apple.mobileipod-AudioPlayer"])
+		return (![self iOS5])&&(strncmp(pl,"iPod",4)==0);
+	if ([bundleID isEqual:@"com.apple.mobileipod"])
+		return [self iOS5];
+	return YES;
+}
+
 -(void)loadSettings
 {
 	[order release];
 	order = [[NSMutableArray alloc] initWithObjects:@"_global",nil];
 	NSDictionary * def = [[NSDictionary alloc] initWithContentsOfFile:prefsPath];
 	if (!def)
-		def = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"defaults" ofType:@"plist"]];
+	{
+		def = [[NSMutableDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"defaults" ofType:@"plist"]];
+		NSMutableDictionary * dict = (NSMutableDictionary*)def;
+		if (dict)
+		{
+			NSMutableDictionary * apps = (NSMutableDictionary*)[dict objectForKey:@"Apps"];
+			if (![apps isKindOfClass:[NSDictionary class]])
+				apps = nil;
+			if (apps)
+				apps = [[NSMutableDictionary alloc] initWithDictionary:apps];
+			
+			NSMutableArray * ord = (NSMutableArray*)[dict objectForKey:@"Order"];
+			if (![ord isKindOfClass:[NSArray class]])
+				ord = nil;
+			if (ord)
+				ord = [[NSMutableArray alloc] initWithArray:ord];
+
+			NSArray * applist = [[[apps allKeys] copy] autorelease];
+			for (NSString * app in applist)
+				if (![self springBoardHasApp:app])
+				{
+					[apps removeObjectForKey:app];
+					[ord removeObject:app];
+				}
+			if (apps)
+				[dict setValue:apps forKey:@"Apps"];
+			if (ord)
+				[dict setValue:ord forKey:@"Order"];
+		}
+	}
 	NSArray * ord = [def objectForKey:@"Order"];
 	if ([ord isKindOfClass:[NSArray class]])
 	{

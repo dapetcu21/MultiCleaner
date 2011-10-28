@@ -14,6 +14,8 @@
 #include <sys/time.h>
 #include <substrate.h>
 #include <substrate2.h>
+#include <sys/types.h>
+#include <sys/sysctl.h>
 #include <SpringBoard/SBAwayController.h>
 
 static BOOL MCshouldHook = NO;
@@ -45,8 +47,9 @@ static BOOL MCshouldHook = NO;
 %end
 
 %group ios5
-- (void)unlockWithSound:(BOOL)arg1 lockOwner:(id)arg2 isAutoUnlock:(BOOL)arg3 unlockSource:(int)arg4
+- (void)_unlockWithSound:(BOOL)arg1 isAutoUnlock:(BOOL)arg2 unlockSource:(int)arg3
 {
+	%log;
 	%orig;
 	if (MCshouldHook)
 	{
@@ -123,7 +126,58 @@ static BOOL MCshouldHook = NO;
 	[center release];
 	[super dealloc];
 }
-			   
+
+- (char *) platform
+{
+	static char * platform = NULL;
+	if (!platform)
+	{
+		size_t size;
+		sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+		char *machine = (char*)malloc(size);
+	    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+		platform = machine;
+	}
+	return platform;
+}
+
+-(BOOL)iOS5
+{
+	static double vv = 0;
+	if (!vv)
+	{
+		NSDictionary * sysVersionDict = [[NSDictionary alloc] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+		NSString * version = [sysVersionDict objectForKey:@"ProductVersion"];
+		if (!version)
+		{
+			version = [[UIDevice currentDevice] systemVersion];
+			MCLog(@"Couldn't get ProductVersion from /System/Library/CoreServices/SystemVersion.plist ... Defaulting to [[UIDevice currentDevice] systemVersion]");
+		}
+		vv = [version floatValue];
+	}
+	return vv>=5.0f;
+}
+
+-(BOOL)springBoardHasApp:(NSString*)bundleID
+{
+	char * pl = [self platform];
+	if ([bundleID isEqual:@"com.apple.mobilephone"])
+		return (strncmp(pl,"iPhone",6)==0);
+	if ([bundleID isEqual:@"com.apple.MobileSMS"])
+	{
+		if ([self iOS5])
+			return YES;
+		return (strncmp(pl,"iPhone",6)==0);
+	}
+	if ([bundleID isEqual:@"com.apple.mobileipod-MediaPlayer"])
+		return (![self iOS5])&&(strncmp(pl,"iPod",4)!=0);
+	if ([bundleID isEqual:@"com.apple.mobileipod-AudioPlayer"])
+		return (![self iOS5])&&(strncmp(pl,"iPod",4)==0);
+	if ([bundleID isEqual:@"com.apple.mobileipod"])
+		return [self iOS5];
+	return YES;
+}		
+	   
 -(BOOL)loadSettings
 {
 	BOOL shouldSave = NO;
@@ -133,7 +187,33 @@ static BOOL MCshouldHook = NO;
 		NSLog(@"MultiCleaner: Can't load settings, loading defaults");
 		MCshouldHook = YES;
 		shouldSave = YES;
-		dict = [[NSDictionary alloc] initWithContentsOfFile:defaultsPath];
+		dict = [[NSMutableDictionary alloc] initWithContentsOfFile:defaultsPath];
+		if (dict)
+		{
+			NSMutableDictionary * apps = (NSMutableDictionary*)[dict objectForKey:@"Apps"];
+			if (![apps isKindOfClass:[NSDictionary class]])
+				apps = nil;
+			if (apps)
+				apps = [[NSMutableDictionary alloc] initWithDictionary:apps];
+			
+			NSMutableArray * ord = (NSMutableArray*)[dict objectForKey:@"Order"];
+			if (![ord isKindOfClass:[NSArray class]])
+				ord = nil;
+			if (ord)
+				ord = [[NSMutableArray alloc] initWithArray:ord];
+
+			NSArray * applist = [[[apps allKeys] copy] autorelease];
+			for (NSString * app in applist)
+				if (![self springBoardHasApp:app])
+				{
+					[apps removeObjectForKey:app];
+					[ord removeObject:app];
+				}
+			if (apps)
+				[dict setValue:apps forKey:@"Apps"];
+			if (ord)
+				[dict setValue:ord forKey:@"Order"];
+		}
 	}
 	if (!dict)
 	{
