@@ -681,7 +681,7 @@ void quitForegroundApp(BOOL removeIcon)
 	SBApplication * app = [SBWActiveDisplayStack topApplication];
 	if (!app) return;
 	[app setDeactivationSetting:0x2 flag:YES]; //animate flag
-	if (versionBigger(5,0))
+	if (!versionBigger(5,0))
 		[app setDeactivationSetting:0x10 flag:YES]; //forceExit flag
 
 	[SBWActiveDisplayStack popDisplay:app];

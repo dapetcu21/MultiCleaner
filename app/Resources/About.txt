@@ -1,7 +1,9 @@
 MultiCleaner
-version 2.9.3
+version 2.9.4
 
 CHANGELOG:
+v2.9.4
+ - fixed a bug causing quit app not to work on iOS 4
 v2.9.3
  - iOS5 support
  - device dependent defaults
