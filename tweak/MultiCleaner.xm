@@ -72,6 +72,8 @@ struct MultiCleanerVars {
 	BOOL iPad;
 	BOOL touchingIcon;
 	NSString * lastBundleID;
+	NSMutableSet * quitQueue;
+	pthread_mutex_t quitQueueMutex;
 };
 static struct MultiCleanerVars MC;
 
@@ -119,6 +121,8 @@ enum kPinTypes {
 	NUMPINTYPES
 };
 
+
+void recalculateSwitchAppList();
 void removeApplicationFromBar(SBAppSwitcherController * self, SBApplication * app);
 BOOL shouldKeepAppWithBundleID(NSString * bundleID);
 void badgeAppIcon(SBApplicationIcon * app);
@@ -195,6 +199,7 @@ bool iconIsApplicationIcon(SBIcon * self);
 {
 	if (isMultitaskingOff())
 		return;
+	recalculateSwitchAppList();
 	NSDictionary * dict = [ui objectForKey:@"PinnedApps"];
 	NSArray * apps = [dict allKeys];
 	for (NSString * bundleID in apps)
@@ -281,6 +286,8 @@ void settingsReloaded()
 		refreshAppStatus(NO);
 		return;
 	}
+	
+	recalculateSwitchAppList();
 	
 	SBAppSwitcherController * appSwitcher = [$SBAppSwitcherController sharedInstance];
 	SBAppSwitcherModel * appSwitcherModel = [$SBAppSwitcherModel sharedInstance];
@@ -379,7 +386,12 @@ void removeApplicationFromBar(SBAppSwitcherController * self, SBApplication * ap
 		[bundleID retain];
 		[MC.lastBundleID release];
 		MC.lastBundleID = bundleID;
+		
+		pthread_mutex_lock(&MC.quitQueueMutex);
+		[MC.quitQueue removeObject:bundleID];
+		pthread_mutex_unlock(&MC.quitQueueMutex);
 	}
+	
 	SBAppSwitcherModel * model = [$SBAppSwitcherModel sharedInstance];
 	MCIndividualSettings * sett = [MC.settingsController settingsForBundleID:bundleID];
 	if (modelHasApp(model, app))
@@ -595,6 +607,7 @@ inline bool iconIsApplicationIcon(SBIcon * self)
 
 BOOL iconCloseTapped(SBAppSwitcherController * self,SBApplicationIcon * icon)
 {
+	recalculateSwitchAppList();
 	if (!iconIsApplicationIcon(icon))
 		return YES;
 	SBApplication * app = [realIcon(icon) application];
@@ -675,6 +688,61 @@ void minimizeForegroundApp()
 	[SBWSuspendingDisplayStack pushDisplay:app];
 }
 
+void * killThread(void * ui)
+{
+	SBApplication * app = (SBApplication*)ui;
+
+	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+	NSString * bundleID = [[app displayIdentifier] retain];
+
+	sleep(5);
+	
+	pthread_mutex_lock(&MC.quitQueueMutex);
+	BOOL has = [MC.quitQueue containsObject:bundleID];
+	pthread_mutex_unlock(&MC.quitQueueMutex);
+	if (has)
+	{
+		[app kill];
+		pthread_mutex_lock(&MC.quitQueueMutex);
+		[MC.quitQueue removeObject:bundleID];
+		pthread_mutex_unlock(&MC.quitQueueMutex);
+	}
+	
+	[bundleID release];
+	[app release];
+	
+	[pool drain];
+	
+	return NULL;
+}
+
+int threadPriority()
+{
+	struct sched_param param;
+	int policy;
+	int	rt;
+	rt = pthread_getschedparam(pthread_self(), &policy, &param);
+	return param.sched_priority;
+}
+
+void queueAppForKilling(SBApplication * app)
+{	
+	pthread_mutex_lock(&MC.quitQueueMutex);
+	[MC.quitQueue addObject:[app displayIdentifier]];
+	pthread_mutex_unlock(&MC.quitQueueMutex);
+	
+	[app retain];
+	
+	pthread_t quitThread;
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	struct sched_param params;
+	params.sched_priority=threadPriority();
+	pthread_attr_setschedparam(&attr, &params);
+	pthread_create(&quitThread, &attr, killThread, app);
+	pthread_attr_destroy(&attr);
+}
+
 extern "C"
 void quitForegroundApp(BOOL removeIcon)
 {
@@ -687,7 +755,7 @@ void quitForegroundApp(BOOL removeIcon)
 	[SBWActiveDisplayStack popDisplay:app];
 	[SBWSuspendingDisplayStack pushDisplay:app];
 	if (versionBigger(5,0))
-		[app kill];
+		queueAppForKilling(app);
 	if (removeIcon)
 	{
 		MCIndividualSettings * sett = [MC.settingsController settingsForBundleID:[app displayIdentifier]];
@@ -725,18 +793,8 @@ void quitForegroundAppAndReturn(BOOL keepIcon)
 	quitForegroundApp(NO);
 }
 
-int threadPriority()
-{
-	struct sched_param param;
-	int policy;
-	int	rt;
-	rt = pthread_getschedparam(pthread_self(), &policy, &param);
-	return param.sched_priority;
-}
-
 void * quitAppsThread(void * ui)
 {
-	threadPriority();
 	NSArray * appsToQuit = (NSArray*)ui;
 	for (SBApplication * app in appsToQuit)
 		quitApp(app);
@@ -1018,8 +1076,7 @@ SBIcon * placeholderIcon()
 	MC.isOut = (posy<0);
 	
 	if (!MC.isOut)
-	{
-		
+	{	
 		while (MC.index)
 		{
 			SBIcon * neighbor = [icons objectAtIndex:MC.index-1];
@@ -1034,9 +1091,9 @@ SBIcon * placeholderIcon()
 			MC.index--;
 		}
 		
-		while (MC.index+(int)hasPlaceHolder<(int)[icons count])
+		while ((int)hasPlaceHolder + MC.index < (int)[icons count])
 		{
-			SBIcon * neighbor = [icons objectAtIndex:MC.index+(int)hasPlaceHolder];
+			SBIcon * neighbor = [icons objectAtIndex:(int)hasPlaceHolder+MC.index];
 			CGFloat posx = [touch locationInView:neighbor].x;
 			CGRect frame = neighbor.bounds;
 			if (neighbor.tag==4445)
@@ -1133,6 +1190,7 @@ SBIcon * placeholderIcon()
 			quitForegroundAppAndReturn(YES);
 		else
 			quitApp(app);
+		recalculateSwitchAppList();
 	}
 	if (MC.isOut&&MC.settings.swipeQuit&&(swipeType!=kSTNothing)&&(swipeType!=kSTApp))
 	{
@@ -1154,8 +1212,11 @@ SBIcon * placeholderIcon()
 				[quitButton release];
 			}
 		}
+		recalculateSwitchAppList();
 		renumberSubviews(bar);
 	} else {
+		recalculateSwitchAppList();
+		
 		[icons insertObject:icon atIndex:MC.index];
 		
 		[UIView beginAnimations:nil];
@@ -1646,7 +1707,10 @@ bool modelHasApp(SBAppSwitcherModel * self, SBApplication * app)
 void modelRemove(SBAppSwitcherModel * self, SBApplication * app)
 {
 	if (versionBigger(4,2))
+	{
 		[self remove:[app displayIdentifier]];
+		recalculateSwitchAppList();
+	}
 	else
 		[self remove:app];
 }
@@ -1820,10 +1884,29 @@ void remSBIcon()
 %group post43
 %hook SBUIController
 
+void recalculateSwitchAppList()
+{
+	if (!versionBigger(5,0)) return;
+	SBUIController * self = [$SBUIController sharedInstance];
+	NSMutableArray * & applist = MSHookIvar<NSMutableArray*>(self,"_switchAppFullyOrderedList");
+	[applist release];
+	applist = NULL;
+//	[self _calculateSwitchAppList];
+}
+
 -(void)_calculateSwitchAppList
 {
 	NSMutableArray * & applist = MSHookIvar<NSMutableArray*>(self,"_switchAppFullyOrderedList");
-	//Original(SBUIC_calculateAppList)(self,_cmd);
+	
+	if (versionBigger(5,0))
+	{
+		%orig;
+		[applist removeObject:SBBUNDLEID];
+		[applist removeObject:SWITCHERBUNDLEID];
+		MCLog(@"%@",applist);
+		return;
+	}
+	
 	if (applist) return;
 	NSMutableArray * list = [[NSMutableArray alloc] init];
 	SBApplication * topApp = [SBWActiveDisplayStack topApplication];
@@ -1949,6 +2032,11 @@ static __attribute__((constructor)) void init() {
 		MC.majorSysVersion = 0;
 		MC.minorSysVersion = 0;
 		MC.bugfixSysVersion = 0;
+		
+		MC.quitQueue = [[NSMutableSet alloc] init];
+		pthread_mutex_init(&MC.quitQueueMutex,NULL);
+		
+		
 		sscanf([version UTF8String],"%d.%d.%d",&MC.majorSysVersion,&MC.minorSysVersion,&MC.bugfixSysVersion);
 		[sysVersionDict release];
 		

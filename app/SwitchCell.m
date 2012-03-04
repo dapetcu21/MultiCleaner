@@ -43,7 +43,7 @@
 		[Switch addTarget:self action:@selector(callback:) forControlEvents:UIControlEventValueChanged];
 		self.selectionStyle = UITableViewCellSelectionStyleNone;
 		self.accessoryType = UITableViewCellAccessoryNone;
-		[self addSubview:Switch];
+		[self.contentView addSubview:Switch];
     }
     return self;
 }
@@ -82,15 +82,17 @@
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
-	Switch.frame=CGRectMake(self.bounds.origin.x+self.bounds.size.width-Switch.frame.size.width-20,
-						  self.bounds.origin.y+(self.bounds.size.height-Switch.frame.size.height)/2,
+	float leftBorder = 10;
+	float rightBorder = 5;
+	CGRect cb = self.contentView.bounds;
+	Switch.frame=CGRectMake(cb.origin.x+cb.size.width-Switch.frame.size.width-leftBorder,
+						  (int)(cb.origin.y+(cb.size.height-Switch.frame.size.height)/2),
 						  Switch.frame.size.width,
 						  Switch.frame.size.height);
 	self.textLabel.numberOfLines = 0;
 	CGRect textFrame = self.textLabel.frame;
-	textFrame.size.width = Switch.frame.origin.x-textFrame.origin.x-20;
+	textFrame.size.width = Switch.frame.origin.x-textFrame.origin.x-rightBorder;
 	self.textLabel.frame = textFrame;
-	//NSLog(@"textWidth:%f fontName:%@ fontSize:%f",textFrame.size.width,self.textLabel.font.fontName,self.textLabel.font.pointSize);
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -111,14 +113,18 @@
 	static CGFloat width = 0;
 	static CGFloat height = 0;
 	static UIFont * font;
-	if (!width)
+	
+	UIInterfaceOrientation orient = [[UIApplication sharedApplication] statusBarOrientation];
+	BOOL landscape = ((orient == UIInterfaceOrientationLandscapeLeft) || (orient == UIInterfaceOrientationLandscapeRight));
+	CGRect r = [[UIApplication sharedApplication] keyWindow].bounds;
+	
+	width = (landscape?r.size.height:r.size.width) - ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)?192:122);
+	if (!font)
 	{
-		width = 176.0f;
-		font = [UIFont fontWithName:@"Helvetica-Bold" size:17.0f];
+		font = [UIFont boldSystemFontOfSize:17.0f];
 		[font retain];
-		height = [@"A" sizeWithFont:font constrainedToSize:CGSizeMake(width, FLT_MAX)].height;
-		//NSLog(@"width:%f height:%f",width,height);
 	}
+	height = [@"A" sizeWithFont:font constrainedToSize:CGSizeMake(width, FLT_MAX)].height;
 	return [text sizeWithFont:font constrainedToSize:CGSizeMake(width, FLT_MAX)].height-height;
 }
 

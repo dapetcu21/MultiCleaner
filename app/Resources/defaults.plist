@@ -6,16 +6,16 @@
 	<false/>
 	<key>Apps</key>
 	<dict>
-		<key>_global</key>
+		<key>com.apple.music</key>
 		<dict>
 			<key>AlwaysDim</key>
 			<false/>
 			<key>Autoclose</key>
-			<true/>
+			<false/>
 			<key>AutoLaunch</key>
 			<true/>
 			<key>DimClosed</key>
-			<false/>
+			<true/>
 			<key>DontMoveToFront</key>
 			<false/>
 			<key>Hidden</key>
@@ -23,7 +23,44 @@
 			<key>LaunchType</key>
 			<integer>0</integer>
 			<key>MoveBack</key>
+			<true/>
+			<key>Pinned</key>
 			<false/>
+			<key>PinnedBadge</key>
+			<true/>
+			<key>QuitException</key>
+			<true/>
+			<key>QuitSingleException</key>
+			<true/>
+			<key>QuitType</key>
+			<integer>2</integer>
+			<key>RemoveIconOnQuitApp</key>
+			<true/>
+			<key>RunningBadge</key>
+			<false/>
+			<key>ShowCurrentApp</key>
+			<false/>
+			<key>SwipeType</key>
+			<integer>1</integer>
+		</dict>
+		<key>_global</key>
+		<dict>
+			<key>AlwaysDim</key>
+			<false/>
+			<key>Autoclose</key>
+			<false/>
+			<key>AutoLaunch</key>
+			<true/>
+			<key>DimClosed</key>
+			<true/>
+			<key>DontMoveToFront</key>
+			<false/>
+			<key>Hidden</key>
+			<false/>
+			<key>LaunchType</key>
+			<integer>0</integer>
+			<key>MoveBack</key>
+			<true/>
 			<key>Pinned</key>
 			<false/>
 			<key>PinnedBadge</key>
@@ -48,11 +85,11 @@
 			<key>AlwaysDim</key>
 			<false/>
 			<key>Autoclose</key>
-			<true/>
+			<false/>
 			<key>AutoLaunch</key>
 			<true/>
 			<key>DimClosed</key>
-			<false/>
+			<true/>
 			<key>DontMoveToFront</key>
 			<false/>
 			<key>Hidden</key>
@@ -60,7 +97,7 @@
 			<key>LaunchType</key>
 			<integer>0</integer>
 			<key>MoveBack</key>
-			<false/>
+			<true/>
 			<key>Pinned</key>
 			<false/>
 			<key>PinnedBadge</key>
@@ -85,11 +122,11 @@
 			<key>AlwaysDim</key>
 			<false/>
 			<key>Autoclose</key>
-			<true/>
+			<false/>
 			<key>AutoLaunch</key>
 			<true/>
 			<key>DimClosed</key>
-			<false/>
+			<true/>
 			<key>DontMoveToFront</key>
 			<false/>
 			<key>Hidden</key>
@@ -97,7 +134,7 @@
 			<key>LaunchType</key>
 			<integer>0</integer>
 			<key>MoveBack</key>
-			<false/>
+			<true/>
 			<key>Pinned</key>
 			<false/>
 			<key>PinnedBadge</key>
@@ -122,11 +159,11 @@
 			<key>AlwaysDim</key>
 			<false/>
 			<key>Autoclose</key>
-			<true/>
+			<false/>
 			<key>AutoLaunch</key>
 			<true/>
 			<key>DimClosed</key>
-			<false/>
+			<true/>
 			<key>DontMoveToFront</key>
 			<false/>
 			<key>Hidden</key>
@@ -134,7 +171,7 @@
 			<key>LaunchType</key>
 			<integer>0</integer>
 			<key>MoveBack</key>
-			<false/>
+			<true/>
 			<key>Pinned</key>
 			<false/>
 			<key>PinnedBadge</key>
@@ -159,11 +196,11 @@
 			<key>AlwaysDim</key>
 			<false/>
 			<key>Autoclose</key>
-			<true/>
+			<false/>
 			<key>AutoLaunch</key>
 			<true/>
 			<key>DimClosed</key>
-			<false/>
+			<true/>
 			<key>DontMoveToFront</key>
 			<false/>
 			<key>Hidden</key>
@@ -171,7 +208,7 @@
 			<key>LaunchType</key>
 			<integer>0</integer>
 			<key>MoveBack</key>
-			<false/>
+			<true/>
 			<key>Pinned</key>
 			<false/>
 			<key>PinnedBadge</key>
@@ -196,11 +233,11 @@
 			<key>AlwaysDim</key>
 			<false/>
 			<key>Autoclose</key>
-			<true/>
+			<false/>
 			<key>AutoLaunch</key>
 			<true/>
 			<key>DimClosed</key>
-			<false/>
+			<true/>
 			<key>DontMoveToFront</key>
 			<false/>
 			<key>Hidden</key>
@@ -208,7 +245,7 @@
 			<key>LaunchType</key>
 			<integer>0</integer>
 			<key>MoveBack</key>
-			<false/>
+			<true/>
 			<key>Pinned</key>
 			<false/>
 			<key>PinnedBadge</key>
@@ -233,11 +270,11 @@
 			<key>AlwaysDim</key>
 			<false/>
 			<key>Autoclose</key>
-			<true/>
+			<false/>
 			<key>AutoLaunch</key>
 			<true/>
 			<key>DimClosed</key>
-			<false/>
+			<true/>
 			<key>DontMoveToFront</key>
 			<false/>
 			<key>Hidden</key>
@@ -245,7 +282,7 @@
 			<key>LaunchType</key>
 			<integer>0</integer>
 			<key>MoveBack</key>
-			<false/>
+			<true/>
 			<key>Pinned</key>
 			<false/>
 			<key>PinnedBadge</key>
@@ -301,6 +338,7 @@
 		<string>com.apple.mobileipod-AudioPlayer</string>
 		<string>com.apple.mobileipod</string>
 		<string>com.apple.mobilephone</string>
+		<string>com.apple.Music</string>
 	</array>
 	<key>PinnedOnlyWhenEmpty</key>
 	<false/>

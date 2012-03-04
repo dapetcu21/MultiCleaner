@@ -62,20 +62,26 @@
 
 +(CGFloat)additionalCellHeightForText:(NSString*)text detailText:(NSString*)detailText andStyle:(UITableViewCellStyle)style
 {
-	static CGFloat totalwidth=260.0f;
+	UIInterfaceOrientation orient = [[UIApplication sharedApplication] statusBarOrientation];
+	BOOL landscape = ((orient == UIInterfaceOrientationLandscapeLeft) || (orient == UIInterfaceOrientationLandscapeRight));
+	CGRect r = [[UIApplication sharedApplication] keyWindow].bounds;
+	
+	CGFloat totalwidth = (landscape?r.size.height:r.size.width) - ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)?130:60);
 	static UIFont * font = nil;	
 	static UIFont * detailFont = nil;
-	static CGFloat defaultHeight = 0.0f;
+	CGFloat defaultHeight = 0.0f;
 	const static float detail=0.25;
 	if (!font)
 	{
-		font = [UIFont fontWithName:@"Helvetica-Bold" size:17.0f];
-		detailFont = [UIFont fontWithName:@"Helvetica" size:17.0f];
-		defaultHeight = [@"A" sizeWithFont:font constrainedToSize:CGSizeMake(FLT_MAX, FLT_MAX)].height;
-		CGFloat defaultDetailHeight = [@"A" sizeWithFont:detailFont constrainedToSize:CGSizeMake(FLT_MAX, FLT_MAX)].height;
-		if (defaultDetailHeight>defaultHeight)
-			defaultHeight=defaultDetailHeight;
+		font = [UIFont boldSystemFontOfSize:17.0f];
+		detailFont = [UIFont systemFontOfSize:17.0f];
+		[font retain];
+		[detailFont retain];
 	}
+	defaultHeight = [@"A" sizeWithFont:font constrainedToSize:CGSizeMake(FLT_MAX, FLT_MAX)].height;
+	CGFloat defaultDetailHeight = [@"A" sizeWithFont:detailFont constrainedToSize:CGSizeMake(FLT_MAX, FLT_MAX)].height;
+	if (defaultDetailHeight>defaultHeight)
+		defaultHeight=defaultDetailHeight;
 	CGFloat height;
 	if ((style==UITableViewCellStyleValue1)&&(detailText))
 	{

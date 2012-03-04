@@ -117,12 +117,14 @@
 			return YES;
 		return (strncmp(pl,"iPhone",6)==0);
 	}
+	if ([bundleID isEqual:@"com.apple.Music"])
+		return (strncmp(pl,"iPad",4)==0);
 	if ([bundleID isEqual:@"com.apple.mobileipod-MediaPlayer"])
-		return (![self iOS5])&&(strncmp(pl,"iPod",4)!=0);
+		return (![self iOS5])&&(strncmp(pl,"iPod",4)!=0)&&(strncmp(pl,"iPad",4)!=0);
 	if ([bundleID isEqual:@"com.apple.mobileipod-AudioPlayer"])
 		return (![self iOS5])&&(strncmp(pl,"iPod",4)==0);
 	if ([bundleID isEqual:@"com.apple.mobileipod"])
-		return [self iOS5];
+		return [self iOS5]&&(strncmp(pl,"iPad",4)!=0);
 	return YES;
 }
 

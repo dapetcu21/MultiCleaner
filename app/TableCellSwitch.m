@@ -112,10 +112,13 @@
 	NSString * cellID = @"TableCellSwitch";
 	SwitchCell * cell = (SwitchCell*)[viewController.tableView dequeueReusableCellWithIdentifier:cellID];
 	if (!cell)
+	{
 		cell = [[[SwitchCell alloc] initWithReuseIdentifier:cellID] autorelease];
+		cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0f];
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		cell.accessoryType = UITableViewCellAccessoryNone;
+	}
 	cell.textLabel.text = text;
-	cell.selectionStyle = UITableViewCellSelectionStyleNone;
-	cell.accessoryType = UITableViewCellAccessoryNone;
 	cell.on = on;
 	[cell setTarget:self andSelector:@selector(stateChanged:)];
 	return cell;

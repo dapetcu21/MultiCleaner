@@ -1,7 +1,12 @@
 MultiCleaner
-version 2.9.4
+version 2.9.5
 
 CHANGELOG:
+v2.9.5
+ - universal iPad settings app
+ - fixed the SBSettings toggle
+ - fixed iPad four finger swipe left/right gestures
+ - fixed a bug preventing apps saving state when closed with MultiCleaner on iOS5
 v2.9.4
  - fixed a bug causing quit app not to work on iOS 4
 v2.9.3

@@ -93,7 +93,9 @@ void setState(BOOL state)
 	if (MCToggleType)
 	{
 		[center sendMessageName:@"quitAllApps" userInfo:nil];
-		[getAppWindow() closeButtonPressed];
+		UIWindow<SBSettingsWindowProtocol> * window = getAppWindow();
+		if ([window respondsToSelector:@selector(closeButtonPressed)])
+			[window closeButtonPressed];
 	}
 	else
 	{
