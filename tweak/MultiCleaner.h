@@ -32,6 +32,7 @@ BOOL isMultitaskingOff();
 #define SBBUNDLEID @"com.dapetcu21.SpringBoard"
 #define SWITCHERBUNDLEID @"com.dapetcu21.SwitcherBar"
 #define NEWSSTANDBUNDLEID @"com.apple.newsstand"
+#define ROOTHELPERFILE "/tmp/mckill"
 
 #define MCLog(args...) NSLog(@"MultiCleaner: %@",[NSString stringWithFormat:args])
 #define loc(x,y) [[NSBundle bundleWithPath:@"/Applications/MultiCleaner.app"] localizedStringForKey:(x) value:(y) table:nil]

@@ -1,4 +1,4 @@
-SUBPROJECTS = tweak app toggle
+SUBPROJECTS = tweak app toggle roothelper
 
 export THEOS_KEEP_VER=1
 export TARGET_IPHONEOS_DEPLOYMENT_VERSION = 3.0

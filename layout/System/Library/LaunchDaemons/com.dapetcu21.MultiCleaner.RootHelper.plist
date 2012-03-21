@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.dapetcu21.MultiCleaner.RootHelper</string>
+	<key>Program</key>
+	<string>/Applications/MultiCleaner.app/MCRootHelper</string>
+	<key>StandardErrorPath</key>
+	<string>/dev/null</string>
+	<key>OnDemand</key>
+	<false/>
+</dict>
+</plist>

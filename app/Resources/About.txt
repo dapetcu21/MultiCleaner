@@ -1,7 +1,11 @@
 MultiCleaner
-version 2.9.5
+version 2.9.6
 
 CHANGELOG:
+v2.9.6
+ - now quits root apps on iOS 5
+ - compatible with Applocker
+ - reduced the kill delay from 5 seconds to 2 seconds
 v2.9.5
  - universal iPad settings app
  - fixed the SBSettings toggle

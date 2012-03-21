@@ -49,7 +49,6 @@ static BOOL MCshouldHook = NO;
 %group ios5
 - (void)_unlockWithSound:(BOOL)arg1 isAutoUnlock:(BOOL)arg2 unlockSource:(int)arg3
 {
-	%log;
 	%orig;
 	if (MCshouldHook)
 	{

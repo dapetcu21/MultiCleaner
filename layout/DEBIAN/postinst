@@ -1,0 +1,7 @@
+#!/bin/bash
+
+LAUNCHD_PLIST=/System/Library/LaunchDaemons/com.dapetcu21.MultiCleaner.RootHelper.plist
+
+chown 0:0 "$LAUNCHD_PLIST"
+chmod 644 "$LAUNCHD_PLIST"
+launchctl load "$LAUNCHD_PLIST"

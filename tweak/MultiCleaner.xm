@@ -4,6 +4,10 @@
 #include <notify.h>
 #include <stdlib.h>
 #include <sys/utsname.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
 
 #import <SpringBoard/SpringBoard.h>
 #import <SpringBoard/SBIconView.h>
@@ -73,7 +77,7 @@ struct MultiCleanerVars {
 	BOOL touchingIcon;
 	NSString * lastBundleID;
 	NSMutableSet * quitQueue;
-	pthread_mutex_t quitQueueMutex;
+	pthread_mutex_t quitQueueMutex,killLock;
 };
 static struct MultiCleanerVars MC;
 
@@ -688,6 +692,57 @@ void minimizeForegroundApp()
 	[SBWSuspendingDisplayStack pushDisplay:app];
 }
 
+static
+void killApp(SBApplication * app)
+{
+	static int fd = -1;
+	static bool fallback = false;
+	pthread_mutex_lock(&MC.killLock);
+	if (fallback)
+	{
+		pthread_mutex_unlock(&MC.killLock);
+		[app kill];
+	}
+	else
+	{
+		if (fd == -1)
+		{
+			fd = open(ROOTHELPERFILE,O_WRONLY);
+			if (fd == -1)
+			{
+				fallback = true;
+				NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+				MCLog(@"Could not open() %s: %s",ROOTHELPERFILE,strerror(errno));
+				[pool drain];
+				pthread_mutex_unlock(&MC.killLock);
+				[app kill];
+				return;
+			}
+		}
+		
+		#define PID_BUFFER_SIZE 32
+		char s[PID_BUFFER_SIZE];
+		
+		pid_t pid = [[app process] pid];
+		int sz = snprintf(s,PID_BUFFER_SIZE,"%lld\n",(long long)(pid));
+		int r;
+		while (((r = write(fd,s,sz)) == -1) && (errno == EINTR));
+		if (r==-1)
+		{
+			close(fd);
+			fallback = true;
+			NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+			MCLog(@"Could not write() to %s: %s",ROOTHELPERFILE,strerror(errno));
+			[pool drain];
+			pthread_mutex_unlock(&MC.killLock);
+			[app kill];
+			return;
+		}
+		pthread_mutex_unlock(&MC.killLock);
+	}
+} 
+
+static
 void * killThread(void * ui)
 {
 	SBApplication * app = (SBApplication*)ui;
@@ -695,14 +750,14 @@ void * killThread(void * ui)
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 	NSString * bundleID = [[app displayIdentifier] retain];
 
-	sleep(5);
+	sleep(2);
 	
 	pthread_mutex_lock(&MC.quitQueueMutex);
 	BOOL has = [MC.quitQueue containsObject:bundleID];
 	pthread_mutex_unlock(&MC.quitQueueMutex);
 	if (has)
 	{
-		[app kill];
+		killApp(app);
 		pthread_mutex_lock(&MC.quitQueueMutex);
 		[MC.quitQueue removeObject:bundleID];
 		pthread_mutex_unlock(&MC.quitQueueMutex);
@@ -716,6 +771,7 @@ void * killThread(void * ui)
 	return NULL;
 }
 
+static
 int threadPriority()
 {
 	struct sched_param param;
@@ -725,6 +781,7 @@ int threadPriority()
 	return param.sched_priority;
 }
 
+static
 void queueAppForKilling(SBApplication * app)
 {	
 	pthread_mutex_lock(&MC.quitQueueMutex);
@@ -807,7 +864,7 @@ void quitApp(SBApplication * app)
 {
 	if (versionBigger(5,0))
 	{
-		[app kill];
+		killApp(app);
 	} else
 	{
 		[app setDeactivationSetting:0x10 flag:YES];
@@ -1854,7 +1911,29 @@ void refreshAppStatus(BOOL state)
 
 void addSBIcon()
 {
-	[[$SBAppSwitcherController sharedInstance] applicationLaunched:[[$SBApplicationController sharedInstance] applicationWithDisplayIdentifier:SBBUNDLEID]];
+	SBApplication * app = [[$SBApplicationController sharedInstance] applicationWithDisplayIdentifier:SBBUNDLEID];
+
+	NSString * bundleID = SBBUNDLEID;
+	[MC.runningApps setObject:app forKey:bundleID];
+	
+	SBAppSwitcherModel * model = [$SBAppSwitcherModel sharedInstance];
+	MCIndividualSettings * sett = [MC.settingsController settingsForBundleID:bundleID];
+	if (modelHasApp(model, app))
+	{
+		badgeApp(app);
+	} else {
+		switch (sett.launchType) {
+			case kLTBack:
+				modelAddToBack(model, app);
+				break;
+			case kLTBeforeClosed:
+				modelAddBeforeClosed(model, app);
+				break;
+			default:
+				modelAddToFront(model, app);
+				break;
+		}
+	}
 }
 
 void remSBIcon()
@@ -2035,6 +2114,7 @@ static __attribute__((constructor)) void init() {
 		
 		MC.quitQueue = [[NSMutableSet alloc] init];
 		pthread_mutex_init(&MC.quitQueueMutex,NULL);
+		pthread_mutex_init(&MC.killLock,NULL);
 		
 		
 		sscanf([version UTF8String],"%d.%d.%d",&MC.majorSysVersion,&MC.minorSysVersion,&MC.bugfixSysVersion);
